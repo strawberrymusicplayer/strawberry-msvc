@@ -26,7 +26,7 @@ https://zlib.net/zlib-1.2.12.tar.gz
 https://www.openssl.org/source/openssl-3.0.2.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/3.7.3/libgnutls_3.7.3_msvc16.zip
 https://downloads.sourceforge.net/project/libpng/libpng16/1.6.37/libpng-1.6.37.tar.gz
-https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.39/pcre2-10.39.tar.bz2
+https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
 https://tukaani.org/xz/xz-5.2.5.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz

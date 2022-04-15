@@ -335,8 +335,8 @@ cmake --install . || goto end
 @echo Compiling pcre2
 
 cd "%BUILD_PATH%"
-if not exist "pcre2-10.39" tar -xvf "%SOURCES_PATH%\pcre2-10.39.tar.bz2" || goto end
-cd "pcre2-10.39" || goto end
+if not exist "pcre2-10.40" tar -xvf "%SOURCES_PATH%\pcre2-10.40.tar.bz2" || goto end
+cd "pcre2-10.40" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
