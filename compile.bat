@@ -136,7 +136,6 @@
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\taglib.pc" goto taglib
 @if not exist "%PREFIX_PATH%\include\dlfcn.h" goto dlfcn-win32
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\fftw3.pc" goto fftw3
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\libchromaprint.pc" goto chromaprint
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\glib-2.0.pc" goto glib
 @if not exist "%PREFIX_PATH%\lib\gio\modules\gioopenssl.lib" goto glib-networking
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpsl.pc" goto libpsl
@@ -148,11 +147,14 @@
 @if not exist "%PREFIX_PATH%\lib\faad.lib" goto faad2
 @if not exist "%PREFIX_PATH%\lib\libfaac.lib" goto faac
 @if not exist "%PREFIX_PATH%\lib\libbs2b.lib" goto libbs2b
+@if not exist "%PREFIX_PATH%\lib\avutil.lib" goto ffmpeg
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libchromaprint.pc" goto chromaprint
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-1.0.pc" goto gstreamer
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-base-1.0.pc" goto gst-plugins-base
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstdirectsound.lib" goto gst-plugins-good
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc" goto gst-plugins-bad
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
+@if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
@@ -676,22 +678,6 @@ cmake --install . || goto end
 @goto continue
 
 
-:chromaprint
-
-@echo Compiling chromaprint
-
-cd "%BUILD_PATH%"
-if not exist "chromaprint-1.5.1" tar -xvf "%SOURCES_PATH%\chromaprint-1.5.1.tar.gz"
-cd "chromaprint-1.5.1" || goto end
-if not exist build mkdir build || goto end
-cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="%PREFIX_PATH%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" || goto end
-nmake || goto end
-cmake --install . || goto end
-
-@goto continue
-
-
 :glib
 
 @echo Compiling glib
@@ -894,6 +880,44 @@ cmake --install . || goto end
 @goto continue
 
 
+:ffmpeg
+
+@echo Compiling ffmpeg
+
+cd "%BUILD_PATH%"
+if not exist "ffmpeg" @(
+  mkdir "ffmpeg" || goto end
+  cd "ffmpeg" || goto end
+  xcopy /s /y /h "%SOURCES_PATH%\ffmpeg" . || goto end
+  cd ..
+ ) || goto end
+cd ffmpeg || goto end
+@rem --buildtype="%BUILD_TYPE%"
+if not exist "build\build.ninja" meson --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=disabled -Dgpl=enabled build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+
+@goto continue
+
+
+:chromaprint
+
+@echo Compiling chromaprint
+
+cd "%BUILD_PATH%"
+if not exist "chromaprint-1.5.1" tar -xvf "%SOURCES_PATH%\chromaprint-1.5.1.tar.gz"
+cd "chromaprint-1.5.1" || goto end
+if not exist build mkdir build || goto end
+cd build || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="%PREFIX_PATH%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" || goto end
+nmake || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
 :gstreamer
 
 @echo Compiling GStreamer
@@ -966,6 +990,21 @@ cd "%BUILD_PATH%"
 if not exist "gst-plugins-ugly-1.20.1" 7z x "%SOURCES_PATH%\gst-plugins-ugly-1.20.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-1.20.1.tar" || goto end
 cd "gst-plugins-ugly-1.20.1" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dorc=enabled -Dasfdemux=enabled -Ddvdlpcmdec=disabled -Ddvdsub=disabled -Drealmedia=disabled -Dxingmux=enabled -Da52dec=disabled -Damrnb=disabled -Damrwbdec=disabled -Dcdio=disabled -Ddvdread=disabled -Dmpeg2dec=disabled -Dsidplay=disabled -Dx264=disabled build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
+:gst-libav
+
+@echo Compiling gst-libav
+
+cd "%BUILD_PATH%"
+if not exist "gst-libav-1.20.1" 7z x "%SOURCES_PATH%\gst-libav-1.20.1.tar.xz" -so | 7z x -aoa -si"gst-libav-1.20.1.tar" || goto end
+cd "gst-libav-1.20.1" || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=disabled -Ddoc=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1202,6 +1241,13 @@ copy /y "%PREFIX_PATH%\bin\Qt6Gui*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\Qt6Network*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\Qt6Sql*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\Qt6Widgets*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\avcodec*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\avfilter*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\avformat*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\avutil*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\postproc*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\swresample*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\swscale*.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end
@@ -1262,6 +1308,7 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwasapi2.dll" ".\gstreamer-plugins\" 
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavpack.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavparse.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstxingmux.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.dll" ".\gstreamer-plugins\" || goto end
 
 copy /y "..\COPYING" . || goto end
 copy /y "..\dist\windows\*.nsi" . || goto end

@@ -461,16 +461,6 @@ Open Git Bash
     cmake --install .
 
 
-### Compile chromaprint
-
-    cd C:\Data\Projects\strawberry\strawberry-dependencies\msvc\sources\chromaprint-1.5.1
-    mkdir build
-    cd build
-    cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="c:\msvc_x86_64" -DCMAKE_INSTALL_PREFIX="c:\msvc_x86_64"
-    nmake
-    cmake --install .
-
-
 ### Compile glib
 
     cd C:\Data\Projects\strawberry\strawberry-dependencies\msvc\sources\glib-2.72.1
@@ -587,6 +577,25 @@ Open Git Bash
     cmake --install .
 
 
+### Compile ffmpeg
+
+    cd c:\data\projects\strawberry\strawberry-dependencies\msvc\sources\ffmpeg
+    meson --buildtype=release --prefix=c:\msvc_x86_64 --pkg-config-path=c:\msvc_x86_64\lib\pkgconfig -Dtests=disabled -Dgpl=enabled build
+    cd build
+    ninja
+    ninja install
+
+
+### Compile chromaprint
+
+    cd C:\Data\Projects\strawberry\strawberry-dependencies\msvc\sources\chromaprint-1.5.1
+    mkdir build
+    cd build
+    cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="c:\msvc_x86_64" -DCMAKE_INSTALL_PREFIX="c:\msvc_x86_64"
+    nmake
+    cmake --install .
+
+
 ### Compile GStreamer
 
     cd c:\data\projects\strawberry\strawberry-dependencies\msvc\sources\gstreamer-1.20.1
@@ -627,6 +636,15 @@ Open Git Bash
 
     cd c:\data\projects\strawberry\strawberry-dependencies\msvc\sources\gst-plugins-ugly-1.20.1
     meson --buildtype=release --prefix=c:\msvc_x86_64 --pkg-config-path=c:\msvc_x86_64\lib\pkgconfig -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dorc=enabled -Dasfdemux=enabled -Ddvdlpcmdec=disabled -Ddvdsub=disabled -Drealmedia=disabled -Dxingmux=enabled -Da52dec=disabled -Damrnb=disabled -Damrwbdec=disabled -Dcdio=disabled -Ddvdread=disabled -Dmpeg2dec=disabled -Dsidplay=disabled -Dx264=disabled build
+    cd build
+    ninja
+    ninja install
+
+
+### Compile gst-libav
+
+    cd c:\data\projects\strawberry\strawberry-dependencies\msvc\sources\gst-libav-1.20.1
+    meson --buildtype=release --prefix=c:\msvc_x86_64 --pkg-config-path=c:\msvc_x86_64\lib\pkgconfig -Dtests=disabled build
     cd build
     ninja
     ninja install
