@@ -642,7 +642,7 @@ cmake --install . || goto end
 cd "%BUILD_PATH%"
 if not exist "lame-3.100" tar -xvf "%DOWNLOADS_PATH%\lame-3.100.tar.gz" || goto end
 cd "lame-3.100" || goto end
-sed -i 's/MACHINE = \/machine:.*/MACHINE = \/machine:Win64/g' Makefile.MSVC || goto end
+sed -i "s/MACHINE = \/machine:.*/MACHINE = \/machine:Win64/g" Makefile.MSVC || goto end
 nmake -f Makefile.MSVC MSVCVER=Win64 libmp3lame.dll || goto end
 copy include\*.h "%PREFIX_PATH%\include\" || goto end
 copy output\libmp3lame*.lib "%PREFIX_PATH%\lib\" || goto end
