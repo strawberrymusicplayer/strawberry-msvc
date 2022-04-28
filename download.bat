@@ -2,22 +2,53 @@
 
 @setlocal
 
-@set SOURCES_DIR="c:\data\projects\strawberry\msvc_\sources"
+@set DOWNLOADS_PATH="c:\data\projects\strawberry\msvc_\downloads"
 
-@curl --help >NUL || @(
+:setup
+
+@c: || goto end
+@cd \ || goto end
+@if not exist  "%DOWNLOADS_PATH%" mkdir "%DOWNLOADS_PATH%"
+@cd "%DOWNLOADS_PATH%" || goto end
+
+
+@curl --help >NUL 2>&1 || @(
   @echo "Missing curl."
   @goto end
 )
 
-@git --help >NUL || @(
+:install
+
+
+@if not exist "C:\Program Files\Git\bin\git.exe" goto git
+
+
+@goto check
+
+
+:git
+
+@echo Installing git...
+
+cd "%DOWNLOADS_PATH%" || goto end
+curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.36.0.windows.1/Git-2.36.0-64-bit.exe || goto end
+"%DOWNLOADS_PATH%\Git-2.36.0-64-bit.exe" /silent /norestart || goto end
+
+@goto install
+
+
+:check
+
+@git --help >NUL 2>&1 || set PATH=%PATH%;C:\Program Files\Git\bin
+
+@git --help >NUL 2>&1 || @(
   @echo "Missing git."
   @goto end
 )
 
-@c: || goto end
-@cd \ || goto end
-@if not exist  "%SOURCES_DIR%" mkdir "%SOURCES_DIR%"
-@cd "%SOURCES_DIR%" || goto end
+
+:start
+
 
 @for %%x in (
 https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost_1_79_0.tar.bz2
@@ -33,7 +64,7 @@ https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.40.0.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.9.13/libxml2-v2.9.13.tar.bz2
 https://github.com/nghttp2/nghttp2/releases/download/v1.47.0/nghttp2-1.47.0.tar.bz2
-https://sqlite.org/2022/sqlite-autoconf-3380200.tar.gz
+https://sqlite.org/2022/sqlite-autoconf-3380300.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.3.4.tar.xz
@@ -52,17 +83,16 @@ https://github.com/rockdaboot/libpsl/releases/download/0.21.1/libpsl-0.21.1.tar.
 https://download.gnome.org/sources/libsoup/2.74/libsoup-2.74.2.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-0.4.32.tar.xz
 https://files.musepack.net/source/musepack_src_r475.tar.gz
-https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.2+release.msvc.zip
+https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.3+release.msvc.zip
 https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-2.0.2.tar.gz
 https://downloads.sourceforge.net/project/bs2b/libbs2b/3.1.0/libbs2b-3.1.0.tar.bz2
-http://ffmpeg.org/releases/ffmpeg-5.0.tar.bz2
 https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.20.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.20.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.20.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.20.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.20.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.20.1.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v3.20.0/protobuf-cpp-3.20.0.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v3.20.1/protobuf-cpp-3.20.1.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.4.8/expat-2.4.8.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.12.0/freetype-2.12.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-70-1.tar.gz
@@ -70,9 +100,17 @@ https://cairographics.org/releases/cairo-1.16.0.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/4.2.0/harfbuzz-4.2.0.tar.xz
 https://download.qt.io/official_releases/qt/6.3/6.3.0/submodules/qtbase-everywhere-src-6.3.0.tar.xz
 https://download.qt.io/official_releases/qt/6.3/6.3.0/submodules/qttools-everywhere-src-6.3.0.tar.xz
-http://files.jkvinge.net/packages/strawberry-dependencies/nasm-2.15.05-installer-x64.exe
+https://aka.ms/vs/16/release/vs_community.exe
+https://github.com/git-for-windows/git/releases/download/v2.36.0.windows.1/Git-2.36.0-64-bit.exe
+https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1-windows-x86_64.msi
+https://github.com/mesonbuild/meson/releases/download/0.62.1/meson-0.62.1-64.msi
+https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-installer-x64.exe
 http://www.tortall.net/projects/yasm/releases/yasm-1.3.0-win64.exe
 https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip
+https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit.msi
+https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe
+https://www.7-zip.org/a/7z2107-x64.exe
+https://files.jkvinge.net/winbins/sed.exe
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/opusfile-cmake.patch
