@@ -42,7 +42,7 @@ goto end
 
 @echo Installing CMake...
 
-"%DOWNLOADS_PATH%\cmake-3.23.1-windows-x86_64.msi" /quiet /norestart || goto end
+"%DOWNLOADS_PATH%\cmake-3.23.2-windows-x86_64.msi" /quiet /norestart || goto end
 
 @goto install
 
