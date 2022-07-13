@@ -383,6 +383,8 @@ cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_
 cmake --build . || goto end
 cmake --install . || goto end
 
+@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\pcre2-8d.lib" "%PREFIX_PATH%\lib\pcre2-8.lib" || goto end
+
 @goto continue
 
 
@@ -732,9 +734,11 @@ xcopy /s /y fftw3.h "%PREFIX_PATH%\include\"
 
 @echo Compiling glib
 
+@set LDFLAGS="-L%PREFIX_PATH%\lib"
+
 cd "%BUILD_PATH%"
-if not exist "glib-2.72.1" 7z x "%DOWNLOADS_PATH%\glib-2.73.1.tar.xz" -so | 7z x -aoa -si"glib-2.73.1.tar"
-cd "glib-2.73.1" || goto end
+if not exist "glib-2.72.1" 7z x "%DOWNLOADS_PATH%\glib-2.73.2.tar.xz" -so | 7z x -aoa -si"glib-2.73.2.tar"
+cd "glib-2.73.2" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
 ninja || goto end
@@ -1259,7 +1263,7 @@ copy /y "%PREFIX_PATH%\bin\gsttag-1.0-0.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\gsturidownloader-1.0-0.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\gstvideo-1.0-0.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\gstwinrt-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\fftw3.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\libfftw3-3.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\intl-8.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\libbs2b.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\libfaac_dll.dll" || goto end
@@ -1284,6 +1288,7 @@ copy /y "%PREFIX_PATH%\bin\wavpackdll.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\libpng16*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\libprotobuf*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\libxml2*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\pcre2-8*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\pcre2-16*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\zlib*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\Qt6Concurrent*.dll" || goto end
@@ -1299,6 +1304,7 @@ copy /y "%PREFIX_PATH%\bin\avutil*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\postproc*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\swresample*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\swscale*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\avresample*.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end

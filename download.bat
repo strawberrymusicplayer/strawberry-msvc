@@ -68,7 +68,6 @@ https://sqlite.org/2022/sqlite-autoconf-3390000.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.3.4.tar.xz
-https://www.wavpack.com/wavpack-5.4.0.tar.bz2
 https://www.wavpack.com/wavpack-5.5.0.tar.bz2
 https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-0.12.tar.gz
@@ -79,7 +78,7 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
 https://www.fftw.org/fftw-3.3.10.tar.gz
 https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.73/glib-2.73.1.tar.xz
+https://download.gnome.org/sources/glib/2.73/glib-2.73.2.tar.xz
 https://download.gnome.org/sources/glib-networking/2.72/glib-networking-2.72.1.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/0.21.1/libpsl-0.21.1.tar.gz
 https://download.gnome.org/sources/libsoup/2.74/libsoup-2.74.2.tar.xz
