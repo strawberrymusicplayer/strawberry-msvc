@@ -314,7 +314,7 @@ cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-copy /y "%PREFIX_PATH%\lib\libpng16d.lib" "%PREFIX_PATH%\lib\png16.lib" || goto end
+@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\libpng16d.lib" "%PREFIX_PATH%\lib\png16.lib" || goto end
 
 @goto continue
 
