@@ -176,6 +176,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\speex.pc" goto speex
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libmpg123.pc" goto mpg123
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mp3lame.pc" goto lame
+@if not exist "%PREFIX_PATH%\lib\libtwolame_dll.lib" goto twolame
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\taglib.pc" goto taglib
 @if not exist "%PREFIX_PATH%\include\dlfcn.h" goto dlfcn-win32
 @if not exist "%PREFIX_PATH%\lib\libfftw3-3.lib" goto fftw3
@@ -668,6 +669,40 @@ copy output\libmp3lame*.dll "%PREFIX_PATH%\bin\" || goto end
 @goto continue
 
 
+:twolame
+
+@echo Compiling twolame
+
+cd "%BUILD_PATH%"
+if not exist "twolame-0.4.0" tar -xvf "%DOWNLOADS_PATH%\twolame-0.4.0.tar.gz" || goto end
+cd "twolame-0.4.0" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/twolame.patch"
+cd "win32" || goto end
+start /w devenv.exe libtwolame_dll.sln /upgrade || goto end
+sed -i "s/Win32/x64/g" libtwolame_dll.sln libtwolame_dll.vcxproj || goto end
+sed -i "s/MachineX86/MachineX64/g" libtwolame_dll.sln libtwolame_dll.vcxproj || goto end
+msbuild libtwolame_dll.sln /property:Configuration="%BUILD_TYPE%" || goto end
+copy /y ..\libtwolame\twolame.h "%PREFIX_PATH%\include\" || goto end
+copy /y lib\*.lib "%PREFIX_PATH%\lib\" || goto end
+copy /y lib\*.dll "%PREFIX_PATH%\bin\" || goto end
+
+@echo "Create twolame pc file"
+
+@echo prefix=%PREFIX_PATH_FORWARD% > "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD% >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo. >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Name: lame >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Description: optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo URL: https://www.twolame.org/ >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Version: 0.4.0 >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -ltwolame_dll >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+
+@goto continue
+
+
 :taglib
 
 @echo Compiling taglib
@@ -1010,7 +1045,7 @@ ninja install || goto end
 cd "%BUILD_PATH%"
 if not exist "gst-plugins-good-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-1.20.3.tar" || goto end
 cd "gst-plugins-good-1.20.3" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=disabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
