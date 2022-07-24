@@ -269,7 +269,7 @@ cd openssl-3.0.5 || goto end
 if "%BUILD_TYPE%" == "debug" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix=%PREFIX_PATH% --libdir=lib --openssldir=%PREFIX_PATH%\ssl --debug --with-zlib-include=%PREFIX_PATH%\include --with-zlib-lib=%PREFIX_PATH%\lib\zlibd.lib || goto end
 if "%BUILD_TYPE%" == "release" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH%" --libdir=lib --openssldir="%PREFIX_PATH%\ssl" --release --with-zlib-include="%PREFIX_PATH%\include" --with-zlib-lib="%PREFIX_PATH%\lib\zlib.lib" || goto end
 nmake || goto end
-nmake install || goto end
+nmake install_sw || goto end
 
 @goto continue
 
