@@ -462,8 +462,8 @@ cmake --install . || goto end
 @echo Compiling sqlite
 
 cd "%BUILD_PATH%"
-if not exist "sqlite-autoconf-3390000" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3390000.tar.gz" || goto end
-cd "sqlite-autoconf-3390000" || goto end
+if not exist "sqlite-autoconf-3390100" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3390100.tar.gz" || goto end
+cd "sqlite-autoconf-3390100" || goto end
 cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll || goto end
 cl shell.c sqlite3.c -Fe:sqlite3.exe || goto end
 copy /y "*.h" "%PREFIX_PATH%\include\" || goto end
