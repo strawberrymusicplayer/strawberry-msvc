@@ -1107,8 +1107,8 @@ ninja install || goto end
 @echo Compiling protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.2" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.2.tar.gz" || goto end
-cd "protobuf-3.21.2\cmake" || goto end
+if not exist "protobuf-3.21.3" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.3.tar.gz" || goto end
+cd "protobuf-3.21.3\cmake" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF || goto end
