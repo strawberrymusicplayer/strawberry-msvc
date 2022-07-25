@@ -1340,6 +1340,7 @@ copy /y "%PREFIX_PATH%\bin\postproc*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\swresample*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\swscale*.dll" || goto end
 copy /y "%PREFIX_PATH%\bin\avresample*.dll" || goto end
+copy /y "%PREFIX_PATH%\bin\twolame*.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end
@@ -1376,6 +1377,7 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gsticydemux.dll" ".\gstreamer-plugins\"
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstid3demux.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstisomp4.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstlame.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gsttwolame.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstmpg123.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstmusepack.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstogg.dll" ".\gstreamer-plugins\" || goto end
