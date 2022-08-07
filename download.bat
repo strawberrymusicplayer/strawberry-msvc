@@ -71,15 +71,15 @@ https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.3.4.tar.xz
 https://www.wavpack.com/wavpack-5.5.0.tar.bz2
 https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-0.12.tar.gz
-https://downloads.sourceforge.net/project/mpg123/mpg123/1.30.0/mpg123-1.30.0.tar.bz2
+https://downloads.sourceforge.net/project/mpg123/mpg123/1.30.2/mpg123-1.30.2.tar.bz2
 https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz
 https://taglib.org/releases/taglib-1.12.tar.gz
 https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
 https://www.fftw.org/fftw-3.3.10.tar.gz
 https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.73/glib-2.73.2.tar.xz
-https://download.gnome.org/sources/glib-networking/2.72/glib-networking-2.72.1.tar.xz
+https://download.gnome.org/sources/glib/2.73/glib-2.73.3.tar.xz
+https://download.gnome.org/sources/glib-networking/2.72/glib-networking-2.72.2.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/0.21.1/libpsl-0.21.1.tar.gz
 https://download.gnome.org/sources/libsoup/2.74/libsoup-2.74.2.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-0.4.32.tar.xz
@@ -95,15 +95,18 @@ https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.20.3.t
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.20.3.tar.xz
 https://github.com/protocolbuffers/protobuf/releases/download/v21.3/protobuf-cpp-3.21.3.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.4.8/expat-2.4.8.tar.bz2
-https://netix.dl.sourceforge.net/project/freetype/freetype2/2.12.0/freetype-2.12.0.tar.gz
+https://netix.dl.sourceforge.net/project/freetype/freetype2/2.12.1/freetype-2.12.1.tar.gz
 https://github.com/unicode-org/icu/archive/release-70-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
-https://github.com/harfbuzz/harfbuzz/releases/download/4.2.0/harfbuzz-4.2.0.tar.xz
+https://github.com/harfbuzz/harfbuzz/releases/download/5.1.0/harfbuzz-5.1.0.tar.xz
 https://download.qt.io/official_releases/qt/6.3/6.3.1/submodules/qtbase-everywhere-src-6.3.1.tar.xz
 https://download.qt.io/official_releases/qt/6.3/6.3.1/submodules/qttools-everywhere-src-6.3.1.tar.xz
+https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
+https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.zip
+https://downloads.sourceforge.net/twolame/twolame-0.4.0.tar.gz
 https://aka.ms/vs/17/release/vs_community.exe
 https://github.com/git-for-windows/git/releases/download/v2.36.0.windows.1/Git-2.36.0-64-bit.exe
-https://github.com/Kitware/CMake/releases/download/v3.23.2/cmake-3.23.2-windows-x86_64.msi
+https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0-windows-x86_64.msi
 https://github.com/mesonbuild/meson/releases/download/0.62.1/meson-0.62.1-64.msi
 https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-installer-x64.exe
 http://www.tortall.net/projects/yasm/releases/yasm-1.3.0-win64.exe
@@ -125,6 +128,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libbs2b-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtsparkle-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/icu-fixes.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx

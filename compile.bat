@@ -187,6 +187,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\orc-0.4.pc" goto orc
 @if not exist "%PREFIX_PATH%\lib\mpcdec.lib" goto musepack
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libopenmpt.pc" goto libopenmpt
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libgme.pc" goto libgme
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\fdk-aac.pc" goto fdk-aac
 @if not exist "%PREFIX_PATH%\lib\faad.lib" goto faad2
 @if not exist "%PREFIX_PATH%\lib\libfaac.lib" goto faac
@@ -200,6 +201,12 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
+@if not exist "%PREFIX_PATH%\lib\icuio*.lib" goto icu4c
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\expat.pc" goto expat
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\freetype2.pc" goto freetype_bootstrap
+@if not exist "%PREFIX_PATH%\lib\harfbuzz*.lib" goto harfbuzz
+@if not exist "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ" goto freetype
+
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
@@ -540,12 +547,12 @@ cmake --install . || goto end
 @echo Compiling wavpack
 
 cd "%BUILD_PATH%"
-if not exist "wavpack-5.4.0" tar -xvf "%DOWNLOADS_PATH%\wavpack-5.4.0.tar.bz2" || goto end
-cd "wavpack-5.4.0" || goto end
+if not exist "wavpack-5.5.0" tar -xvf "%DOWNLOADS_PATH%\wavpack-5.5.0.tar.bz2" || goto end
+cd "wavpack-5.5.0" || goto end
+sed -i "/wavpackdll.rc/d" CMakeLists.txt || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 if not exist wavpackdll mkdir wavpackdll
-echo. > wavpackdll/wavpackdll.rc || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWAVPACK_BUILD_DOCS=OFF -DWAVPACK_BUILD_PROGRAMS=OFF -DWAVPACK_ENABLE_ASM=OFF -DWAVPACK_ENABLE_LEGACY=OFF -DWAVPACK_BUILD_WINAMP_PLUGIN=OFF -DWAVPACK_BUILD_COOLEDIT_PLUGIN=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -627,8 +634,8 @@ cmake --install . || goto end
 @echo Compiling mpg123
 
 cd "%BUILD_PATH%"
-if not exist "mpg123-1.30.0" tar -xvf "%DOWNLOADS_PATH%\mpg123-1.30.0.tar.bz2" || goto end
-cd "mpg123-1.30.0" || goto end
+if not exist "mpg123-1.30.2" tar -xvf "%DOWNLOADS_PATH%\mpg123-1.30.2.tar.bz2" || goto end
+cd "mpg123-1.30.2" || goto end
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
 cmake ../ports/cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF || goto end
@@ -772,8 +779,8 @@ xcopy /s /y fftw3.h "%PREFIX_PATH%\include\"
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "glib-2.72.1" 7z x "%DOWNLOADS_PATH%\glib-2.73.2.tar.xz" -so | 7z x -aoa -si"glib-2.73.2.tar"
-cd "glib-2.73.2" || goto end
+if not exist "glib-2.72.3" 7z x "%DOWNLOADS_PATH%\glib-2.73.3.tar.xz" -so | 7z x -aoa -si"glib-2.73.3.tar"
+cd "glib-2.73.3" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
 ninja || goto end
@@ -787,8 +794,8 @@ ninja install || goto end
 @echo Compiling glib-networking
 
 cd "%BUILD_PATH%"
-if not exist "glib-networking-2.72.1" 7z x "%DOWNLOADS_PATH%\glib-networking-2.72.1.tar.xz" -so | 7z x -aoa -si"glib-networking-2.72.1.tar" || goto end
-cd "glib-networking-2.72.1" || goto end
+if not exist "glib-networking-2.72.2" 7z x "%DOWNLOADS_PATH%\glib-networking-2.72.2.tar.xz" -so | 7z x -aoa -si"glib-networking-2.72.2.tar" || goto end
+cd "glib-networking-2.72.2" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/glib-networking-tests.patch"
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dgnutls=enabled -Dopenssl=enabled build || goto end
 cd build || goto end
@@ -883,6 +890,24 @@ cd build2 || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX=%PREFIX_PATH% -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
+
+goto continue
+
+
+:libgme
+
+@set LDFLAGS="-L%PREFIX_PATH%\lib"
+
+cd "%BUILD_PATH%"
+if not exist "game-music-emu-0.6.3" tar -xf "%DOWNLOADS_PATH%/game-music-emu-0.6.3.tar.gz" || goto end
+cd game-music-emu-0.6.3 || goto end
+if not exist build mkdir build || goto end
+cd build || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@set LDFLAGS=
 
 goto continue
 
@@ -1064,7 +1089,8 @@ patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-libpaths.patch"
 sed -i "s/c:\\msvc_x86_64\\lib/c:\\strawberry_msvc_x86_64_debug\\lib/g" ext\faad\meson.build || goto end
 sed -i "s/c:\\msvc_x86_64\\lib/c:\\strawberry_msvc_x86_64_debug\\lib/g" ext\faac\meson.build || goto end
 sed -i "s/c:\\msvc_x86_64\\lib/c:\\strawberry_msvc_x86_64_debug\\lib/g" ext\musepack\meson.build || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig  -Dexamples=disabled -Dtests=disabled -Dexamples=disabled -Dgpl=enabled -Dorc=enabled -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daiff=enabled -Dasfmux=enabled -Daudiobuffersplit=disabled -Daudiofxbad=disabled -Daudiolatency=disabled -Daudiomixmatrix=disabled -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled -Dcamerabin2=disabled -Dcodecalpha=disabled -Dcoloreffects=disabled -Ddebugutils=disabled -Ddvbsubenc=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled -Dfaceoverlay=disabled -Dfestival=disabled -Dfieldanalysis=disabled -Dfreeverb=disabled -Dfrei0r=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled -Did3tag=enabled -Dinter=disabled -Dinterlace=disabled -Divfparse=disabled -Divtc=disabled -Djp2kdecimator=disabled -Djpegformat=disabled -Dlibrfb=disabled -Dmidi=disabled -Dmpegdemux=disabled -Dmpegpsmux=disabled -Dmpegtsdemux=disabled -Dmpegtsmux=disabled -Dmxf=disabled -Dnetsim=disabled -Donvif=disabled -Dpcapparse=disabled -Dpnm=disabled -Dproxy=disabled -Dqroverlay=disabled -Drawparse=disabled -Dremovesilence=enabled -Drist=disabled -Drtmp2=disabled -Drtp=disabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled -Dspeed=disabled -Dsubenc=disabled -Dswitchbin=disabled -Dtimecode=disabled -Dvideofilters=disabled -Dvideoframe_audiolevel=disabled -Dvideoparsers=disabled -Dvideosignal=disabled -Dvmnc=disabled -Dy4m=disabled -Dopencv=disabled -Dwayland=disabled -Dx11=disabled -Daes=enabled -Daom=disabled -Davtp=disabled -Dandroidmedia=disabled -Dapplemedia=disabled -Dasio=disabled -Dassrender=disabled -Dbluez=enabled -Dbs2b=enabled -Dbz2=disabled -Dchromaprint=enabled -Dclosedcaption=disabled -Dcolormanagement=disabled -Dcurl=disabled -Dcurl-ssh2=disabled -Dd3dvideosink=disabled -Dd3d11=disabled -Ddash=enabled -Ddc1394=disabled -Ddecklink=disabled -Ddirectfb=disabled -Ddirectsound=enabled -Ddtls=disabled -Ddts=disabled -Ddvb=disabled -Dfaac=enabled -Dfaad=enabled -Dfbdev=disabled -Dfdkaac=enabled -Dflite=disabled -Dfluidsynth=disabled -Dgl=disabled -Dgme=disabled -Dgs=disabled -Dgsm=disabled -Dipcpipeline=disabled -Diqa=disabled -Dkate=disabled -Dkms=disabled -Dladspa=disabled -Dldac=disabled -Dlibde265=disabled -Dopenaptx=disabled -Dlv2=disabled -Dmediafoundation=disabled -Dmicrodns=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=enabled -Dneon=disabled -Dnvcodec=disabled -Donnx=disabled -Dopenal=disabled -Dopenexr=disabled -Dopenh264=disabled -Dopenjpeg=disabled -Dopenmpt=enabled -Dopenni2=disabled -Dopensles=disabled -Dopus=enabled -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsbc=disabled -Dsctp=disabled -Dshm=disabled -Dsmoothstreaming=disabled -Dsndfile=disabled -Dsoundtouch=disabled -Dspandsp=disabled -Dsrt=disabled -Dsrtp=disabled -Dsvthevcenc=disabled -Dteletext=disabled -Dtinyalsa=disabled -Dtranscode=disabled -Dttml=disabled -Duvch264=disabled -Dva=disabled -Dvoaacenc=disabled -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=enabled -Dwasapi2=enabled -Dwebp=disabled -Dwebrtc=disabled -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwinks=disabled -Dwinscreencap=disabled -Dx265=disabled -Dzbar=disabled -Dzxing=disabled -Dwpe=disabled -Dmagicleap=disabled -Dv4l2codecs=disabled -Disac=disabled -Dhls=enabled -Dhls-crypto=openssl build || goto end
+sed -i "s/c:\\msvc_x86_64\\lib/c:\\strawberry_msvc_x86_64_debug\\lib/g" ext\gme\meson.build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig  -Dexamples=disabled -Dtests=disabled -Dexamples=disabled -Dgpl=enabled -Dorc=enabled -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daiff=enabled -Dasfmux=enabled -Daudiobuffersplit=disabled -Daudiofxbad=disabled -Daudiolatency=disabled -Daudiomixmatrix=disabled -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled -Dcamerabin2=disabled -Dcodecalpha=disabled -Dcoloreffects=disabled -Ddebugutils=disabled -Ddvbsubenc=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled -Dfaceoverlay=disabled -Dfestival=disabled -Dfieldanalysis=disabled -Dfreeverb=disabled -Dfrei0r=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled -Did3tag=enabled -Dinter=disabled -Dinterlace=disabled -Divfparse=disabled -Divtc=disabled -Djp2kdecimator=disabled -Djpegformat=disabled -Dlibrfb=disabled -Dmidi=disabled -Dmpegdemux=disabled -Dmpegpsmux=disabled -Dmpegtsdemux=disabled -Dmpegtsmux=disabled -Dmxf=disabled -Dnetsim=disabled -Donvif=disabled -Dpcapparse=disabled -Dpnm=disabled -Dproxy=disabled -Dqroverlay=disabled -Drawparse=disabled -Dremovesilence=enabled -Drist=disabled -Drtmp2=disabled -Drtp=disabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled -Dspeed=disabled -Dsubenc=disabled -Dswitchbin=disabled -Dtimecode=disabled -Dvideofilters=disabled -Dvideoframe_audiolevel=disabled -Dvideoparsers=disabled -Dvideosignal=disabled -Dvmnc=disabled -Dy4m=disabled -Dopencv=disabled -Dwayland=disabled -Dx11=disabled -Daes=enabled -Daom=disabled -Davtp=disabled -Dandroidmedia=disabled -Dapplemedia=disabled -Dasio=disabled -Dassrender=disabled -Dbluez=enabled -Dbs2b=enabled -Dbz2=disabled -Dchromaprint=enabled -Dclosedcaption=disabled -Dcolormanagement=disabled -Dcurl=disabled -Dcurl-ssh2=disabled -Dd3dvideosink=disabled -Dd3d11=disabled -Ddash=enabled -Ddc1394=disabled -Ddecklink=disabled -Ddirectfb=disabled -Ddirectsound=enabled -Ddtls=disabled -Ddts=disabled -Ddvb=disabled -Dfaac=enabled -Dfaad=enabled -Dfbdev=disabled -Dfdkaac=enabled -Dflite=disabled -Dfluidsynth=disabled -Dgl=disabled -Dgme=enabled -Dgs=disabled -Dgsm=disabled -Dipcpipeline=disabled -Diqa=disabled -Dkate=disabled -Dkms=disabled -Dladspa=disabled -Dldac=disabled -Dlibde265=disabled -Dopenaptx=disabled -Dlv2=disabled -Dmediafoundation=disabled -Dmicrodns=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=enabled -Dneon=disabled -Dnvcodec=disabled -Donnx=disabled -Dopenal=disabled -Dopenexr=disabled -Dopenh264=disabled -Dopenjpeg=disabled -Dopenmpt=enabled -Dopenni2=disabled -Dopensles=disabled -Dopus=enabled -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsbc=disabled -Dsctp=disabled -Dshm=disabled -Dsmoothstreaming=disabled -Dsndfile=disabled -Dsoundtouch=disabled -Dspandsp=disabled -Dsrt=disabled -Dsrtp=disabled -Dsvthevcenc=disabled -Dteletext=disabled -Dtinyalsa=disabled -Dtranscode=disabled -Dttml=disabled -Duvch264=disabled -Dva=disabled -Dvoaacenc=disabled -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=enabled -Dwasapi2=enabled -Dwebp=disabled -Dwebrtc=disabled -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwinks=disabled -Dwinscreencap=disabled -Dx265=disabled -Dzbar=disabled -Dzxing=disabled -Dwpe=disabled -Dmagicleap=disabled -Dv4l2codecs=disabled -Disac=disabled -Dhls=enabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1119,13 +1145,33 @@ copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 @goto continue
 
 
+:icu4c
+
+@echo Compiling icu4c
+
+cd "%BUILD_PATH%"
+if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-71_1-src.zip" || goto end
+cd "icu" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/icu-fixes.patch"
+cd "source\allinone" || goto end
+@rem start /w devenv.exe allinone.sln /upgrade
+msbuild allinone.sln /property:Configuration="%BUILD_TYPE%" /p:Platform="x64" || goto end
+cd ..\..\ || goto end
+if not exist "%PREFIX_PATH%\include\unicode" mkdir "%PREFIX_PATH%\include\unicode" || goto end
+copy /y "include\unicode\*.h" "%PREFIX_PATH%\include\unicode\" || goto end
+copy /y "lib64\*.*" "%PREFIX_PATH%\lib\" || goto end
+copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
+
+@goto continue
+
+
 :expat
 
 @echo Compiling expat
 
 cd "%BUILD_PATH%"
 if not exist "expat-2.4.8" tar -xvf "%DOWNLOADS_PATH%\expat-2.4.8.tar.bz2" || goto end
-cd "expat" || goto end
+cd "expat-2.4.8" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DEXPAT_SHARED_LIBS=ON -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_FUZZERS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_PKGCONFIG=ON || goto end
@@ -1135,18 +1181,20 @@ cmake --install . || goto end
 @goto continue
 
 
-:freetype
+:freetype_bootstrap
 
-@echo Compiling freetype
+@echo Compiling freetype (bootstrap)
 
 cd "%BUILD_PATH%"
-if not exist "freetype-2.12.0" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.0.tar.bz2" || goto end
-cd "freetype-2.12.0" || goto end
+if not exist "freetype-2.12.1" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.1.tar.gz" || goto end
+cd "freetype-2.12.1" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
+
+del "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ"
 
 @goto continue
 
@@ -1156,15 +1204,39 @@ cmake --install . || goto end
 @echo Compiling harfbuzz
 
 cd "%BUILD_PATH%"
-if not exist "harfbuzz-4.2.0" tar -xvf "%DOWNLOADS_PATH%\harfbuzz-4.2.0.tar.bz2" || goto end
-cd "harfbuzz-4.2.0" || goto end
-if not exist build mkdir build || goto end
+if not exist "harfbuzz-5.1.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-5.1.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-5.1.0.tar" || goto end
+cd "harfbuzz-5.1.0" || goto end
+
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON || goto end
-cmake --build . || goto end
-cmake --install . || goto end
+ninja || goto end
+ninja install || goto end
+
+@rem if not exist build mkdir build || goto end
+@rem cd build || goto end
+@rem cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON || goto end
+@rem cmake --build . || goto end
+@rem cmake --install . || goto end
 
 @goto continue
+
+
+:freetype
+
+@echo Compiling freetype
+
+cd "%BUILD_PATH%"
+if not exist "freetype-2.12.1" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.1.tar.gz" || goto end
+cd "freetype-2.12.1" || goto end
+if not exist build mkdir build || goto end
+cd build || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+echo "" > "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ"
+
+@goto continue
+
 
 
 :qtbase
@@ -1177,7 +1249,7 @@ cd "qtbase-everywhere-src-6.3.1" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/qtbase-pcre2.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH%\bin\pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_fontconfig=OFF -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=OFF -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=OFF -DFEATURE_system_pcre2=ON -DFEATURE_system_harfbuzz=OFF -DFEATURE_system_sqlite=ON || goto end
+cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH%\bin\pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=OFF -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1260,87 +1332,90 @@ if not exist sqldrivers mkdir sqldrivers || goto end
 if not exist imageformats mkdir imageformats || goto end
 if not exist gstreamer-plugins mkdir gstreamer-plugins || goto end
 
-copy /y "%PREFIX_PATH%\bin\libssl-3-x64.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libcrypto-3-x64.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\soup-2.4-1.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gst-launch-1.0.exe" || goto end
-copy /y "%PREFIX_PATH%\bin\gst-discoverer-1.0.exe" || goto end
-copy /y "%PREFIX_PATH%\bin\sqlite3.exe" || goto end
-copy /y "%PREFIX_PATH%\bin\libcrypto-3-x64.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libssl-3-x64.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\brotlicommon.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\brotlidec.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\chromaprint.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\faad.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\fdk-aac.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\ffi-7.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\FLAC.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gio-2.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\glib-2.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gmodule-2.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gnutls.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gobject-2.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstadaptivedemux-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstapp-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstaudio-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstbadaudio-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstbase-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstfft-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstisoff-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstnet-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstpbutils-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstreamer-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstriff-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstrtp-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstrtsp-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstsdp-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gsttag-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gsturidownloader-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstvideo-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\gstwinrt-1.0-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libfftw3-3.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\intl-8.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libbs2b.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libfaac_dll.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libiconv.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\liblzma.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libmp3lame.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libopenmpt.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libspeex.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\mpcdec.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\mpg123.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\ogg.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\opus.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\orc-0.4-0.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\psl-5.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\qtsparkle-qt6.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\soup-2.4-1.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\sqlite3.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\tag.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\vorbis.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\vorbisfile.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\wavpackdll.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libpng16*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libprotobuf*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\libxml2*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\pcre2-8*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\pcre2-16*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\zlib*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\Qt6Concurrent*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\Qt6Core*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\Qt6Gui*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\Qt6Network*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\Qt6Sql*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\Qt6Widgets*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\avcodec*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\avfilter*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\avformat*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\avutil*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\postproc*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\swresample*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\swscale*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\avresample*.dll" || goto end
-copy /y "%PREFIX_PATH%\bin\twolame*.dll" || goto end
+copy /y "%prefix_path%\bin\avcodec*.dll" || goto end
+copy /y "%prefix_path%\bin\avfilter*.dll" || goto end
+copy /y "%prefix_path%\bin\avformat*.dll" || goto end
+copy /y "%prefix_path%\bin\avresample*.dll" || goto end
+copy /y "%prefix_path%\bin\avutil*.dll" || goto end
+copy /y "%prefix_path%\bin\brotlicommon.dll" || goto end
+copy /y "%prefix_path%\bin\brotlidec.dll" || goto end
+copy /y "%prefix_path%\bin\chromaprint.dll" || goto end
+copy /y "%prefix_path%\bin\faad.dll" || goto end
+copy /y "%prefix_path%\bin\fdk-aac.dll" || goto end
+copy /y "%prefix_path%\bin\ffi-7.dll" || goto end
+copy /y "%prefix_path%\bin\flac.dll" || goto end
+copy /y "%prefix_path%\bin\freetype*.dll" || goto end
+copy /y "%prefix_path%\bin\gio-2.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\glib-2.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gme.dll" || goto end
+copy /y "%prefix_path%\bin\gmodule-2.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gnutls.dll" || goto end
+copy /y "%prefix_path%\bin\gobject-2.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gst-discoverer-1.0.exe" || goto end
+copy /y "%prefix_path%\bin\gst-launch-1.0.exe" || goto end
+copy /y "%prefix_path%\bin\gstadaptivedemux-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstapp-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstaudio-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstbadaudio-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstbase-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstfft-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstisoff-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstnet-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstpbutils-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstreamer-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstriff-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstrtp-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstrtsp-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstsdp-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gsttag-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gsturidownloader-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstvideo-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstwinrt-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\harfbuzz*.dll" || goto end
+copy /y "%prefix_path%\bin\icudt71*.dll" || goto end
+copy /y "%prefix_path%\bin\icuin71*.dll" || goto end
+copy /y "%prefix_path%\bin\icuuc71*.dll" || goto end
+copy /y "%prefix_path%\bin\intl-8.dll" || goto end
+copy /y "%prefix_path%\bin\libbs2b.dll" || goto end
+copy /y "%prefix_path%\bin\libcrypto-3-x64.dll" || goto end
+copy /y "%prefix_path%\bin\libfaac_dll.dll" || goto end
+copy /y "%prefix_path%\bin\libfftw3-3.dll" || goto end
+copy /y "%prefix_path%\bin\libiconv.dll" || goto end
+copy /y "%prefix_path%\bin\liblzma.dll" || goto end
+copy /y "%prefix_path%\bin\libmp3lame.dll" || goto end
+copy /y "%prefix_path%\bin\libopenmpt.dll" || goto end
+copy /y "%prefix_path%\bin\libpng16*.dll" || goto end
+copy /y "%prefix_path%\bin\libprotobuf*.dll" || goto end
+copy /y "%prefix_path%\bin\libspeex.dll" || goto end
+copy /y "%prefix_path%\bin\libssl-3-x64.dll" || goto end
+copy /y "%prefix_path%\bin\libxml2*.dll" || goto end
+copy /y "%prefix_path%\bin\mpcdec.dll" || goto end
+copy /y "%prefix_path%\bin\mpg123.dll" || goto end
+copy /y "%prefix_path%\bin\ogg.dll" || goto end
+copy /y "%prefix_path%\bin\opus.dll" || goto end
+copy /y "%prefix_path%\bin\orc-0.4-0.dll" || goto end
+copy /y "%prefix_path%\bin\pcre2-16*.dll" || goto end
+copy /y "%prefix_path%\bin\pcre2-8*.dll" || goto end
+copy /y "%prefix_path%\bin\postproc*.dll" || goto end
+copy /y "%prefix_path%\bin\psl-5.dll" || goto end
+copy /y "%prefix_path%\bin\qt6concurrent*.dll" || goto end
+copy /y "%prefix_path%\bin\qt6core*.dll" || goto end
+copy /y "%prefix_path%\bin\qt6gui*.dll" || goto end
+copy /y "%prefix_path%\bin\qt6network*.dll" || goto end
+copy /y "%prefix_path%\bin\qt6sql*.dll" || goto end
+copy /y "%prefix_path%\bin\qt6widgets*.dll" || goto end
+copy /y "%prefix_path%\bin\qtsparkle-qt6.dll" || goto end
+copy /y "%prefix_path%\bin\soup-2.4-1.dll" || goto end
+copy /y "%prefix_path%\bin\sqlite3.dll" || goto end
+copy /y "%prefix_path%\bin\sqlite3.exe" || goto end
+copy /y "%prefix_path%\bin\swresample*.dll" || goto end
+copy /y "%prefix_path%\bin\swscale*.dll" || goto end
+copy /y "%prefix_path%\bin\tag.dll" || goto end
+copy /y "%prefix_path%\bin\twolame*.dll" || goto end
+copy /y "%prefix_path%\bin\vorbis.dll" || goto end
+copy /y "%prefix_path%\bin\vorbisfile.dll" || goto end
+copy /y "%prefix_path%\bin\wavpackdll.dll" || goto end
+copy /y "%prefix_path%\bin\zlib*.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end
@@ -1373,6 +1448,7 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstfaad.dll" ".\gstreamer-plugins\" || 
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstfdkaac.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstflac.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstgio.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstgme.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gsthls.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gsticydemux.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstid3demux.dll" ".\gstreamer-plugins\" || goto end
