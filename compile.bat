@@ -183,7 +183,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\glib-2.0.pc" goto glib
 @if not exist "%PREFIX_PATH%\lib\gio\modules\gioopenssl.lib" goto glib-networking
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpsl.pc" goto libpsl
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\libsoup-2.4.pc" goto libsoup
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libsoup-3.0.pc" goto libsoup
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\orc-0.4.pc" goto orc
 @if not exist "%PREFIX_PATH%\lib\mpcdec.lib" goto musepack
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libopenmpt.pc" goto libopenmpt
@@ -222,9 +222,9 @@ goto continue
 @echo Installing boost
 
 cd "%BUILD_PATH%"
-if not exist "boost_1_79_0" tar -xvf "%DOWNLOADS_PATH%\boost_1_79_0.tar.gz" || goto end
+if not exist "boost_1_80_0" tar -xvf "%DOWNLOADS_PATH%\boost_1_80_0.tar.gz" || goto end
 if not exist "%PREFIX_PATH%\include\boost" mkdir "%PREFIX_PATH%\include\boost"
-xcopy /s /y /h "boost_1_79_0\boost" "%PREFIX_PATH%\include\boost\" || goto end
+xcopy /s /y /h "boost_1_80_0\boost" "%PREFIX_PATH%\include\boost\" || goto end
 
 @goto continue
 
@@ -235,8 +235,8 @@ xcopy /s /y /h "boost_1_79_0\boost" "%PREFIX_PATH%\include\boost\" || goto end
 
 cd "%BUILD_PATH%"
 
-if not exist "pkgconf-pkgconf-1.8.0" tar -xvf "%DOWNLOADS_PATH%\pkgconf-1.8.0.tar.gz" || goto end
-cd "pkgconf-pkgconf-1.8.0" || goto end
+if not exist "pkgconf-pkgconf-1.9.3" tar -xvf "%DOWNLOADS_PATH%\pkgconf-1.9.3.tar.gz" || goto end
+cd "pkgconf-pkgconf-1.9.3" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dtests=false build || goto end
 cd build || goto end
 ninja || goto end
@@ -288,7 +288,7 @@ nmake install_sw || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist gnutls mkdir gnutls || goto end
 cd gnutls || goto end
-7z x -aoa "%DOWNLOADS_PATH%\libgnutls_3.7.5_msvc17.zip" || goto end
+7z x -aoa "%DOWNLOADS_PATH%\libgnutls_3.7.6_msvc17.zip" || goto end
 xcopy /s /y "bin\x64\*.*" "%PREFIX_PATH%\bin\" || goto end
 xcopy /s /y "lib\x64\*.*" "%PREFIX_PATH%\lib\" || goto end
 if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
@@ -436,8 +436,8 @@ ninja install || goto end
 @echo Compiling libxml2
 
 cd "%BUILD_PATH%"
-if not exist "libxml2-v2.9.14" tar -xvf "%DOWNLOADS_PATH%\libxml2-v2.9.14.tar.bz2"
-cd "libxml2-v2.9.14" || goto end
+if not exist "libxml2-v2.10.2" tar -xvf "%DOWNLOADS_PATH%\libxml2-v2.10.2.tar.bz2"
+cd "libxml2-v2.10.2" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DLIBXML2_WITH_PYTHON=OFF -DLIBXML2_WITH_ZLIB=ON || goto end
@@ -453,8 +453,8 @@ cmake --install . || goto end
 @echo Compiling nghttp2
 
 cd "%BUILD_PATH%"
-if not exist "nghttp2-1.48.0" tar -xvf "%DOWNLOADS_PATH%\nghttp2-1.48.0.tar.bz2" || goto end
-cd "nghttp2-1.48.0" || goto end
+if not exist "nghttp2-1.49.0" tar -xvf "%DOWNLOADS_PATH%\nghttp2-1.49.0.tar.bz2" || goto end
+cd "nghttp2-1.49.0" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DENABLE_SHARED_LIB=ON || goto end
@@ -469,8 +469,8 @@ cmake --install . || goto end
 @echo Compiling sqlite
 
 cd "%BUILD_PATH%"
-if not exist "sqlite-autoconf-3390100" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3390100.tar.gz" || goto end
-cd "sqlite-autoconf-3390100" || goto end
+if not exist "sqlite-autoconf-3390200" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3390200.tar.gz" || goto end
+cd "sqlite-autoconf-3390200" || goto end
 cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll || goto end
 cl shell.c sqlite3.c -Fe:sqlite3.exe || goto end
 copy /y "*.h" "%PREFIX_PATH%\include\" || goto end
@@ -825,9 +825,10 @@ ninja install || goto end
 @echo Compiling libsoup
 
 cd "%BUILD_PATH%"
-if not exist "libsoup-2.74.2" 7z x "%DOWNLOADS_PATH%\libsoup-2.74.2.tar.xz" -so | 7z x -aoa -si"libsoup-2.74.2.tar" || goto end
-cd "libsoup-2.74.2" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false -Dgnome=false -Dgtk_doc=false build || goto end
+if not exist "libsoup-3.1.3" 7z x "%DOWNLOADS_PATH%\libsoup-3.1.3.tar.xz" -so | 7z x -aoa -si"libsoup-3.1.3.tar" || goto end
+cd "libsoup-3.1.3" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%\libsoup-msvc.patch"
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -880,7 +881,7 @@ cd "%BUILD_PATH%"
 if not exist "libopenmpt" @(
   mkdir libopenmpt || goto end
   cd libopenmpt || goto end
-  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.4+release.msvc.zip" || goto end
+  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.5+release.msvc.zip" || goto end
   cd ..
  ) || goto end
 cd "libopenmpt" || goto end
@@ -1133,8 +1134,8 @@ ninja install || goto end
 @echo Compiling protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.3" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.3.tar.gz" || goto end
-cd "protobuf-3.21.3\cmake" || goto end
+if not exist "protobuf-3.21.5" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.5.tar.gz" || goto end
+cd "protobuf-3.21.5\cmake" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF || goto end
@@ -1320,7 +1321,7 @@ if not exist "strawberry" @(
 cd "strawberry" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH%\lib\cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DARCH=x86_64 -DENABLE_TRANSLATIONS=OFF || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH%\lib\cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DARCH=x86_64 -DENABLE_TRANSLATIONS=OFF -DENABLE_WIN32_CONSOLE=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1370,7 +1371,6 @@ copy /y "%prefix_path%\bin\gstsdp-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gsttag-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gsturidownloader-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstvideo-1.0-0.dll" || goto end
-copy /y "%prefix_path%\bin\gstwinrt-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\harfbuzz*.dll" || goto end
 copy /y "%prefix_path%\bin\icudt71*.dll" || goto end
 copy /y "%prefix_path%\bin\icuin71*.dll" || goto end
@@ -1405,7 +1405,7 @@ copy /y "%prefix_path%\bin\qt6network*.dll" || goto end
 copy /y "%prefix_path%\bin\qt6sql*.dll" || goto end
 copy /y "%prefix_path%\bin\qt6widgets*.dll" || goto end
 copy /y "%prefix_path%\bin\qtsparkle-qt6.dll" || goto end
-copy /y "%prefix_path%\bin\soup-2.4-1.dll" || goto end
+copy /y "%prefix_path%\bin\soup-3.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\sqlite3.dll" || goto end
 copy /y "%prefix_path%\bin\sqlite3.exe" || goto end
 copy /y "%prefix_path%\bin\swresample*.dll" || goto end
