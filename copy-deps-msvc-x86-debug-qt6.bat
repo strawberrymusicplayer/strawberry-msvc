@@ -1,10 +1,10 @@
 SET SOURCE_DIR="C:\Data\Projects\strawberry\strawberry"
-SET BUILD_DIR="C:\Data\Projects\strawberry\strawberry\out\build\x64-Debug"
+SET BUILD_DIR="C:\Data\Projects\strawberry\strawberry\out\build\x86-Debug"
 
-SET BIN_DIR="C:\strawberry_msvc_x86_64_debug\bin"
-SET QT_DIR="C:\strawberry_msvc_x86_64_debug"
-SET GIO_DIR="C:\strawberry_msvc_x86_64_debug\lib\gio\modules"
-SET GST_DIR="C:\strawberry_msvc_x86_64_debug\lib\gstreamer-1.0"
+SET BIN_DIR="C:\strawberry_msvc_x86_debug\bin"
+SET QT_DIR="C:\strawberry_msvc_x86_debug"
+SET GIO_DIR="C:\strawberry_msvc_x86_debug\lib\gio\modules"
+SET GST_DIR="C:\strawberry_msvc_x86_debug\lib\gstreamer-1.0"
 
 MKDIR "%BUILD_DIR%\platforms"
 MKDIR "%BUILD_DIR%\tls"
@@ -19,8 +19,8 @@ COPY %SOURCE_DIR%\dist\windows\*.nsh "%BUILD_DIR%\"
 COPY %SOURCE_DIR%\dist\windows\*.nsi "%BUILD_DIR%\"
 COPY %SOURCE_DIR%\dist\windows\*.ico "%BUILD_DIR%\"
 
-COPY "%BIN_DIR%\libcrypto-3-x64.dll" "%BUILD_DIR%\"
-COPY "%BIN_DIR%\libssl-3-x64.dll" "%BUILD_DIR%\"
+COPY "%BIN_DIR%\libcrypto-3.dll" "%BUILD_DIR%\"
+COPY "%BIN_DIR%\libssl-3.dll" "%BUILD_DIR%\"
 
 COPY "%BIN_DIR%\soup-2.4-1.dll" "%BUILD_DIR%\"
 COPY "%BIN_DIR%\sqlite3.exe" "%BUILD_DIR%\"
