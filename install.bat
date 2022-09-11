@@ -51,7 +51,7 @@ goto end
 
 @echo Installing Meson...
 
-"%DOWNLOADS_PATH%\meson-0.62.1-64.msi" /quiet /norestart || goto end
+"%DOWNLOADS_PATH%\meson-0.63.2-64.msi" /quiet /norestart || goto end
 
 @goto install
 

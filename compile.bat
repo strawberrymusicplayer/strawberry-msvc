@@ -180,6 +180,8 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\taglib.pc" goto taglib
 @if not exist "%PREFIX_PATH%\include\dlfcn.h" goto dlfcn-win32
 @if not exist "%PREFIX_PATH%\lib\libfftw3-3.lib" goto fftw3
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libffi.pc" goto libffi
+@rem @if not exist "%PREFIX_PATH%\lib\intl.lib" goto libintl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\glib-2.0.pc" goto glib
 @if not exist "%PREFIX_PATH%\lib\gio\modules\gioopenssl.lib" goto glib-networking
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpsl.pc" goto libpsl
@@ -237,7 +239,7 @@ cd "%BUILD_PATH%"
 
 if not exist "pkgconf-pkgconf-1.9.3" tar -xvf "%DOWNLOADS_PATH%\pkgconf-1.9.3.tar.gz" || goto end
 cd "pkgconf-pkgconf-1.9.3" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dtests=false build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --wrap-mode=nodownload -Dtests=false build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -288,7 +290,7 @@ nmake install_sw || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist gnutls mkdir gnutls || goto end
 cd gnutls || goto end
-7z x -aoa "%DOWNLOADS_PATH%\libgnutls_3.7.6_msvc17.zip" || goto end
+7z x -aoa "%DOWNLOADS_PATH%\libgnutls_3.7.7_msvc17.zip" || goto end
 xcopy /s /y "bin\x64\*.*" "%PREFIX_PATH%\bin\" || goto end
 xcopy /s /y "lib\x64\*.*" "%PREFIX_PATH%\lib\" || goto end
 if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
@@ -423,7 +425,7 @@ copy /y "include\*.h" "%PREFIX_PATH%\include\" || goto end
 cd "%BUILD_PATH%"
 if not exist "pixman-0.40.0" tar -xvf "%DOWNLOADS_PATH%\pixman-0.40.0.tar.gz" || goto end
 cd "pixman-0.40.0" || goto end
-if not exist "build\build.ninja" meson --buildtype=%BUILD_TYPE% --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dgtk=disabled -Dlibpng=enabled build || goto end
+if not exist "build\build.ninja" meson --buildtype=%BUILD_TYPE% --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dgtk=disabled -Dlibpng=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -469,8 +471,8 @@ cmake --install . || goto end
 @echo Compiling sqlite
 
 cd "%BUILD_PATH%"
-if not exist "sqlite-autoconf-3390200" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3390200.tar.gz" || goto end
-cd "sqlite-autoconf-3390200" || goto end
+if not exist "sqlite-autoconf-3390300" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3390300.tar.gz" || goto end
+cd "sqlite-autoconf-3390300" || goto end
 cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll || goto end
 cl shell.c sqlite3.c -Fe:sqlite3.exe || goto end
 copy /y "*.h" "%PREFIX_PATH%\include\" || goto end
@@ -531,8 +533,8 @@ cmake --install . || goto end
 @echo Compiling flac
 
 cd "%BUILD_PATH%"
-if not exist "flac-1.3.4" 7z x "%DOWNLOADS_PATH%\flac-1.3.4.tar.xz" -so | 7z x -aoa -si"flac-1.3.4.tar" || goto end
-cd "flac-1.3.4" || goto end
+if not exist "flac-1.4.0" 7z x "%DOWNLOADS_PATH%\flac-1.4.0.tar.xz" -so | 7z x -aoa -si"flac-1.4.0.tar" || goto end
+cd "flac-1.4.0" || goto end
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_MANPAGES=OFF -DBUILD_TESTING=OFF -DBUILD_PROGRAMS=OFF || goto end
@@ -772,6 +774,46 @@ xcopy /s /y fftw3.h "%PREFIX_PATH%\include\"
 @goto continue
 
 
+:libffi
+
+@echo Compiling libffi
+
+cd "%BUILD_PATH%"
+if not exist "libffi" @(
+  mkdir "libffi" || goto end
+  cd "libffi" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\libffi" . || goto end
+  cd ..
+ ) || goto end
+cd libffi || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
+:libintl
+
+@echo Compiling libintl
+
+cd "%BUILD_PATH%"
+if not exist "proxy-libintl" @(
+  mkdir "proxy-libintl" || goto end
+  cd "proxy-libintl" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\proxy-libintl" . || goto end
+  cd ..
+ ) || goto end
+cd proxy-libintl || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
 :glib
 
 @echo Compiling glib
@@ -779,12 +821,15 @@ xcopy /s /y fftw3.h "%PREFIX_PATH%\include\"
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "glib-2.72.3" 7z x "%DOWNLOADS_PATH%\glib-2.73.3.tar.xz" -so | 7z x -aoa -si"glib-2.73.3.tar"
+if not exist "glib-2.73.3" 7z x "%DOWNLOADS_PATH%\glib-2.73.3.tar.xz" -so | 7z x -aoa -si"glib-2.73.3.tar"
 cd "glib-2.73.3" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
+@rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@set LDFLAGS=
 
 @goto continue
 
@@ -797,7 +842,7 @@ cd "%BUILD_PATH%"
 if not exist "glib-networking-2.72.2" 7z x "%DOWNLOADS_PATH%\glib-networking-2.72.2.tar.xz" -so | 7z x -aoa -si"glib-networking-2.72.2.tar" || goto end
 cd "glib-networking-2.72.2" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/glib-networking-tests.patch"
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dgnutls=enabled -Dopenssl=enabled build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -812,7 +857,7 @@ ninja install || goto end
 cd "%BUILD_PATH%"
 if not exist "libpsl-0.21.1" tar -xvf "%DOWNLOADS_PATH%\libpsl-0.21.1.tar.gz" || goto end
 cd "libpsl-0.21.1" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -825,10 +870,9 @@ ninja install || goto end
 @echo Compiling libsoup
 
 cd "%BUILD_PATH%"
-if not exist "libsoup-3.1.3" 7z x "%DOWNLOADS_PATH%\libsoup-3.1.3.tar.xz" -so | 7z x -aoa -si"libsoup-3.1.3.tar" || goto end
-cd "libsoup-3.1.3" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%\libsoup-msvc.patch"
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
+if not exist "libsoup-3.0.8" 7z x "%DOWNLOADS_PATH%\libsoup-3.0.8.tar.xz" -so | 7z x -aoa -si"libsoup-3.0.8.tar" || goto end
+cd "libsoup-3.0.8" || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -844,7 +888,7 @@ ninja install || goto end
 cd "%BUILD_PATH%"
 if not exist "orc-0.4.32" 7z x "%DOWNLOADS_PATH%\orc-0.4.32.tar.xz" -so | 7z x -aoa -si"orc-0.4.32.tar" || goto end
 cd "orc-0.4.32" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1009,7 +1053,7 @@ if not exist "ffmpeg" @(
  ) || goto end
 cd ffmpeg || goto end
 @rem --buildtype="%BUILD_TYPE%"
-if not exist "build\build.ninja" meson --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=disabled -Dgpl=enabled build || goto end
+if not exist "build\build.ninja" meson --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dtests=disabled -Dgpl=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1041,7 +1085,7 @@ cmake --install . || goto end
 cd "%BUILD_PATH%"
 if not exist "gstreamer-1.20.3" 7z x "%DOWNLOADS_PATH%\gstreamer-1.20.3.tar.xz" -so | 7z x -aoa -si"gstreamer-1.20.3.tar" || goto end
 cd "gstreamer-1.20.3" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1056,7 +1100,7 @@ goto continue
 cd "%BUILD_PATH%"
 if not exist "gst-plugins-base-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-1.20.3.tar" || goto end
 cd "gst-plugins-base-1.20.3" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Ddoc=disabled -Dorc=enabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Dcompositor=disabled -Dencoding=disabled -Dgio=enabled -Dgio-typefinder=enabled -Doverlaycomposition=disabled -Dpbtypes=enabled -Dplayback=enabled -Drawparse=disabled -Dsubparse=disabled -Dtcp=enabled -Dtypefind=enabled -Dvideoconvert=disabled -Dvideorate=disabled -Dvideoscale=disabled -Dvideotestsrc=disabled -Dvolume=enabled -Dalsa=disabled -Dcdparanoia=disabled -Dlibvisual=disabled -Dogg=enabled -Dopus=enabled -Dpango=disabled -Dtheora=disabled -Dtremor=disabled -Dvorbis=enabled -Dx11=disabled -Dxshm=disabled -Dxvideo=disabled -Dgl=disabled -Dgl-graphene=disabled -Dgl-jpeg=disabled -Dgl-png=disabled build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Ddoc=disabled -Dorc=enabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Dcompositor=disabled -Dencoding=disabled -Dgio=enabled -Dgio-typefinder=enabled -Doverlaycomposition=disabled -Dpbtypes=enabled -Dplayback=enabled -Drawparse=disabled -Dsubparse=disabled -Dtcp=enabled -Dtypefind=enabled -Dvideoconvert=disabled -Dvideorate=disabled -Dvideoscale=disabled -Dvideotestsrc=disabled -Dvolume=enabled -Dalsa=disabled -Dcdparanoia=disabled -Dlibvisual=disabled -Dogg=enabled -Dopus=enabled -Dpango=disabled -Dtheora=disabled -Dtremor=disabled -Dvorbis=enabled -Dx11=disabled -Dxshm=disabled -Dxvideo=disabled -Dgl=disabled -Dgl-graphene=disabled -Dgl-jpeg=disabled -Dgl-png=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1071,7 +1115,7 @@ ninja install || goto end
 cd "%BUILD_PATH%"
 if not exist "gst-plugins-good-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-1.20.3.tar" || goto end
 cd "gst-plugins-good-1.20.3" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1087,11 +1131,11 @@ cd "%BUILD_PATH%"
 if not exist "gst-plugins-bad-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-1.20.3.tar" || goto end
 cd "gst-plugins-bad-1.20.3" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-libpaths.patch"
-sed -i "s/c:\\msvc_x86_64\\lib/c:\\strawberry_msvc_x86_64_debug\\lib/g" ext\faad\meson.build || goto end
-sed -i "s/c:\\msvc_x86_64\\lib/c:\\strawberry_msvc_x86_64_debug\\lib/g" ext\faac\meson.build || goto end
-sed -i "s/c:\\msvc_x86_64\\lib/c:\\strawberry_msvc_x86_64_debug\\lib/g" ext\musepack\meson.build || goto end
-sed -i "s/c:\\msvc_x86_64\\lib/c:\\strawberry_msvc_x86_64_debug\\lib/g" ext\gme\meson.build || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig  -Dexamples=disabled -Dtests=disabled -Dexamples=disabled -Dgpl=enabled -Dorc=enabled -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daiff=enabled -Dasfmux=enabled -Daudiobuffersplit=disabled -Daudiofxbad=disabled -Daudiolatency=disabled -Daudiomixmatrix=disabled -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled -Dcamerabin2=disabled -Dcodecalpha=disabled -Dcoloreffects=disabled -Ddebugutils=disabled -Ddvbsubenc=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled -Dfaceoverlay=disabled -Dfestival=disabled -Dfieldanalysis=disabled -Dfreeverb=disabled -Dfrei0r=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled -Did3tag=enabled -Dinter=disabled -Dinterlace=disabled -Divfparse=disabled -Divtc=disabled -Djp2kdecimator=disabled -Djpegformat=disabled -Dlibrfb=disabled -Dmidi=disabled -Dmpegdemux=disabled -Dmpegpsmux=disabled -Dmpegtsdemux=disabled -Dmpegtsmux=disabled -Dmxf=disabled -Dnetsim=disabled -Donvif=disabled -Dpcapparse=disabled -Dpnm=disabled -Dproxy=disabled -Dqroverlay=disabled -Drawparse=disabled -Dremovesilence=enabled -Drist=disabled -Drtmp2=disabled -Drtp=disabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled -Dspeed=disabled -Dsubenc=disabled -Dswitchbin=disabled -Dtimecode=disabled -Dvideofilters=disabled -Dvideoframe_audiolevel=disabled -Dvideoparsers=disabled -Dvideosignal=disabled -Dvmnc=disabled -Dy4m=disabled -Dopencv=disabled -Dwayland=disabled -Dx11=disabled -Daes=enabled -Daom=disabled -Davtp=disabled -Dandroidmedia=disabled -Dapplemedia=disabled -Dasio=disabled -Dassrender=disabled -Dbluez=enabled -Dbs2b=enabled -Dbz2=disabled -Dchromaprint=enabled -Dclosedcaption=disabled -Dcolormanagement=disabled -Dcurl=disabled -Dcurl-ssh2=disabled -Dd3dvideosink=disabled -Dd3d11=disabled -Ddash=enabled -Ddc1394=disabled -Ddecklink=disabled -Ddirectfb=disabled -Ddirectsound=enabled -Ddtls=disabled -Ddts=disabled -Ddvb=disabled -Dfaac=enabled -Dfaad=enabled -Dfbdev=disabled -Dfdkaac=enabled -Dflite=disabled -Dfluidsynth=disabled -Dgl=disabled -Dgme=enabled -Dgs=disabled -Dgsm=disabled -Dipcpipeline=disabled -Diqa=disabled -Dkate=disabled -Dkms=disabled -Dladspa=disabled -Dldac=disabled -Dlibde265=disabled -Dopenaptx=disabled -Dlv2=disabled -Dmediafoundation=disabled -Dmicrodns=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=enabled -Dneon=disabled -Dnvcodec=disabled -Donnx=disabled -Dopenal=disabled -Dopenexr=disabled -Dopenh264=disabled -Dopenjpeg=disabled -Dopenmpt=enabled -Dopenni2=disabled -Dopensles=disabled -Dopus=enabled -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsbc=disabled -Dsctp=disabled -Dshm=disabled -Dsmoothstreaming=disabled -Dsndfile=disabled -Dsoundtouch=disabled -Dspandsp=disabled -Dsrt=disabled -Dsrtp=disabled -Dsvthevcenc=disabled -Dteletext=disabled -Dtinyalsa=disabled -Dtranscode=disabled -Dttml=disabled -Duvch264=disabled -Dva=disabled -Dvoaacenc=disabled -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=enabled -Dwasapi2=enabled -Dwebp=disabled -Dwebrtc=disabled -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwinks=disabled -Dwinscreencap=disabled -Dx265=disabled -Dzbar=disabled -Dzxing=disabled -Dwpe=disabled -Dmagicleap=disabled -Dv4l2codecs=disabled -Disac=disabled -Dhls=enabled -Dhls-crypto=openssl build || goto end
+sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faad\meson.build || goto end
+sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faac\meson.build || goto end
+sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\musepack\meson.build || goto end
+sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\gme\meson.build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dexamples=disabled -Dgpl=enabled -Dorc=enabled -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daiff=enabled -Dasfmux=enabled -Daudiobuffersplit=disabled -Daudiofxbad=disabled -Daudiolatency=disabled -Daudiomixmatrix=disabled -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled -Dcamerabin2=disabled -Dcodecalpha=disabled -Dcoloreffects=disabled -Ddebugutils=disabled -Ddvbsubenc=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled -Dfaceoverlay=disabled -Dfestival=disabled -Dfieldanalysis=disabled -Dfreeverb=disabled -Dfrei0r=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled -Did3tag=enabled -Dinter=disabled -Dinterlace=disabled -Divfparse=disabled -Divtc=disabled -Djp2kdecimator=disabled -Djpegformat=disabled -Dlibrfb=disabled -Dmidi=disabled -Dmpegdemux=disabled -Dmpegpsmux=disabled -Dmpegtsdemux=disabled -Dmpegtsmux=disabled -Dmxf=disabled -Dnetsim=disabled -Donvif=disabled -Dpcapparse=disabled -Dpnm=disabled -Dproxy=disabled -Dqroverlay=disabled -Drawparse=disabled -Dremovesilence=enabled -Drist=disabled -Drtmp2=disabled -Drtp=disabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled -Dspeed=disabled -Dsubenc=disabled -Dswitchbin=disabled -Dtimecode=disabled -Dvideofilters=disabled -Dvideoframe_audiolevel=disabled -Dvideoparsers=disabled -Dvideosignal=disabled -Dvmnc=disabled -Dy4m=disabled -Dopencv=disabled -Dwayland=disabled -Dx11=disabled -Daes=enabled -Daom=disabled -Davtp=disabled -Dandroidmedia=disabled -Dapplemedia=disabled -Dasio=disabled -Dassrender=disabled -Dbluez=enabled -Dbs2b=enabled -Dbz2=disabled -Dchromaprint=enabled -Dclosedcaption=disabled -Dcolormanagement=disabled -Dcurl=disabled -Dcurl-ssh2=disabled -Dd3dvideosink=disabled -Dd3d11=disabled -Ddash=enabled -Ddc1394=disabled -Ddecklink=disabled -Ddirectfb=disabled -Ddirectsound=enabled -Ddtls=disabled -Ddts=disabled -Ddvb=disabled -Dfaac=enabled -Dfaad=enabled -Dfbdev=disabled -Dfdkaac=enabled -Dflite=disabled -Dfluidsynth=disabled -Dgl=disabled -Dgme=enabled -Dgs=disabled -Dgsm=disabled -Dipcpipeline=disabled -Diqa=disabled -Dkate=disabled -Dkms=disabled -Dladspa=disabled -Dldac=disabled -Dlibde265=disabled -Dopenaptx=disabled -Dlv2=disabled -Dmediafoundation=disabled -Dmicrodns=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=enabled -Dneon=disabled -Dnvcodec=disabled -Donnx=disabled -Dopenal=disabled -Dopenexr=disabled -Dopenh264=disabled -Dopenjpeg=disabled -Dopenmpt=enabled -Dopenni2=disabled -Dopensles=disabled -Dopus=enabled -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsbc=disabled -Dsctp=disabled -Dshm=disabled -Dsmoothstreaming=disabled -Dsndfile=disabled -Dsoundtouch=disabled -Dspandsp=disabled -Dsrt=disabled -Dsrtp=disabled -Dsvthevcenc=disabled -Dteletext=disabled -Dtinyalsa=disabled -Dtranscode=disabled -Dttml=disabled -Duvch264=disabled -Dva=disabled -Dvoaacenc=disabled -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=enabled -Dwasapi2=enabled -Dwebp=disabled -Dwebrtc=disabled -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwinks=disabled -Dwinscreencap=disabled -Dx265=disabled -Dzbar=disabled -Dzxing=disabled -Dwpe=disabled -Dmagicleap=disabled -Dv4l2codecs=disabled -Disac=disabled -Dhls=enabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1106,7 +1150,7 @@ ninja install || goto end
 cd "%BUILD_PATH%"
 if not exist "gst-plugins-ugly-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-1.20.3.tar" || goto end
 cd "gst-plugins-ugly-1.20.3" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dorc=enabled -Dasfdemux=enabled -Ddvdlpcmdec=disabled -Ddvdsub=disabled -Drealmedia=disabled -Dxingmux=enabled -Da52dec=disabled -Damrnb=disabled -Damrwbdec=disabled -Dcdio=disabled -Ddvdread=disabled -Dmpeg2dec=disabled -Dsidplay=disabled -Dx264=disabled build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dorc=enabled -Dasfdemux=enabled -Ddvdlpcmdec=disabled -Ddvdsub=disabled -Drealmedia=disabled -Dxingmux=enabled -Da52dec=disabled -Damrnb=disabled -Damrwbdec=disabled -Dcdio=disabled -Ddvdread=disabled -Dmpeg2dec=disabled -Dsidplay=disabled -Dx264=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1121,7 +1165,7 @@ ninja install || goto end
 cd "%BUILD_PATH%"
 if not exist "gst-libav-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-libav-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-libav-1.20.3.tar" || goto end
 cd "gst-libav-1.20.3" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig -Dtests=disabled -Ddoc=disabled build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1208,7 +1252,7 @@ cd "%BUILD_PATH%"
 if not exist "harfbuzz-5.1.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-5.1.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-5.1.0.tar" || goto end
 cd "harfbuzz-5.1.0" || goto end
 
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1245,8 +1289,8 @@ echo "" > "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ"
 @echo Compiling qtbase
 
 cd "%BUILD_PATH%"
-if not exist "qtbase-everywhere-src-6.3.1" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-6.3.1.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-6.3.1.tar" || goto end
-cd "qtbase-everywhere-src-6.3.1" || goto end
+if not exist "qtbase-everywhere-src-6.3.2" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-6.3.2.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-6.3.2.tar" || goto end
+cd "qtbase-everywhere-src-6.3.2" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/qtbase-pcre2.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -1262,8 +1306,8 @@ cmake --install . || goto end
 @echo Compiling qttools
 
 cd "%BUILD_PATH%"
-if not exist "qttools-everywhere-src-6.3.1" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-6.3.1.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-6.3.1.tar" || goto end
-cd "qttools-everywhere-src-6.3.1" || goto end
+if not exist "qttools-everywhere-src-6.3.2" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-6.3.2.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-6.3.2.tar" || goto end
+cd "qttools-everywhere-src-6.3.2" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 call %PREFIX_PATH%\bin\qt-configure-module.bat .. || goto end
@@ -1391,6 +1435,7 @@ copy /y "%prefix_path%\bin\libssl-3-x64.dll" || goto end
 copy /y "%prefix_path%\bin\libxml2*.dll" || goto end
 copy /y "%prefix_path%\bin\mpcdec.dll" || goto end
 copy /y "%prefix_path%\bin\mpg123.dll" || goto end
+copy /y "%prefix_path%\bin\nghttp2.dll" || goto end
 copy /y "%prefix_path%\bin\ogg.dll" || goto end
 copy /y "%prefix_path%\bin\opus.dll" || goto end
 copy /y "%prefix_path%\bin\orc-0.4-0.dll" || goto end
