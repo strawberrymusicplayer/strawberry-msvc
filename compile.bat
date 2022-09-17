@@ -205,9 +205,8 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%PREFIX_PATH%\lib\icuio*.lib" goto icu4c
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\expat.pc" goto expat
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\freetype2.pc" goto freetype_bootstrap
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\freetype2.pc" goto freetype
 @if not exist "%PREFIX_PATH%\lib\harfbuzz*.lib" goto harfbuzz
-@if not exist "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ" goto freetype
 
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
@@ -304,7 +303,7 @@ xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 @echo Name: gnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Description: gnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo URL: https://www.gnutls.org/ >> %PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Version: 3.7.3 >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Version: 3.7.7 >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lgnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 
@@ -316,9 +315,9 @@ xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 @echo Compiling libpng
 
 cd "%BUILD_PATH%"
-if not exist "libpng-1.6.37" tar -xvf "%DOWNLOADS_PATH%\libpng-1.6.37.tar.gz" || goto end
-cd "libpng-1.6.37" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/libpng-msvc.patch"
+if not exist "libpng-1.6.38" tar -xvf "%DOWNLOADS_PATH%\libpng-1.6.38.tar.gz" || goto end
+cd "libpng-1.6.38" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/libpng-pkgconf.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" || goto end
@@ -351,8 +350,10 @@ cmake --install . || goto end
 @echo Compiling xz
 
 cd "%BUILD_PATH%"
-if not exist "xz-5.2.5" tar -xvf "%DOWNLOADS_PATH%\xz-5.2.5.tar.bz2" || goto end
-cd xz-5.2.5\windows\vs2019 || goto end
+if not exist "xz-5.2.6" tar -xvf "%DOWNLOADS_PATH%\xz-5.2.6.tar.bz2" || goto end
+cd xz-5.2.6 || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%\xz-config.patch"
+cd windows\vs2019 || goto end
 start /w devenv.exe xz_win.sln /upgrade
 msbuild xz_win.sln /property:Configuration=%BUILD_TYPE% || goto end
 copy /y "%BUILD_TYPE%\x64\liblzma_dll\*.lib" "%PREFIX_PATH%\lib\" || goto end
@@ -821,8 +822,8 @@ ninja install || goto end
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "glib-2.73.3" 7z x "%DOWNLOADS_PATH%\glib-2.73.3.tar.xz" -so | 7z x -aoa -si"glib-2.73.3.tar"
-cd "glib-2.73.3" || goto end
+if not exist "glib-2.74.0" 7z x "%DOWNLOADS_PATH%\glib-2.74.0.tar.xz" -so | 7z x -aoa -si"glib-2.74.0.tar"
+cd "glib-2.74.0" || goto end
 @rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
@@ -839,8 +840,8 @@ ninja install || goto end
 @echo Compiling glib-networking
 
 cd "%BUILD_PATH%"
-if not exist "glib-networking-2.72.2" 7z x "%DOWNLOADS_PATH%\glib-networking-2.72.2.tar.xz" -so | 7z x -aoa -si"glib-networking-2.72.2.tar" || goto end
-cd "glib-networking-2.72.2" || goto end
+if not exist "glib-networking-2.74.0" 7z x "%DOWNLOADS_PATH%\glib-networking-2.74.0.tar.xz" -so | 7z x -aoa -si"glib-networking-2.74.0.tar" || goto end
+cd "glib-networking-2.74.0" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/glib-networking-tests.patch"
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled build || goto end
 cd build || goto end
@@ -870,8 +871,8 @@ ninja install || goto end
 @echo Compiling libsoup
 
 cd "%BUILD_PATH%"
-if not exist "libsoup-3.0.8" 7z x "%DOWNLOADS_PATH%\libsoup-3.0.8.tar.xz" -so | 7z x -aoa -si"libsoup-3.0.8.tar" || goto end
-cd "libsoup-3.0.8" || goto end
+if not exist "libsoup-3.2.0" 7z x "%DOWNLOADS_PATH%\libsoup-3.2.0.tar.xz" -so | 7z x -aoa -si"libsoup-3.2.0.tar" || goto end
+cd "libsoup-3.2.0" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --pkg-config-path=%PREFIX_PATH%\lib\pkgconfig --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
 cd build || goto end
 ninja || goto end
@@ -1178,8 +1179,8 @@ ninja install || goto end
 @echo Compiling protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.5" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.5.tar.gz" || goto end
-cd "protobuf-3.21.5\cmake" || goto end
+if not exist "protobuf-3.21.6" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.6.tar.gz" || goto end
+cd "protobuf-3.21.6\cmake" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF || goto end
@@ -1226,9 +1227,9 @@ cmake --install . || goto end
 @goto continue
 
 
-:freetype_bootstrap
+:freetype
 
-@echo Compiling freetype (bootstrap)
+@echo Compiling freetype without harfbuzz
 
 cd "%BUILD_PATH%"
 if not exist "freetype-2.12.1" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.1.tar.gz" || goto end
@@ -1238,6 +1239,7 @@ cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
+copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 del "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ"
 
@@ -1248,27 +1250,24 @@ del "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ"
 
 @echo Compiling harfbuzz
 
+@set LDFLAGS="-L%PREFIX_PATH%\lib"
+
 cd "%BUILD_PATH%"
-if not exist "harfbuzz-5.1.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-5.1.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-5.1.0.tar" || goto end
-cd "harfbuzz-5.1.0" || goto end
+if not exist "harfbuzz-5.2.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-5.2.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-5.2.0.tar" || goto end
+cd "harfbuzz-5.2.0" || goto end
 
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
-@rem if not exist build mkdir build || goto end
+@rem if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 @rem cd build || goto end
-@rem cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON || goto end
-@rem cmake --build . || goto end
-@rem cmake --install . || goto end
+@rem ninja || goto end
+@rem ninja install || goto end
 
-@goto continue
+if not exist build mkdir build || goto end
+cd build || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON -DICU_ROOT="%PREFIX_PATH%" || goto end
+cmake --build . || goto end
+cmake --install . || goto end
 
-
-:freetype
-
-@echo Compiling freetype
+@echo Compiling freetype with harfbuzz
 
 cd "%BUILD_PATH%"
 if not exist "freetype-2.12.1" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.1.tar.gz" || goto end
@@ -1278,10 +1277,11 @@ cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-echo "" > "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ"
+copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 @goto continue
 
+@set LDFLAGS=
 
 
 :qtbase
@@ -1293,7 +1293,7 @@ if not exist "qtbase-everywhere-src-6.3.2" 7z x "%DOWNLOADS_PATH%\qtbase-everywh
 cd "qtbase-everywhere-src-6.3.2" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH%\bin\pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=OFF -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON || goto end
+cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH%\bin\pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=OFF -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1307,6 +1307,7 @@ cmake --install . || goto end
 cd "%BUILD_PATH%"
 if not exist "qttools-everywhere-src-6.3.2" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-6.3.2.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-6.3.2.tar" || goto end
 cd "qttools-everywhere-src-6.3.2" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/qttools-designer.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
 call %PREFIX_PATH%\bin\qt-configure-module.bat .. || goto end
@@ -1364,7 +1365,7 @@ if not exist "strawberry" @(
 cd "strawberry" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH%\lib\cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DARCH=x86_64 -DENABLE_TRANSLATIONS=OFF -DENABLE_WIN32_CONSOLE=OFF || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH%\lib\cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DARCH=x86_64 -DENABLE_TRANSLATIONS=OFF -DENABLE_WIN32_CONSOLE=OFF -DICU_ROOT="%PREFIX_PATH%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 

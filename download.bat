@@ -56,10 +56,10 @@ https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.3.tar.gz
 https://zlib.net/zlib-1.2.12.tar.gz
 https://www.openssl.org/source/openssl-3.0.5.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/3.7.7/libgnutls_3.7.7_msvc17.zip
-https://downloads.sourceforge.net/project/libpng/libpng16/1.6.37/libpng-1.6.37.tar.gz
+https://downloads.sourceforge.net/project/libpng/libpng16/1.6.38/libpng-1.6.38.tar.gz
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-https://tukaani.org/xz/xz-5.2.5.tar.bz2
+https://tukaani.org/xz/xz-5.2.6.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.40.0.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.10.2/libxml2-v2.10.2.tar.bz2
@@ -78,10 +78,10 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
 https://www.fftw.org/fftw-3.3.10.tar.gz
 https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.73/glib-2.73.3.tar.xz
-https://download.gnome.org/sources/glib-networking/2.72/glib-networking-2.72.2.tar.xz
+https://download.gnome.org/sources/glib/2.74/glib-2.74.0.tar.xz
+https://download.gnome.org/sources/glib-networking/2.74/glib-networking-2.74.0.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/0.21.1/libpsl-0.21.1.tar.gz
-https://download.gnome.org/sources/libsoup/3.0/libsoup-3.0.8.tar.xz
+https://download.gnome.org/sources/libsoup/3.2/libsoup-3.2.0.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-0.4.32.tar.xz
 https://files.musepack.net/source/musepack_src_r475.tar.gz
 https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.5+release.msvc.zip
@@ -93,12 +93,12 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.20.3.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.20.3.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.20.3.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.20.3.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v21.5/protobuf-cpp-3.21.5.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v21.6/protobuf-cpp-3.21.6.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.4.8/expat-2.4.8.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.12.1/freetype-2.12.1.tar.gz
-https://github.com/unicode-org/icu/archive/release-70-1.tar.gz
+https://github.com/unicode-org/icu/archive/release-71-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
-https://github.com/harfbuzz/harfbuzz/releases/download/5.1.0/harfbuzz-5.1.0.tar.xz
+https://github.com/harfbuzz/harfbuzz/releases/download/5.2.0/harfbuzz-5.2.0.tar.xz
 https://download.qt.io/official_releases/qt/6.3/6.3.2/submodules/qtbase-everywhere-src-6.3.2.tar.xz
 https://download.qt.io/official_releases/qt/6.3/6.3.2/submodules/qttools-everywhere-src-6.3.2.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
@@ -115,7 +115,7 @@ https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit.msi
 https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe
 https://www.7-zip.org/a/7z2107-x64.exe
 https://files.jkvinge.net/winbins/sed.exe
-https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-msvc.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-pkgconf.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/opusfile-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/speex-cmake.patch
@@ -130,6 +130,8 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/icu-fixes.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libsoup-msvc.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qttools-designer.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/xz-config.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx
