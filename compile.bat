@@ -456,8 +456,8 @@ cmake --install . || goto end
 @echo Compiling nghttp2
 
 cd "%BUILD_PATH%"
-if not exist "nghttp2-1.49.0" tar -xvf "%DOWNLOADS_PATH%\nghttp2-1.49.0.tar.bz2" || goto end
-cd "nghttp2-1.49.0" || goto end
+if not exist "nghttp2-1.50.0" tar -xvf "%DOWNLOADS_PATH%\nghttp2-1.50.0.tar.bz2" || goto end
+cd "nghttp2-1.50.0" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DENABLE_SHARED_LIB=ON || goto end
@@ -534,8 +534,8 @@ cmake --install . || goto end
 @echo Compiling flac
 
 cd "%BUILD_PATH%"
-if not exist "flac-1.4.0" 7z x "%DOWNLOADS_PATH%\flac-1.4.0.tar.xz" -so | 7z x -aoa -si"flac-1.4.0.tar" || goto end
-cd "flac-1.4.0" || goto end
+if not exist "flac-1.4.1" 7z x "%DOWNLOADS_PATH%\flac-1.4.1.tar.xz" -so | 7z x -aoa -si"flac-1.4.1.tar" || goto end
+cd "flac-1.4.1" || goto end
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_MANPAGES=OFF -DBUILD_TESTING=OFF -DBUILD_PROGRAMS=OFF || goto end
@@ -926,7 +926,7 @@ cd "%BUILD_PATH%"
 if not exist "libopenmpt" @(
   mkdir libopenmpt || goto end
   cd libopenmpt || goto end
-  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.5+release.msvc.zip" || goto end
+  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.6+release.msvc.zip" || goto end
   cd ..
  ) || goto end
 cd "libopenmpt" || goto end
@@ -1216,8 +1216,8 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 @echo Compiling expat
 
 cd "%BUILD_PATH%"
-if not exist "expat-2.4.8" tar -xvf "%DOWNLOADS_PATH%\expat-2.4.8.tar.bz2" || goto end
-cd "expat-2.4.8" || goto end
+if not exist "expat-2.4.9" tar -xvf "%DOWNLOADS_PATH%\expat-2.4.9.tar.bz2" || goto end
+cd "expat-2.4.9" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DEXPAT_SHARED_LIBS=ON -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_FUZZERS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_PKGCONFIG=ON || goto end
@@ -1236,12 +1236,10 @@ if not exist "freetype-2.12.1" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.1.tar.gz
 cd "freetype-2.12.1" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
-
-del "%PREFIX_PATH%\lib\FREETYPE_HARFBUZZ"
 
 @goto continue
 
@@ -1256,16 +1254,16 @@ cd "%BUILD_PATH%"
 if not exist "harfbuzz-5.2.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-5.2.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-5.2.0.tar" || goto end
 cd "harfbuzz-5.2.0" || goto end
 
-@rem if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH% --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
-@rem cd build || goto end
-@rem ninja || goto end
-@rem ninja install || goto end
-
-if not exist build mkdir build || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix=%PREFIX_PATH_FORWARD% --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON -DICU_ROOT="%PREFIX_PATH%" || goto end
-cmake --build . || goto end
-cmake --install . || goto end
+ninja || goto end
+ninja install || goto end
+
+@rem if not exist build mkdir build || goto end
+@rem cd build || goto end
+@rem cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
+@rem cmake --build . || goto end
+@rem cmake --install . || goto end
 
 @echo Compiling freetype with harfbuzz
 
@@ -1274,7 +1272,7 @@ if not exist "freetype-2.12.1" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.1.tar.gz
 cd "freetype-2.12.1" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
@@ -1293,7 +1291,7 @@ if not exist "qtbase-everywhere-src-6.3.2" 7z x "%DOWNLOADS_PATH%\qtbase-everywh
 cd "qtbase-everywhere-src-6.3.2" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH%\bin\pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=OFF -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH%" || goto end
+cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH_FORWARD%/bin/pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=OFF -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1310,7 +1308,7 @@ cd "qttools-everywhere-src-6.3.2" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/qttools-designer.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
-call %PREFIX_PATH%\bin\qt-configure-module.bat .. || goto end
+call %PREFIX_PATH%\bin\qt-configure-module.bat .. -feature-linguist -no-feature-assistant -no-feature-designer || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
