@@ -158,6 +158,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\libssl-3-x64.dll" goto openssl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc" goto gnutls
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpng.pc" goto libpng
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libjpeg.pc" goto libjpeg
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\bzip2.pc" goto bzip2
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpcre2-16.pc" goto pcre2
 @if not exist "%PREFIX_PATH%\lib\liblzma.lib" goto xz
@@ -328,6 +329,22 @@ cmake --install . || goto end
 @goto continue
 
 
+:libjpeg
+
+@echo Compiling libjpeg
+
+cd "%BUILD_PATH%"
+if not exist "libjpeg-turbo-2.1.4" tar -xvf "%DOWNLOADS_PATH%\libjpeg-turbo-2.1.4.tar.gz" || goto end
+cd "libjpeg-turbo-2.1.4" || goto end
+if not exist build mkdir build || goto end
+cd build || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DENABLE_SHARED=ON || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
 :bzip2
 
 @echo Compiling bzip2
@@ -350,8 +367,8 @@ cmake --install . || goto end
 @echo Compiling xz
 
 cd "%BUILD_PATH%"
-if not exist "xz-5.2.6" tar -xvf "%DOWNLOADS_PATH%\xz-5.2.6.tar.bz2" || goto end
-cd xz-5.2.6 || goto end
+if not exist "xz-5.2.7" tar -xvf "%DOWNLOADS_PATH%\xz-5.2.7.tar.bz2" || goto end
+cd xz-5.2.7 || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\xz-config.patch"
 cd windows\vs2019 || goto end
 start /w devenv.exe xz_win.sln /upgrade
@@ -472,8 +489,8 @@ cmake --install . || goto end
 @echo Compiling sqlite
 
 cd "%BUILD_PATH%"
-if not exist "sqlite-autoconf-3390300" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3390300.tar.gz" || goto end
-cd "sqlite-autoconf-3390300" || goto end
+if not exist "sqlite-autoconf-3390400" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3390400.tar.gz" || goto end
+cd "sqlite-autoconf-3390400" || goto end
 cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll || goto end
 cl shell.c sqlite3.c -Fe:sqlite3.exe || goto end
 copy /y "*.h" "%PREFIX_PATH%\include\" || goto end
@@ -1179,8 +1196,8 @@ ninja install || goto end
 @echo Compiling protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.6" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.6.tar.gz" || goto end
-cd "protobuf-3.21.6\cmake" || goto end
+if not exist "protobuf-3.21.7" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.7.tar.gz" || goto end
+cd "protobuf-3.21.7\cmake" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF || goto end
@@ -1287,11 +1304,11 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 @echo Compiling qtbase
 
 cd "%BUILD_PATH%"
-if not exist "qtbase-everywhere-src-6.3.2" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-6.3.2.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-6.3.2.tar" || goto end
-cd "qtbase-everywhere-src-6.3.2" || goto end
+if not exist "qtbase-everywhere-src-6.4.0" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-6.4.0.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-6.4.0.tar" || goto end
+cd "qtbase-everywhere-src-6.4.0" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH_FORWARD%/bin/pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=OFF -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
+cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH_FORWARD%/bin/pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_brotli=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_schannel=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=ON -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1303,9 +1320,8 @@ cmake --install . || goto end
 @echo Compiling qttools
 
 cd "%BUILD_PATH%"
-if not exist "qttools-everywhere-src-6.3.2" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-6.3.2.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-6.3.2.tar" || goto end
-cd "qttools-everywhere-src-6.3.2" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/qttools-designer.patch"
+if not exist "qttools-everywhere-src-6.4.0" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-6.4.0.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-6.4.0.tar" || goto end
+cd "qttools-everywhere-src-6.4.0" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 call %PREFIX_PATH%\bin\qt-configure-module.bat .. -feature-linguist -no-feature-assistant -no-feature-designer || goto end
