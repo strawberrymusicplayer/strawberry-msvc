@@ -163,7 +163,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpcre2-16.pc" goto pcre2
 @if not exist "%PREFIX_PATH%\lib\liblzma.lib" goto xz
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libbrotlicommon.pc" goto brotli
-@if not exist "%PREFIX_PATH%\lib\libiconv.lib" goto libiconv
+@if not exist "%PREFIX_PATH%\lib\libiconv*.lib" goto libiconv
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\pixman-1.pc" goto pixman
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libxml-2.0.pc" goto libxml2
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libnghttp2.pc" goto nghttp2
@@ -254,8 +254,8 @@ copy /y "%PREFIX_PATH%\bin\pkgconf.exe" "%PREFIX_PATH%\bin\pkg-config.exe" || go
 @echo Compiling zlib
 
 cd "%BUILD_PATH%" || goto end
-if not exist "zlib-1.2.12" tar -xvf "%DOWNLOADS_PATH%\zlib-1.2.12.tar.gz" || goto end
-cd "zlib-1.2.12" || goto end
+if not exist "zlib-1.2.13" tar -xvf "%DOWNLOADS_PATH%\zlib-1.2.13.tar.gz" || goto end
+cd "zlib-1.2.13" || goto end
 if not exist build mkdir build
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
@@ -429,9 +429,10 @@ if not exist "libiconv-for-Windows" @(
 ) || goto end
 cd libiconv-for-Windows || goto end
 msbuild libiconv.sln /property:Configuration=%BUILD_TYPE% || goto end
-copy /y "lib64\*.lib" "%PREFIX_PATH%\lib\" || goto end
-copy /y "lib64\*.dll" "%PREFIX_PATH%\bin\" || goto end
+copy /y "output\x64\%BUILD_TYPE%\*.lib" "%PREFIX_PATH%\lib\" || goto end
+copy /y "output\x64\%BUILD_TYPE%\*.dll" "%PREFIX_PATH%\bin\" || goto end
 copy /y "include\*.h" "%PREFIX_PATH%\include\" || goto end
+@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\libiconvD.lib" "%PREFIX_PATH%\lib\libiconv.lib"
 
 @goto continue
 
@@ -441,8 +442,8 @@ copy /y "include\*.h" "%PREFIX_PATH%\include\" || goto end
 @echo Compiling pixman
 
 cd "%BUILD_PATH%"
-if not exist "pixman-0.40.0" tar -xvf "%DOWNLOADS_PATH%\pixman-0.40.0.tar.gz" || goto end
-cd "pixman-0.40.0" || goto end
+if not exist "pixman-0.42.0" tar -xvf "%DOWNLOADS_PATH%\pixman-0.42.0.tar.gz" || goto end
+cd "pixman-0.42.0" || goto end
 if not exist "build\build.ninja" meson --buildtype=%BUILD_TYPE% --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgtk=disabled -Dlibpng=enabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -456,8 +457,8 @@ ninja install || goto end
 @echo Compiling libxml2
 
 cd "%BUILD_PATH%"
-if not exist "libxml2-v2.10.2" tar -xvf "%DOWNLOADS_PATH%\libxml2-v2.10.2.tar.bz2"
-cd "libxml2-v2.10.2" || goto end
+if not exist "libxml2-v2.10.3" tar -xvf "%DOWNLOADS_PATH%\libxml2-v2.10.3.tar.bz2"
+cd "libxml2-v2.10.3" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DLIBXML2_WITH_PYTHON=OFF -DLIBXML2_WITH_ZLIB=ON || goto end
@@ -553,6 +554,7 @@ cmake --install . || goto end
 cd "%BUILD_PATH%"
 if not exist "flac-1.4.1" 7z x "%DOWNLOADS_PATH%\flac-1.4.1.tar.xz" -so | 7z x -aoa -si"flac-1.4.1.tar" || goto end
 cd "flac-1.4.1" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/flac-seek.patch"
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_MANPAGES=OFF -DBUILD_TESTING=OFF -DBUILD_PROGRAMS=OFF || goto end
@@ -628,13 +630,8 @@ cmake --install . || goto end
 @echo Compiling speex
 
 cd "%BUILD_PATH%"
-if not exist "speex" @(
-  mkdir speex || goto end
-  cd speex || goto end
-  xcopy /s /y /h "%DOWNLOADS_PATH%\speex" . || goto end
-  cd .. || goto end
-) || goto end
-cd "speex" || goto end
+if not exist "speex-Speex-1.2.1" tar -xvf "%DOWNLOADS_PATH%\speex-Speex-1.2.1.tar.gz" || goto end
+cd "speex-Speex-1.2.1" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/speex-cmake.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -888,8 +885,8 @@ ninja install || goto end
 @echo Compiling libsoup
 
 cd "%BUILD_PATH%"
-if not exist "libsoup-3.2.0" 7z x "%DOWNLOADS_PATH%\libsoup-3.2.0.tar.xz" -so | 7z x -aoa -si"libsoup-3.2.0.tar" || goto end
-cd "libsoup-3.2.0" || goto end
+if not exist "libsoup-3.2.1" 7z x "%DOWNLOADS_PATH%\libsoup-3.2.1.tar.xz" -so | 7z x -aoa -si"libsoup-3.2.1.tar" || goto end
+cd "libsoup-3.2.1" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
 cd build || goto end
 ninja || goto end
@@ -997,13 +994,8 @@ cmake --install . || goto end
 @echo Compiling faad2
 
 cd "%BUILD_PATH%"
-if not exist "faad2" @(
-  mkdir "faad2" || goto end
-  cd "faad2" || goto end
-  xcopy /s /y /h "%DOWNLOADS_PATH%\faad2" . || goto end
-  cd ..
- ) || goto end
-cd "faad2" || goto end
+if not exist "knik0-faad2-*" tar -xvf "%DOWNLOADS_PATH%\faad2-2.10.1.tar.gz" || goto end
+cd "knik0-faad2-*" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\faad2-cmake.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -1101,8 +1093,8 @@ cmake --install . || goto end
 @echo Compiling GStreamer
 
 cd "%BUILD_PATH%"
-if not exist "gstreamer-1.20.3" 7z x "%DOWNLOADS_PATH%\gstreamer-1.20.3.tar.xz" -so | 7z x -aoa -si"gstreamer-1.20.3.tar" || goto end
-cd "gstreamer-1.20.3" || goto end
+if not exist "gstreamer-1.20.4" 7z x "%DOWNLOADS_PATH%\gstreamer-1.20.4.tar.xz" -so | 7z x -aoa -si"gstreamer-1.20.4.tar" || goto end
+cd "gstreamer-1.20.4" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
@@ -1116,8 +1108,8 @@ goto continue
 @echo Compiling gst-plugins-base
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-base-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-1.20.3.tar" || goto end
-cd "gst-plugins-base-1.20.3" || goto end
+if not exist "gst-plugins-base-1.20.4" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-1.20.4.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-1.20.4.tar" || goto end
+cd "gst-plugins-base-1.20.4" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Ddoc=disabled -Dorc=enabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Dcompositor=disabled -Dencoding=disabled -Dgio=enabled -Dgio-typefinder=enabled -Doverlaycomposition=disabled -Dpbtypes=enabled -Dplayback=enabled -Drawparse=disabled -Dsubparse=disabled -Dtcp=enabled -Dtypefind=enabled -Dvideoconvert=disabled -Dvideorate=disabled -Dvideoscale=disabled -Dvideotestsrc=disabled -Dvolume=enabled -Dalsa=disabled -Dcdparanoia=disabled -Dlibvisual=disabled -Dogg=enabled -Dopus=enabled -Dpango=disabled -Dtheora=disabled -Dtremor=disabled -Dvorbis=enabled -Dx11=disabled -Dxshm=disabled -Dxvideo=disabled -Dgl=disabled -Dgl-graphene=disabled -Dgl-jpeg=disabled -Dgl-png=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1131,8 +1123,8 @@ ninja install || goto end
 @echo Compiling gst-plugins-good
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-good-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-1.20.3.tar" || goto end
-cd "gst-plugins-good-1.20.3" || goto end
+if not exist "gst-plugins-good-1.20.4" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-1.20.4.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-1.20.4.tar" || goto end
+cd "gst-plugins-good-1.20.4" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1146,8 +1138,8 @@ ninja install || goto end
 @echo Compiling gst-plugins-bad
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-bad-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-1.20.3.tar" || goto end
-cd "gst-plugins-bad-1.20.3" || goto end
+if not exist "gst-plugins-bad-1.20.4" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-1.20.4.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-1.20.4.tar" || goto end
+cd "gst-plugins-bad-1.20.4" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-libpaths.patch"
 sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faad\meson.build || goto end
 sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faac\meson.build || goto end
@@ -1166,8 +1158,8 @@ ninja install || goto end
 @echo Compiling gst-plugins-ugly
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-ugly-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-1.20.3.tar" || goto end
-cd "gst-plugins-ugly-1.20.3" || goto end
+if not exist "gst-plugins-ugly-1.20.4" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-1.20.4.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-1.20.4.tar" || goto end
+cd "gst-plugins-ugly-1.20.4" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dorc=enabled -Dasfdemux=enabled -Ddvdlpcmdec=disabled -Ddvdsub=disabled -Drealmedia=disabled -Dxingmux=enabled -Da52dec=disabled -Damrnb=disabled -Damrwbdec=disabled -Dcdio=disabled -Ddvdread=disabled -Dmpeg2dec=disabled -Dsidplay=disabled -Dx264=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1181,8 +1173,8 @@ ninja install || goto end
 @echo Compiling gst-libav
 
 cd "%BUILD_PATH%"
-if not exist "gst-libav-1.20.3" 7z x "%DOWNLOADS_PATH%\gst-libav-1.20.3.tar.xz" -so | 7z x -aoa -si"gst-libav-1.20.3.tar" || goto end
-cd "gst-libav-1.20.3" || goto end
+if not exist "gst-libav-1.20.4" 7z x "%DOWNLOADS_PATH%\gst-libav-1.20.4.tar.xz" -so | 7z x -aoa -si"gst-libav-1.20.4.tar" || goto end
+cd "gst-libav-1.20.4" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1196,8 +1188,8 @@ ninja install || goto end
 @echo Compiling protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.7" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.7.tar.gz" || goto end
-cd "protobuf-3.21.7\cmake" || goto end
+if not exist "protobuf-3.21.8" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.8.tar.gz" || goto end
+cd "protobuf-3.21.8\cmake" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF || goto end
@@ -1213,7 +1205,7 @@ copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 @echo Compiling icu4c
 
 cd "%BUILD_PATH%"
-if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-71_1-src.zip" || goto end
+if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-72_1-src.zip" || goto end
 cd "icu" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/icu-fixes.patch"
 cd "source\allinone" || goto end
@@ -1268,8 +1260,8 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "harfbuzz-5.2.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-5.2.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-5.2.0.tar" || goto end
-cd "harfbuzz-5.2.0" || goto end
+if not exist "harfbuzz-5.3.1" 7z x "%DOWNLOADS_PATH%\harfbuzz-5.3.1.tar.xz" -so | 7z x -aoa -si"harfbuzz-5.3.1.tar" || goto end
+cd "harfbuzz-5.3.1" || goto end
 
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
@@ -1430,10 +1422,11 @@ copy /y "%prefix_path%\bin\gsttag-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gsturidownloader-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstvideo-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\harfbuzz*.dll" || goto end
-copy /y "%prefix_path%\bin\icudt71*.dll" || goto end
-copy /y "%prefix_path%\bin\icuin71*.dll" || goto end
-copy /y "%prefix_path%\bin\icuuc71*.dll" || goto end
+copy /y "%prefix_path%\bin\icudt72*.dll" || goto end
+copy /y "%prefix_path%\bin\icuin72*.dll" || goto end
+copy /y "%prefix_path%\bin\icuuc72*.dll" || goto end
 copy /y "%prefix_path%\bin\intl-8.dll" || goto end
+copy /y "%prefix_path%\bin\jpeg62.dll" || goto end
 copy /y "%prefix_path%\bin\libbs2b.dll" || goto end
 copy /y "%prefix_path%\bin\libcrypto-3-x64.dll" || goto end
 copy /y "%prefix_path%\bin\libfaac_dll.dll" || goto end
