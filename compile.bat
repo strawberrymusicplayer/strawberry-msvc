@@ -1295,6 +1295,9 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 @echo Compiling qtbase
 
+@rem "Workaround Qt issue with harfbuzz pc file."
+del "%PREFIX_PATH%\lib\pkgconfig\harfbuzz.pc"
+
 cd "%BUILD_PATH%"
 if not exist "qtbase-everywhere-src-6.4.0" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-6.4.0.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-6.4.0.tar" || goto end
 cd "qtbase-everywhere-src-6.4.0" || goto end
