@@ -38,7 +38,7 @@ To create the Strawberry installer, you need 3 NSIS plugins (LockedList, Inetc a
 
 Those need to be manually extracted, and copied to C:\Program Files (x86)\NSIS\Plugins
 
-Specifcally, the following files need to exist:
+Specifically, the following files need to exist:
 
     C:\Program Files (x86)\NSIS\Plugins\LockedList64.dll
     C:\Program Files (x86)\NSIS\Plugins\Registry.dll

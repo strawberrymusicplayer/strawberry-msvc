@@ -151,12 +151,12 @@ https://github.com/frida/proxy-libintl
 https://github.com/strawberrymusicplayer/strawberry
 ) do @(
   if exist %%~nxx @(
-    echo Udating repostiory %%x
+    echo Updating repository %%x
     cd %%~nxx
 	git pull
 	cd ..
   ) else (
-    echo Cloning repostiory %%x
+    echo Cloning repository %%x
     git clone %%x
   )
 )
