@@ -570,7 +570,6 @@ cmake --install . || goto end
 cd "%BUILD_PATH%"
 if not exist "wavpack-5.6.0" tar -xvf "%DOWNLOADS_PATH%\wavpack-5.6.0.tar.bz2" || goto end
 cd "wavpack-5.6.0" || goto end
-sed -i "/wavpackdll.rc/d" CMakeLists.txt || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 if not exist wavpackdll mkdir wavpackdll
@@ -578,7 +577,6 @@ cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_
 cmake --build . || goto end
 cmake --install . || goto end
 if not exist "%PREFIX_PATH%\include\wavpack" mkdir "%PREFIX_PATH%\include\wavpack" || goto end
-copy /y "%PREFIX_PATH%\include\wavpack.h" "%PREFIX_PATH%\include\wavpack\" || goto end
 copy /y "%PREFIX_PATH%\lib\wavpackdll.lib" "%PREFIX_PATH%\lib\wavpack.lib" || goto end
 copy /y "%PREFIX_PATH%\bin\wavpackdll.dll" "%PREFIX_PATH%\bin\wavpack.dll" || goto end
 
