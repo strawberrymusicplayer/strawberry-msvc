@@ -30,7 +30,7 @@ There is an install.bat batch file to install most of these automatically.
  - Make sure no pkg-config utility is in PATH, this will cause conflicts with Strawberry's own pkg-config.
    del c:\strawberry\perl\bin\pkg-config.bat
  - Make sure no MinGW-W64 (gcc, g++, etc) installation is in PATH, as this can cause those to be picked up as compiler instead of MSVC.
- - You need the sed and patch utility, it can be copied from ie.: MSYS2 and put in ie.: C:\Data\Tools and added to PATH.
+ - You need the sed and patch utility, add C:\Program Files\Git\usr\bin to PATH.
 
 
 ### Installing NSIS plugins
