@@ -60,7 +60,7 @@ https://downloads.sourceforge.net/project/libpng/libpng16/1.6.39/libpng-1.6.39.t
 https://sourceforge.net/projects/libjpeg-turbo/files/2.1.4/libjpeg-turbo-2.1.4.tar.gz
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-https://tukaani.org/xz/xz-5.2.8.tar.bz2
+https://tukaani.org/xz/xz-5.2.9.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.10.3/libxml2-v2.10.3.tar.bz2
@@ -69,7 +69,7 @@ https://sqlite.org/2022/sqlite-autoconf-3400000.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.4.2.tar.xz
-https://www.wavpack.com/wavpack-5.5.0.tar.bz2
+https://www.wavpack.com/wavpack-5.6.0.tar.bz2
 https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-0.12.tar.gz
 https://gitlab.xiph.org/xiph/speex/-/archive/Speex-1.2.1/speex-Speex-1.2.1.tar.gz
@@ -96,7 +96,7 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.20.4.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.20.4.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.20.4.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.20.4.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v21.9/protobuf-cpp-3.21.9.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v21.10/protobuf-cpp-3.21.10.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.12.1/freetype-2.12.1.tar.gz
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz

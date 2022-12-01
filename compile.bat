@@ -367,8 +367,8 @@ cmake --install . || goto end
 @echo Compiling xz
 
 cd "%BUILD_PATH%"
-if not exist "xz-5.2.8" tar -xvf "%DOWNLOADS_PATH%\xz-5.2.8.tar.bz2" || goto end
-cd xz-5.2.8 || goto end
+if not exist "xz-5.2.9" tar -xvf "%DOWNLOADS_PATH%\xz-5.2.9.tar.bz2" || goto end
+cd xz-5.2.9 || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\xz-config.patch"
 cd windows\vs2019 || goto end
 start /w devenv.exe xz_win.sln /upgrade
@@ -568,8 +568,8 @@ cmake --install . || goto end
 @echo Compiling wavpack
 
 cd "%BUILD_PATH%"
-if not exist "wavpack-5.5.0" tar -xvf "%DOWNLOADS_PATH%\wavpack-5.5.0.tar.bz2" || goto end
-cd "wavpack-5.5.0" || goto end
+if not exist "wavpack-5.6.0" tar -xvf "%DOWNLOADS_PATH%\wavpack-5.6.0.tar.bz2" || goto end
+cd "wavpack-5.6.0" || goto end
 sed -i "/wavpackdll.rc/d" CMakeLists.txt || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -1187,8 +1187,8 @@ ninja install || goto end
 @echo Compiling protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.9" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.9.tar.gz" || goto end
-cd "protobuf-3.21.9\cmake" || goto end
+if not exist "protobuf-3.21.10" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.10.tar.gz" || goto end
+cd "protobuf-3.21.10\cmake" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF || goto end
