@@ -919,7 +919,7 @@ cd "musepack_src_r475" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\musepack-fixes.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DSHARED=ON || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DSHARED=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy libmpcdec\*.lib %PREFIX_PATH%\lib\ || goto end
