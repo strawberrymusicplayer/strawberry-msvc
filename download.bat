@@ -51,21 +51,21 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.36.0.w
 
 
 @for %%x in (
-https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.gz
+https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.3.tar.gz
 https://zlib.net/zlib-1.2.13.tar.gz
 https://www.openssl.org/source/openssl-3.0.7.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/3.7.8/libgnutls_3.7.8_msvc17.zip
 https://downloads.sourceforge.net/project/libpng/libpng16/1.6.39/libpng-1.6.39.tar.gz
 https://sourceforge.net/projects/libjpeg-turbo/files/2.1.4/libjpeg-turbo-2.1.4.tar.gz
-https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2
+https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.41/pcre2-10.41.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-https://tukaani.org/xz/xz-5.2.9.tar.bz2
+https://tukaani.org/xz/xz-5.4.0.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.10.3/libxml2-v2.10.3.tar.bz2
 https://github.com/nghttp2/nghttp2/releases/download/v1.51.0/nghttp2-1.51.0.tar.bz2
-https://sqlite.org/2022/sqlite-autoconf-3400000.tar.gz
+https://sqlite.org/2022/sqlite-autoconf-3400100.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.4.2.tar.xz
@@ -82,7 +82,7 @@ https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
 https://download.gnome.org/sources/glib/2.75/glib-2.75.0.tar.xz
 https://download.gnome.org/sources/glib-networking/2.74/glib-networking-2.74.0.tar.xz
-https://github.com/rockdaboot/libpsl/releases/download/0.21.1/libpsl-0.21.1.tar.gz
+https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz
 https://download.gnome.org/sources/libsoup/3.2/libsoup-3.2.2.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-0.4.33.tar.xz
 https://files.musepack.net/source/musepack_src_r475.tar.gz
@@ -96,12 +96,12 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.20.4.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.20.4.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.20.4.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.20.4.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v21.10/protobuf-cpp-3.21.10.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-cpp-3.21.12.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.12.1/freetype-2.12.1.tar.gz
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
-https://github.com/harfbuzz/harfbuzz/releases/download/5.3.1/harfbuzz-5.3.1.tar.xz
+https://github.com/harfbuzz/harfbuzz/releases/download/6.0.0/harfbuzz-6.0.0.tar.xz
 https://download.qt.io/official_releases/qt/6.4/6.4.1/submodules/qtbase-everywhere-src-6.4.1.tar.xz
 https://download.qt.io/official_releases/qt/6.4/6.4.1/submodules/qttools-everywhere-src-6.4.1.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
@@ -111,7 +111,7 @@ https://aka.ms/vs/17/release/vs_community.exe
 https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
 https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-x86_64.msi
 https://github.com/mesonbuild/meson/releases/download/0.64.1/meson-0.64.1-64.msi
-https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-installer-x64.exe
+https://www.nasm.us/pub/nasm/releasebuilds/21.16/win64/nasm-21.16-installer-x64.exe
 http://www.tortall.net/projects/yasm/releases/yasm-1.3.0-win64.exe
 https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip
 https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit.msi
@@ -131,7 +131,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtsparkle-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/icu-fixes.patch
-https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/xz-config.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpsl-time.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx

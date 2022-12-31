@@ -224,9 +224,9 @@ goto continue
 @echo Installing boost
 
 cd "%BUILD_PATH%"
-if not exist "boost_1_80_0" tar -xvf "%DOWNLOADS_PATH%\boost_1_80_0.tar.gz" || goto end
+if not exist "boost_1_81_0" tar -xvf "%DOWNLOADS_PATH%\boost_1_81_0.tar.gz" || goto end
 if not exist "%PREFIX_PATH%\include\boost" mkdir "%PREFIX_PATH%\include\boost"
-xcopy /s /y /h "boost_1_80_0\boost" "%PREFIX_PATH%\include\boost\" || goto end
+xcopy /s /y /h "boost_1_81_0\boost" "%PREFIX_PATH%\include\boost\" || goto end
 
 @goto continue
 
@@ -367,9 +367,8 @@ cmake --install . || goto end
 @echo Compiling xz
 
 cd "%BUILD_PATH%"
-if not exist "xz-5.2.9" tar -xvf "%DOWNLOADS_PATH%\xz-5.2.9.tar.bz2" || goto end
-cd xz-5.2.9 || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%\xz-config.patch"
+if not exist "xz-5.4.0" tar -xvf "%DOWNLOADS_PATH%\xz-5.4.0.tar.bz2" || goto end
+cd xz-5.4.0 || goto end
 cd windows\vs2019 || goto end
 start /w devenv.exe xz_win.sln /upgrade
 msbuild xz_win.sln /property:Configuration=%BUILD_TYPE% || goto end
@@ -403,8 +402,8 @@ cmake --install . || goto end
 @echo Compiling pcre2
 
 cd "%BUILD_PATH%"
-if not exist "pcre2-10.40" tar -xvf "%DOWNLOADS_PATH%\pcre2-10.40.tar.bz2" || goto end
-cd "pcre2-10.40" || goto end
+if not exist "pcre2-10.41" tar -xvf "%DOWNLOADS_PATH%\pcre2-10.41.tar.bz2" || goto end
+cd "pcre2-10.41" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
@@ -490,8 +489,8 @@ cmake --install . || goto end
 @echo Compiling sqlite
 
 cd "%BUILD_PATH%"
-if not exist "sqlite-autoconf-3400000" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3400000.tar.gz" || goto end
-cd "sqlite-autoconf-3400000" || goto end
+if not exist "sqlite-autoconf-3400100" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3400100.tar.gz" || goto end
+cd "sqlite-autoconf-3400100" || goto end
 cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll || goto end
 cl shell.c sqlite3.c -Fe:sqlite3.exe || goto end
 copy /y "*.h" "%PREFIX_PATH%\include\" || goto end
@@ -867,8 +866,9 @@ ninja install || goto end
 @echo Compiling libpsl
 
 cd "%BUILD_PATH%"
-if not exist "libpsl-0.21.1" tar -xvf "%DOWNLOADS_PATH%\libpsl-0.21.1.tar.gz" || goto end
-cd "libpsl-0.21.1" || goto end
+if not exist "libpsl-0.21.2" tar -xvf "%DOWNLOADS_PATH%\libpsl-0.21.2.tar.gz" || goto end
+cd "libpsl-0.21.2" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%\libpsl-time.patch"
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
@@ -1185,8 +1185,8 @@ ninja install || goto end
 @echo Compiling protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.10" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.10.tar.gz" || goto end
-cd "protobuf-3.21.10\cmake" || goto end
+if not exist "protobuf-3.21.12" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.12.tar.gz" || goto end
+cd "protobuf-3.21.12\cmake" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF || goto end
@@ -1257,8 +1257,8 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "harfbuzz-5.3.1" 7z x "%DOWNLOADS_PATH%\harfbuzz-5.3.1.tar.xz" -so | 7z x -aoa -si"harfbuzz-5.3.1.tar" || goto end
-cd "harfbuzz-5.3.1" || goto end
+if not exist "harfbuzz-6.0.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-6.0.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-6.0.0.tar" || goto end
+cd "harfbuzz-6.0.0" || goto end
 
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
