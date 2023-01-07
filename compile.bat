@@ -832,8 +832,8 @@ ninja install || goto end
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "glib-2.75.0" 7z x "%DOWNLOADS_PATH%\glib-2.75.0.tar.xz" -so | 7z x -aoa -si"glib-2.75.0.tar"
-cd "glib-2.75.0" || goto end
+if not exist "glib-2.75.2" 7z x "%DOWNLOADS_PATH%\glib-2.75.2.tar.xz" -so | 7z x -aoa -si"glib-2.75.2.tar"
+cd "glib-2.75.2" || goto end
 @rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
@@ -1296,8 +1296,8 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 del "%PREFIX_PATH%\lib\pkgconfig\harfbuzz.pc"
 
 cd "%BUILD_PATH%"
-if not exist "qtbase-everywhere-src-6.4.1" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-6.4.1.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-6.4.1.tar" || goto end
-cd "qtbase-everywhere-src-6.4.1" || goto end
+if not exist "qtbase-everywhere-src-6.4.2" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-6.4.2.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-6.4.2.tar" || goto end
+cd "qtbase-everywhere-src-6.4.2" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH_FORWARD%/bin/pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_brotli=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_schannel=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=ON -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
@@ -1312,8 +1312,8 @@ cmake --install . || goto end
 @echo Compiling qttools
 
 cd "%BUILD_PATH%"
-if not exist "qttools-everywhere-src-6.4.1" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-6.4.1.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-6.4.1.tar" || goto end
-cd "qttools-everywhere-src-6.4.1" || goto end
+if not exist "qttools-everywhere-src-6.4.2" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-6.4.2.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-6.4.2.tar" || goto end
+cd "qttools-everywhere-src-6.4.2" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 call %PREFIX_PATH%\bin\qt-configure-module.bat .. -feature-linguist -no-feature-assistant -no-feature-designer || goto end

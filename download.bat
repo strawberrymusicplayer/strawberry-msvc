@@ -80,7 +80,7 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
 https://www.fftw.org/fftw-3.3.10.tar.gz
 https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.75/glib-2.75.0.tar.xz
+https://download.gnome.org/sources/glib/2.75/glib-2.75.2.tar.xz
 https://download.gnome.org/sources/glib-networking/2.74/glib-networking-2.74.0.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz
 https://download.gnome.org/sources/libsoup/3.2/libsoup-3.2.2.tar.xz
@@ -102,8 +102,8 @@ https://netix.dl.sourceforge.net/project/freetype/freetype2/2.12.1/freetype-2.12
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/6.0.0/harfbuzz-6.0.0.tar.xz
-https://download.qt.io/official_releases/qt/6.4/6.4.1/submodules/qtbase-everywhere-src-6.4.1.tar.xz
-https://download.qt.io/official_releases/qt/6.4/6.4.1/submodules/qttools-everywhere-src-6.4.1.tar.xz
+https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qtbase-everywhere-src-6.4.2.tar.xz
+https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qttools-everywhere-src-6.4.2.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-72-1/icu4c-72_1-src.zip
 https://downloads.sourceforge.net/twolame/twolame-0.4.0.tar.gz
