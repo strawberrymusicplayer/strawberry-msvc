@@ -86,7 +86,7 @@ https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.
 https://download.gnome.org/sources/libsoup/3.2/libsoup-3.2.2.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-0.4.33.tar.xz
 https://files.musepack.net/source/musepack_src_r475.tar.gz
-https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.6+release.msvc.zip
+https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.7+release.msvc.zip
 https://github.com/knik0/faad2/tarball/2.10.1/faad2-2.10.1.tar.gz
 https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-2.0.2.tar.gz
 https://downloads.sourceforge.net/project/bs2b/libbs2b/3.1.0/libbs2b-3.1.0.tar.bz2

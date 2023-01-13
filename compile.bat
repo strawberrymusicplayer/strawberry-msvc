@@ -937,7 +937,7 @@ cd "%BUILD_PATH%"
 if not exist "libopenmpt" @(
   mkdir libopenmpt || goto end
   cd libopenmpt || goto end
-  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.6+release.msvc.zip" || goto end
+  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.7+release.msvc.zip" || goto end
   cd ..
  ) || goto end
 cd "libopenmpt" || goto end
