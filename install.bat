@@ -13,7 +13,7 @@
 @if not exist "c:\Program Files\nasm\nasm.exe" goto nasm
 @if not exist "c:\Program Files\7-zip\7z.exe" goto 7z
 @if not exist "C:\Strawberry\perl\bin" goto perl
-@if not exist "C:\Program Files\Python310\python.exe" goto python
+@if not exist "C:\Program Files\Python311\python.exe" goto python
 @if not exist "c:\win_flex_bison\win_bison.exe" goto win_flex_bison
 @if not exist "c:\win_flex_bison\win_flex.exe" goto win_flex_bison
 
@@ -87,7 +87,7 @@ goto end
 
 @echo Installing Python...
 
-"%DOWNLOADS_PATH%\python-3.10.4-amd64.exe" /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 || goto end
+"%DOWNLOADS_PATH%\python-3.11.0-amd64.exe" /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 || goto end
 
 @goto install
 
