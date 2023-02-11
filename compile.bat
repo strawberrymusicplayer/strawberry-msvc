@@ -273,8 +273,8 @@ cmake --install . || goto end
 @echo Compiling openssl
 
 cd "%BUILD_PATH%" || goto end
-if not exist "openssl-3.0.7" tar -xvf "%DOWNLOADS_PATH%\openssl-3.0.7.tar.gz" || goto end
-cd openssl-3.0.7 || goto end
+if not exist "openssl-3.0.8" tar -xvf "%DOWNLOADS_PATH%\openssl-3.0.8.tar.gz" || goto end
+cd openssl-3.0.8 || goto end
 if "%BUILD_TYPE%" == "debug" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH_FORWARD%" --libdir=lib --openssldir=%PREFIX_PATH%\ssl --debug --with-zlib-include=%PREFIX_PATH%\include --with-zlib-lib=%PREFIX_PATH%\lib\zlibd.lib || goto end
 if "%BUILD_TYPE%" == "release" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH%" --libdir=lib --openssldir="%PREFIX_PATH%\ssl" --release --with-zlib-include="%PREFIX_PATH%\include" --with-zlib-lib="%PREFIX_PATH%\lib\zlib.lib" || goto end
 nmake || goto end
@@ -334,8 +334,8 @@ cmake --install . || goto end
 @echo Compiling libjpeg
 
 cd "%BUILD_PATH%"
-if not exist "libjpeg-turbo-2.1.4" tar -xvf "%DOWNLOADS_PATH%\libjpeg-turbo-2.1.4.tar.gz" || goto end
-cd "libjpeg-turbo-2.1.4" || goto end
+if not exist "libjpeg-turbo-2.1.5.1" tar -xvf "%DOWNLOADS_PATH%\libjpeg-turbo-2.1.5.1.tar.gz" || goto end
+cd "libjpeg-turbo-2.1.5.1" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DENABLE_SHARED=ON || goto end
@@ -937,7 +937,7 @@ cd "%BUILD_PATH%"
 if not exist "libopenmpt" @(
   mkdir libopenmpt || goto end
   cd libopenmpt || goto end
-  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.7+release.msvc.zip" || goto end
+  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.8+release.msvc.zip" || goto end
   cd ..
  ) || goto end
 cd "libopenmpt" || goto end
@@ -1238,8 +1238,8 @@ cmake --install . || goto end
 @echo Compiling freetype without harfbuzz
 
 cd "%BUILD_PATH%"
-if not exist "freetype-2.12.1" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.1.tar.gz" || goto end
-cd "freetype-2.12.1" || goto end
+if not exist "freetype-2.13.0" tar -xvf "%DOWNLOADS_PATH%\freetype-2.13.0.tar.gz" || goto end
+cd "freetype-2.13.0" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
@@ -1274,8 +1274,8 @@ ninja install || goto end
 @echo Compiling freetype with harfbuzz
 
 cd "%BUILD_PATH%"
-if not exist "freetype-2.12.1" tar -xvf "%DOWNLOADS_PATH%\freetype-2.12.1.tar.gz" || goto end
-cd "freetype-2.12.1" || goto end
+if not exist "freetype-2.13.0" tar -xvf "%DOWNLOADS_PATH%\freetype-2.13.0.tar.gz" || goto end
+cd "freetype-2.13.0" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end

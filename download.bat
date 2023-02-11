@@ -54,10 +54,10 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.36.0.w
 https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.4.tar.gz
 https://zlib.net/zlib-1.2.13.tar.gz
-https://www.openssl.org/source/openssl-3.0.7.tar.gz
+https://www.openssl.org/source/openssl-3.0.8.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/3.7.8/libgnutls_3.7.8_msvc17.zip
 https://downloads.sourceforge.net/project/libpng/libpng16/1.6.39/libpng-1.6.39.tar.gz
-https://sourceforge.net/projects/libjpeg-turbo/files/2.1.4/libjpeg-turbo-2.1.4.tar.gz
+https://sourceforge.net/projects/libjpeg-turbo/files/2.1.5.1/libjpeg-turbo-2.1.5.1.tar.gz
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.41/pcre2-10.41.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
 https://tukaani.org/xz/xz-5.4.1.tar.bz2
@@ -86,7 +86,7 @@ https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.
 https://download.gnome.org/sources/libsoup/3.2/libsoup-3.2.2.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-0.4.33.tar.xz
 https://files.musepack.net/source/musepack_src_r475.tar.gz
-https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.7+release.msvc.zip
+https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.8+release.msvc.zip
 https://github.com/knik0/faad2/tarball/2.10.1/faad2-2.10.1.tar.gz
 https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-2.0.2.tar.gz
 https://downloads.sourceforge.net/project/bs2b/libbs2b/3.1.0/libbs2b-3.1.0.tar.bz2
@@ -98,7 +98,7 @@ https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.0.t
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.0.tar.xz
 https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-cpp-3.21.12.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
-https://netix.dl.sourceforge.net/project/freetype/freetype2/2.12.1/freetype-2.12.1.tar.gz
+https://netix.dl.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/6.0.0/harfbuzz-6.0.0.tar.xz
