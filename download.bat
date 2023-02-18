@@ -64,7 +64,7 @@ https://tukaani.org/xz/xz-5.4.1.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.10.3/libxml2-v2.10.3.tar.bz2
-https://github.com/nghttp2/nghttp2/releases/download/v1.51.0/nghttp2-1.51.0.tar.bz2
+https://github.com/nghttp2/nghttp2/releases/download/v1.52.0/nghttp2-1.52.0.tar.bz2
 https://sqlite.org/2022/sqlite-autoconf-3400100.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
@@ -80,7 +80,7 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
 https://www.fftw.org/fftw-3.3.10.tar.gz
 https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.75/glib-2.75.2.tar.xz
+https://download.gnome.org/sources/glib/2.75/glib-2.75.3.tar.xz
 https://download.gnome.org/sources/glib-networking/2.74/glib-networking-2.74.0.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz
 https://download.gnome.org/sources/libsoup/3.2/libsoup-3.2.2.tar.xz
@@ -96,17 +96,18 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.0.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.0.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.0.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.0.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-cpp-3.21.12.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v22.0/protobuf-22.0.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
-https://github.com/harfbuzz/harfbuzz/releases/download/6.0.0/harfbuzz-6.0.0.tar.xz
+https://github.com/harfbuzz/harfbuzz/releases/download/7.0.0/harfbuzz-7.0.0.tar.xz
 https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qtbase-everywhere-src-6.4.2.tar.xz
 https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qttools-everywhere-src-6.4.2.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-72-1/icu4c-72_1-src.zip
 https://downloads.sourceforge.net/twolame/twolame-0.4.0.tar.gz
+https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.0.tar.gz
 https://aka.ms/vs/17/release/vs_community.exe
 https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
 https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-x86_64.msi
@@ -130,7 +131,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libbs2b-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtsparkle-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
-https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/icu-fixes.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/icu-uwp.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpsl-time.patch
 ) do @(
   if not exist %%~nxx (
@@ -144,7 +145,7 @@ https://github.com/knik0/faac
 https://github.com/pffang/libiconv-for-Windows
 https://github.com/davidsansome/qtsparkle
 https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi
-https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg.git
+https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg
 https://github.com/frida/proxy-libintl
 https://github.com/strawberrymusicplayer/strawberry
 ) do @(

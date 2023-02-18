@@ -203,6 +203,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc" goto gst-plugins-bad
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%PREFIX_PATH%\lib\icuio*.lib" goto icu4c
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\expat.pc" goto expat
@@ -473,8 +474,8 @@ cmake --install . || goto end
 @echo Compiling nghttp2
 
 cd "%BUILD_PATH%"
-if not exist "nghttp2-1.51.0" tar -xvf "%DOWNLOADS_PATH%\nghttp2-1.51.0.tar.bz2" || goto end
-cd "nghttp2-1.51.0" || goto end
+if not exist "nghttp2-1.52.0" tar -xvf "%DOWNLOADS_PATH%\nghttp2-1.52.0.tar.bz2" || goto end
+cd "nghttp2-1.52.0" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DENABLE_SHARED_LIB=ON || goto end
@@ -832,8 +833,8 @@ ninja install || goto end
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "glib-2.75.2" 7z x "%DOWNLOADS_PATH%\glib-2.75.2.tar.xz" -so | 7z x -aoa -si"glib-2.75.2.tar"
-cd "glib-2.75.2" || goto end
+if not exist "glib-2.75.3" 7z x "%DOWNLOADS_PATH%\glib-2.75.3.tar.xz" -so | 7z x -aoa -si"glib-2.75.3.tar"
+cd "glib-2.75.3" || goto end
 @rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
@@ -952,6 +953,8 @@ goto continue
 
 
 :libgme
+
+@echo Compiling libgme
 
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
@@ -1180,19 +1183,48 @@ ninja install || goto end
 @goto continue
 
 
+:abseil-cpp
+
+@echo Compiling abseil-cpp
+
+cd "%BUILD_PATH%"
+if not exist "abseil-cpp-20230125.0" tar -xvf "%DOWNLOADS_PATH%\20230125.0.tar.gz" || goto end
+cd "abseil-cpp-20230125.0" || goto end
+if not exist build mkdir build || goto end
+cd build || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
 :protobuf
 
 @echo Compiling protobuf
 
+@set LDFLAGS="/LIBPATH:%PREFIX_PATH%\lib"
+
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.12" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.12.tar.gz" || goto end
-cd "protobuf-3.21.12\cmake" || goto end
+if not exist "protobuf-22.0" tar -xvf "%DOWNLOADS_PATH%\protobuf-22.0.tar.gz" || goto end
+cd "protobuf-22.0" || goto end
+
+if not exist "third_party\abseil-cpp\CMakeLists.txt" @(
+  cd "third_party" || goto end
+  rmdir "abseil-cpp" || goto end
+  tar -xvf "%DOWNLOADS_PATH%\20230125.0.tar.gz" || goto end
+  move "abseil-cpp-20230125.0" "abseil-cpp" || goto end
+  cd .. || goto end
+) || goto end
+
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF || goto end
+cmake ..\cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_ABSL_PROVIDER="module" -Dprotobuf_BUILD_LIBPROTOC=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
+
+@set LDFLAGS=
 
 @goto continue
 
@@ -1204,7 +1236,7 @@ copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 cd "%BUILD_PATH%"
 if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-72_1-src.zip" || goto end
 cd "icu" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/icu-fixes.patch"
+patch -p1 -N < "%DOWNLOADS_PATH%/icu-uwp.patch"
 cd "source\allinone" || goto end
 @rem start /w devenv.exe allinone.sln /upgrade
 msbuild allinone.sln /property:Configuration="%BUILD_TYPE%" /p:Platform="x64" || goto end
@@ -1257,8 +1289,8 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "harfbuzz-6.0.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-6.0.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-6.0.0.tar" || goto end
-cd "harfbuzz-6.0.0" || goto end
+if not exist "harfbuzz-7.0.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-7.0.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-7.0.0.tar" || goto end
+cd "harfbuzz-7.0.0" || goto end
 
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
