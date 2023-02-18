@@ -96,7 +96,7 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.0.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.0.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.0.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.0.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v22.0/protobuf-22.0.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-cpp-3.21.12.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz
@@ -107,7 +107,7 @@ https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qttools-everywh
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-72-1/icu4c-72_1-src.zip
 https://downloads.sourceforge.net/twolame/twolame-0.4.0.tar.gz
-https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.0.tar.gz
+https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.1.tar.gz
 https://aka.ms/vs/17/release/vs_community.exe
 https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
 https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-x86_64.msi
