@@ -65,7 +65,7 @@ https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.10.3/libxml2-v2.10.3.tar.bz2
 https://github.com/nghttp2/nghttp2/releases/download/v1.52.0/nghttp2-1.52.0.tar.bz2
-https://sqlite.org/2022/sqlite-autoconf-3400100.tar.gz
+https://sqlite.org/2023/sqlite-autoconf-3410000.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.4.2.tar.xz
@@ -80,7 +80,7 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
 https://www.fftw.org/fftw-3.3.10.tar.gz
 https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.75/glib-2.75.3.tar.xz
+https://download.gnome.org/sources/glib/2.75/glib-2.75.4.tar.xz
 https://download.gnome.org/sources/glib-networking/2.74/glib-networking-2.74.0.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz
 https://download.gnome.org/sources/libsoup/3.2/libsoup-3.2.2.tar.xz
@@ -101,7 +101,7 @@ https://jztkft.dl.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
-https://github.com/harfbuzz/harfbuzz/releases/download/7.0.0/harfbuzz-7.0.0.tar.xz
+https://github.com/harfbuzz/harfbuzz/releases/download/7.1.0/harfbuzz-7.1.0.tar.xz
 https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qtbase-everywhere-src-6.4.2.tar.xz
 https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qttools-everywhere-src-6.4.2.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz

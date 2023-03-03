@@ -490,8 +490,8 @@ cmake --install . || goto end
 @echo Compiling sqlite
 
 cd "%BUILD_PATH%"
-if not exist "sqlite-autoconf-3400100" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3400100.tar.gz" || goto end
-cd "sqlite-autoconf-3400100" || goto end
+if not exist "sqlite-autoconf-3410000" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3410000.tar.gz" || goto end
+cd "sqlite-autoconf-3410000" || goto end
 cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll || goto end
 cl shell.c sqlite3.c -Fe:sqlite3.exe || goto end
 copy /y "*.h" "%PREFIX_PATH%\include\" || goto end
@@ -833,8 +833,8 @@ ninja install || goto end
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "glib-2.75.3" 7z x "%DOWNLOADS_PATH%\glib-2.75.3.tar.xz" -so | 7z x -aoa -si"glib-2.75.3.tar"
-cd "glib-2.75.3" || goto end
+if not exist "glib-2.75.4" 7z x "%DOWNLOADS_PATH%\glib-2.75.4.tar.xz" -so | 7z x -aoa -si"glib-2.75.4.tar"
+cd "glib-2.75.4" || goto end
 @rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
@@ -1276,8 +1276,8 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "harfbuzz-7.0.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-7.0.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-7.0.0.tar" || goto end
-cd "harfbuzz-7.0.0" || goto end
+if not exist "harfbuzz-7.1.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-7.1.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-7.1.0.tar" || goto end
+cd "harfbuzz-7.1.0" || goto end
 
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
