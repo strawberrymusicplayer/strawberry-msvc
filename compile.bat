@@ -1093,8 +1093,8 @@ cmake --install . || goto end
 @echo Compiling GStreamer
 
 cd "%BUILD_PATH%"
-if not exist "gstreamer-1.22.0" 7z x "%DOWNLOADS_PATH%\gstreamer-1.22.0.tar.xz" -so | 7z x -aoa -si"gstreamer-1.22.0.tar" || goto end
-cd "gstreamer-1.22.0" || goto end
+if not exist "gstreamer-1.22.1" 7z x "%DOWNLOADS_PATH%\gstreamer-1.22.1.tar.xz" -so | 7z x -aoa -si"gstreamer-1.22.1.tar" || goto end
+cd "gstreamer-1.22.1" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
@@ -1108,8 +1108,8 @@ goto continue
 @echo Compiling gst-plugins-base
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-base-1.22.0" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-1.22.0.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-1.22.0.tar" || goto end
-cd "gst-plugins-base-1.22.0" || goto end
+if not exist "gst-plugins-base-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-1.22.1.tar" || goto end
+cd "gst-plugins-base-1.22.1" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Ddoc=disabled -Dorc=enabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Dcompositor=disabled -Dencoding=disabled -Dgio=enabled -Dgio-typefinder=enabled -Doverlaycomposition=disabled -Dpbtypes=enabled -Dplayback=enabled -Drawparse=disabled -Dsubparse=disabled -Dtcp=enabled -Dtypefind=enabled -Dvideoconvertscale=disabled -Dvideorate=disabled -Dvideotestsrc=disabled -Dvolume=enabled -Dalsa=disabled -Dcdparanoia=disabled -Dlibvisual=disabled -Dogg=enabled -Dopus=enabled -Dpango=disabled -Dtheora=disabled -Dtremor=disabled -Dvorbis=enabled -Dx11=disabled -Dxshm=disabled -Dxvideo=disabled -Dgl=disabled -Dgl-graphene=disabled -Dgl-jpeg=disabled -Dgl-png=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1123,8 +1123,8 @@ ninja install || goto end
 @echo Compiling gst-plugins-good
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-good-1.22.0" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-1.22.0.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-1.22.0.tar" || goto end
-cd "gst-plugins-good-1.22.0" || goto end
+if not exist "gst-plugins-good-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-1.22.1.tar" || goto end
+cd "gst-plugins-good-1.22.1" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dxingmux=enabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
@@ -1138,8 +1138,8 @@ ninja install || goto end
 @echo Compiling gst-plugins-bad
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-bad-1.22.0" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-1.22.0.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-1.22.0.tar" || goto end
-cd "gst-plugins-bad-1.22.0" || goto end
+if not exist "gst-plugins-bad-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-1.22.1.tar" || goto end
+cd "gst-plugins-bad-1.22.1" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-libpaths.patch"
 sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faad\meson.build || goto end
 sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faac\meson.build || goto end
@@ -1158,8 +1158,8 @@ ninja install || goto end
 @echo Compiling gst-plugins-ugly
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-ugly-1.22.0" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-1.22.0.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-1.22.0.tar" || goto end
-cd "gst-plugins-ugly-1.22.0" || goto end
+if not exist "gst-plugins-ugly-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-1.22.1.tar" || goto end
+cd "gst-plugins-ugly-1.22.1" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dorc=enabled -Dasfdemux=enabled -Ddvdlpcmdec=disabled -Ddvdsub=disabled -Drealmedia=disabled -Da52dec=disabled -Damrnb=disabled -Damrwbdec=disabled -Dcdio=disabled -Ddvdread=disabled -Dmpeg2dec=disabled -Dsidplay=disabled -Dx264=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1173,8 +1173,8 @@ ninja install || goto end
 @echo Compiling gst-libav
 
 cd "%BUILD_PATH%"
-if not exist "gst-libav-1.22.0" 7z x "%DOWNLOADS_PATH%\gst-libav-1.22.0.tar.xz" -so | 7z x -aoa -si"gst-libav-1.22.0.tar" || goto end
-cd "gst-libav-1.22.0" || goto end
+if not exist "gst-libav-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-libav-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-libav-1.22.1.tar" || goto end
+cd "gst-libav-1.22.1" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled build || goto end
 cd build || goto end
 ninja || goto end
