@@ -203,7 +203,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc" goto gst-plugins-bad
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
-rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%PREFIX_PATH%\lib\icuio*.lib" goto icu4c
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\expat.pc" goto expat
@@ -1204,11 +1204,18 @@ cmake --install . || goto end
 @echo Compiling protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-3.21.12" tar -xvf "%DOWNLOADS_PATH%\protobuf-cpp-3.21.12.tar.gz" || goto end
-cd "protobuf-3.21.12" || goto end
+if not exist "protobuf-22.1" tar -xvf "%DOWNLOADS_PATH%\protobuf-22.1.tar.gz" || goto end
+cd "protobuf-22.1" || goto end
+if not exist "third_party\abseil-cpp\CMakeLists.txt" @(
+  cd "third_party" || goto end
+  rmdir "abseil-cpp" || goto end
+  tar -xvf "%DOWNLOADS_PATH%\20230125.1.tar.gz" || goto end
+  move "abseil-cpp-20230125.1" "abseil-cpp" || goto end
+  cd .. || goto end
+) || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
-cmake ..\cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_LIBPROTOC=OFF || goto end
+cmake ..\cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_ABSL_PROVIDER="module" -Dprotobuf_BUILD_LIBPROTOC=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
@@ -1487,6 +1494,7 @@ copy /y "%prefix_path%\bin\vorbis.dll" || goto end
 copy /y "%prefix_path%\bin\vorbisfile.dll" || goto end
 copy /y "%prefix_path%\bin\wavpackdll.dll" || goto end
 copy /y "%prefix_path%\bin\zlib*.dll" || goto end
+copy /y "%prefix_path%\bin\abseil_dll.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end

@@ -96,7 +96,7 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.1.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.1.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-cpp-3.21.12.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v22.1/protobuf-22.1.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz
