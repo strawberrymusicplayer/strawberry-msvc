@@ -113,8 +113,7 @@ https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2
 https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-windows-x86_64.msi
 https://github.com/mesonbuild/meson/releases/download/1.0.1/meson-1.0.1-64.msi
 https://www.nasm.us/pub/nasm/releasebuilds/2.16.01/win64/nasm-2.16.01-installer-x64.exe
-http://www.tortall.net/projects/yasm/releases/yasm-1.3.0-win64.exe
-http://www.tortall.net/projects/yasm/releases/vsyasm-1.3.0-win64.zip
+http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
 https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip
 https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit.msi
 https://www.python.org/ftp/python/3.11.2/python-3.11.2-amd64.exe

@@ -14,7 +14,6 @@
 @if not exist "c:\Program Files\7-zip\7z.exe" goto 7z
 @if not exist "C:\Strawberry\perl\bin" goto perl
 @if not exist "C:\Program Files\Python311\python.exe" goto python
-@if not exist "c:\yasm\vsyasm.exe" goto yasm
 @if not exist "c:\win_flex_bison\win_bison.exe" goto win_flex_bison
 @if not exist "c:\win_flex_bison\win_flex.exe" goto win_flex_bison
 
@@ -81,20 +80,6 @@ goto end
 @echo Installing Python...
 
 "%DOWNLOADS_PATH%\python-3.11.2-amd64.exe" /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 || goto end
-
-@goto install
-
-
-:yasm
-
-@echo Installing YASM...
-
-c: || goto end
-cd \ || goto end
-if not exist "yasm" mkdir yasm || goto end
-cd "yasm" || goto end
-@7z --version >NUL 2>&1 || set PATH=%PATH%;C:\Program Files\7-Zip
-"c:\Program Files\7-zip\7z.exe" x "%DOWNLOADS_PATH%\vsyasm-1.3.0-win64.zip" || goto end
 
 @goto install
 

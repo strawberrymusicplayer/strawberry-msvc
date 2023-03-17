@@ -16,6 +16,7 @@
 
 @set BOOST_VERSION=1_81_0
 @set PKGCONF_VERSION=1.9.4
+@set YASM_VERSION=1.3.0
 @set ZLIB_VERSION=1.2.13
 @set OPENSSL_VERSION=3.1.0
 @set GNUTLS_VERSION=3.8.0
@@ -109,7 +110,7 @@ copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
 
 @set PATH=%PREFIX_PATH%\bin;%PATH%
 
-@set YASMPATH="c:\yasm\"
+@set YASMPATH=%PREFIX_PATH%\bin\
 
 @goto check
 
@@ -132,12 +133,6 @@ echo Checking requirements...
 @nasm --version >NUL 2>&1 || set PATH=%PATH%;c:\Program Files\nasm
 @nasm --version >NUL 2>&1 || (
   @echo "Missing nasm. Download nasm from https://www.nasm.us/"
-  @goto end
-)
-
-@vsyasm --version >NUL 2>&1 || set PATH=%PATH%;c:\yasm
-@vsyasm --version >NUL 2>&1 || (
-  @echo "Missing vsyasm."
   @goto end
 )
 
@@ -209,6 +204,7 @@ goto continue
 
 @if not exist "%PREFIX_PATH%\include\boost\config.hpp" goto boost
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
+@if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\lib\zlib*.lib" goto zlib
 @if not exist "%PREFIX_PATH%\bin\libssl-3-x64.dll" goto openssl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc" goto gnutls
@@ -304,6 +300,22 @@ copy /y "%PREFIX_PATH%\bin\pkgconf.exe" "%PREFIX_PATH%\bin\pkg-config.exe" || go
 
 @goto continue
 
+
+:yasm
+
+@echo Building yasm
+
+cd "%BUILD_PATH%"
+
+if not exist "yasm-%YASM_VERSION%" tar -xvf "%DOWNLOADS_PATH%\yasm-%YASM_VERSION%.tar.gz" || goto end
+cd "yasm-%YASM_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cd build || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
 
 
 :zlib
@@ -708,7 +720,7 @@ if not exist "mpg123-%MPG123_VERSION%" tar -xvf "%DOWNLOADS_PATH%\mpg123-%MPG123
 cd "mpg123-%MPG123_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
-cmake ../ports/cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF -DYASM_ASSEMBLER="%YASMPATH%\vsyasm.exe" || goto end
+cmake ../ports/cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF -DYASM_ASSEMBLER="%PREFIX_PATH_FORWARD%/bin/vsyasm.exe" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
