@@ -31,8 +31,8 @@
 @echo Installing git...
 
 cd "%DOWNLOADS_PATH%" || goto end
-curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.36.0.windows.1/Git-2.36.0-64-bit.exe || goto end
-"%DOWNLOADS_PATH%\Git-2.36.0-64-bit.exe" /silent /norestart || goto end
+curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.40.0.windows.1/Git-2.40.0-64-bit.exe || goto end
+"%DOWNLOADS_PATH%\Git-2.40.0-64-bit.exe" /silent /norestart || goto end
 
 @goto install
 
@@ -54,8 +54,8 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.36.0.w
 https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.4.tar.gz
 https://zlib.net/zlib-1.2.13.tar.gz
-https://www.openssl.org/source/openssl-3.0.8.tar.gz
-https://github.com/ShiftMediaProject/gnutls/releases/download/3.7.8/libgnutls_3.7.8_msvc17.zip
+https://www.openssl.org/source/openssl-3.1.0.tar.gz
+https://github.com/ShiftMediaProject/gnutls/releases/download/3.8.0/libgnutls_3.8.0_msvc17.zip
 https://downloads.sourceforge.net/project/libpng/libpng16/1.6.39/libpng-1.6.39.tar.gz
 https://sourceforge.net/projects/libjpeg-turbo/files/2.1.5.1/libjpeg-turbo-2.1.5.1.tar.gz
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.41/pcre2-10.41.tar.bz2
@@ -65,7 +65,7 @@ https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.10.3/libxml2-v2.10.3.tar.bz2
 https://github.com/nghttp2/nghttp2/releases/download/v1.52.0/nghttp2-1.52.0.tar.bz2
-https://sqlite.org/2023/sqlite-autoconf-3410000.tar.gz
+https://sqlite.org/2023/sqlite-autoconf-3410100.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.4.2.tar.xz
@@ -80,10 +80,11 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
 https://www.fftw.org/fftw-3.3.10.tar.gz
 https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.75/glib-2.75.4.tar.xz
-https://download.gnome.org/sources/glib-networking/2.74/glib-networking-2.74.0.tar.xz
+https://download.gnome.org/sources/glib/2.76/glib-2.76.0.tar.xz
+https://download.gnome.org/sources/glib-networking/2.76/glib-networking-2.76.0.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz
-https://download.gnome.org/sources/libsoup/3.2/libsoup-3.2.2.tar.xz
+https://github.com/libproxy/libproxy/releases/download/0.4.18/libproxy-0.4.18.tar.xz
+https://download.gnome.org/sources/libsoup/3.4/libsoup-3.4.0.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-0.4.33.tar.xz
 https://files.musepack.net/source/musepack_src_r475.tar.gz
 https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.8+release.msvc.zip
@@ -96,33 +97,32 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.1.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.1.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.1.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v22.1/protobuf-22.1.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v22.2/protobuf-22.2.tar.gz
 https://jztkft.dl.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://netix.dl.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-72-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/7.1.0/harfbuzz-7.1.0.tar.xz
-https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qtbase-everywhere-src-6.4.2.tar.xz
-https://download.qt.io/official_releases/qt/6.4/6.4.2/submodules/qttools-everywhere-src-6.4.2.tar.xz
+https://download.qt.io/official_releases/qt/6.4/6.4.3/submodules/qtbase-everywhere-src-6.4.3.tar.xz
+https://download.qt.io/official_releases/qt/6.4/6.4.3/submodules/qttools-everywhere-src-6.4.3.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-72-1/icu4c-72_1-src.zip
 https://downloads.sourceforge.net/twolame/twolame-0.4.0.tar.gz
 https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.1.tar.gz
-https://aka.ms/vs/17/release/vs_community.exe
 https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
-https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-x86_64.msi
-https://github.com/mesonbuild/meson/releases/download/0.64.1/meson-0.64.1-64.msi
-https://www.nasm.us/pub/nasm/releasebuilds/21.16/win64/nasm-21.16-installer-x64.exe
+https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-windows-x86_64.msi
+https://github.com/mesonbuild/meson/releases/download/1.0.1/meson-1.0.1-64.msi
+https://www.nasm.us/pub/nasm/releasebuilds/2.16.01/win64/nasm-2.16.01-installer-x64.exe
 http://www.tortall.net/projects/yasm/releases/yasm-1.3.0-win64.exe
+http://www.tortall.net/projects/yasm/releases/vsyasm-1.3.0-win64.zip
 https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip
 https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit.msi
-https://www.python.org/ftp/python/3.11.0/python-3.11.0-amd64.exe
-https://www.7-zip.org/a/7z2201-x64.exe
+https://www.python.org/ftp/python/3.11.2/python-3.11.2-amd64.exe
+https://7-zip.org/a/7z2201-x64.exe
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-pkgconf.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/opusfile-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/speex-cmake.patch
-https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/glib-networking-tests.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/musepack-fixes.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libopenmpt-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/faad2-cmake.patch
@@ -141,6 +141,8 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 )
 
 @for %%x in (
+https://code.qt.io/qt/qtbase
+https://code.qt.io/qt/qttools
 https://github.com/knik0/faac
 https://github.com/pffang/libiconv-for-Windows
 https://github.com/davidsansome/qtsparkle

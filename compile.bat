@@ -2,7 +2,7 @@
 
 @setlocal
 
-@echo *** Strawberry MSVC compile script ***
+@echo *** Strawberry MSVC build script ***
 
 @set BUILD_TYPE=%1%
 @if "%BUILD_TYPE%" == "" set BUILD_TYPE=debug
@@ -13,9 +13,64 @@
 @set PREFIX_PATH_FORWARD=%PREFIX_PATH:\=/%
 @set PREFIX_PATH_ESCAPE=%PREFIX_PATH:\=\\%
 
+
+@set BOOST_VERSION=1_81_0
+@set PKGCONF_VERSION=1.9.4
+@set ZLIB_VERSION=1.2.13
+@set OPENSSL_VERSION=3.1.0
+@set GNUTLS_VERSION=3.8.0
+@set LIBPNG_VERSION=1.6.39
+@set LIBJPEG_VERSION=2.1.5.1
+@set BZIP2_VERSION=1.0.8
+@set XZ_VERSION=5.4.1
+@set BROTLI_VERSION=1.0.9
+@set PCRE2_VERSION=10.41
+@set PIXMAN_VERSION=0.42.2
+@set LIBXML2_VERSION=2.10.3
+@set NGHTTP2_VERSION=1.52.0
+@set SQLITE_VERSION=3410100
+@set LIBOGG_VERSION=1.3.5
+@set LIBVORBIS_VERSION=1.3.7
+@set FLAC_VERSION=1.4.2
+@set WAVPACK_VERSION=5.6.0
+@set OPUS_VERSION=1.3.1
+@set OPUSFILE_VERSION=0.12
+@set SPEEX_VERSION=1.2.1
+@set MPG123_VERSION=1.31.2
+@set LAME_VERSION=3.100
+@set TWOLAME_VERSION=0.4.0
+@set TAGLIB_VERSION=1.13
+@set DLFCN_VERSION=1.3.0
+@set FFTW_VERSION=3.3.5
+@set LIBPROXY_VERSION=0.4.18
+@set GLIB_VERSION=2.76.0
+@set GLIB_NETWORKING_VERSION=2.76.0
+@set LIBPSL_VERSION=0.21.2
+@set LIBSOUP_VERSION=3.4.0
+@set ORC_VERSION=0.4.33
+@set MUSEPACK_VERSION=475
+@set LIBOPENMPT_VERSION=0.6.8
+@set LIBGME_VERSION=0.6.3
+@set FDK_AAC_VERSION=2.0.2
+@set FAAD2_VERSION=2.10.1
+@set LIBBS2B_VERSION=3.1.0
+@set CHROMEPRINT_VERSION=1.5.1
+@set GSTREAMER_VERSION=1.22.1
+@set ABSEIL_CPP_VERSION=20230125.1
+@set PROTOBUF_VERSION=22.2
+@set ICU4C_VERSION=72_1
+@set EXPAT_VERSION=2.5.0
+@set FREETYPE_VERSION=2.13.0
+@set HARFBUZZ_VERSION=7.1.0
+@set QT_VERSION=6.4.3
+@set QT_DEV=OFF
+
+
+
 @echo Build type: %BUILD_TYPE%
 @echo Build path: %BUILD_PATH%
 @echo Prefix path: %PREFIX_PATH%
+
 
 :create_directories
 
@@ -31,7 +86,6 @@
 
 :install
 
-@if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\bin\sed.exe" goto sed
 
 goto setup
@@ -39,12 +93,6 @@ goto setup
 :sed
 
 copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
-
-@goto install
-
-:yasm
-
-copy /y "%DOWNLOADS_PATH%\yasm-1.3.0-win64.exe" "%PREFIX_PATH%\bin\yasm.exe" || goto end
 
 @goto install
 
@@ -61,6 +109,7 @@ copy /y "%DOWNLOADS_PATH%\yasm-1.3.0-win64.exe" "%PREFIX_PATH%\bin\yasm.exe" || 
 
 @set PATH=%PREFIX_PATH%\bin;%PATH%
 
+@set YASMPATH="c:\yasm\"
 
 @goto check
 
@@ -83,6 +132,12 @@ echo Checking requirements...
 @nasm --version >NUL 2>&1 || set PATH=%PATH%;c:\Program Files\nasm
 @nasm --version >NUL 2>&1 || (
   @echo "Missing nasm. Download nasm from https://www.nasm.us/"
+  @goto end
+)
+
+@vsyasm --version >NUL 2>&1 || set PATH=%PATH%;c:\yasm
+@vsyasm --version >NUL 2>&1 || (
+  @echo "Missing vsyasm."
   @goto end
 )
 
@@ -183,6 +238,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\libfftw3-3.lib" goto fftw3
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libffi.pc" goto libffi
 @rem @if not exist "%PREFIX_PATH%\lib\intl.lib" goto libintl
+@if not exist "%PREFIX_PATH%\lib\libproxy.lib" goto libproxy
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\glib-2.0.pc" goto glib
 @if not exist "%PREFIX_PATH%\lib\gio\modules\gioopenssl.lib" goto glib-networking
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpsl.pc" goto libpsl
@@ -225,21 +281,21 @@ goto continue
 @echo Installing boost
 
 cd "%BUILD_PATH%"
-if not exist "boost_1_81_0" tar -xvf "%DOWNLOADS_PATH%\boost_1_81_0.tar.gz" || goto end
+if not exist "boost_%BOOST_VERSION%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION%.tar.gz" || goto end
 if not exist "%PREFIX_PATH%\include\boost" mkdir "%PREFIX_PATH%\include\boost"
-xcopy /s /y /h "boost_1_81_0\boost" "%PREFIX_PATH%\include\boost\" || goto end
+xcopy /s /y /h "boost_%BOOST_VERSION%\boost" "%PREFIX_PATH%\include\boost\" || goto end
 
 @goto continue
 
 
 :pkgconf
 
-@echo Compiling pkgconf
+@echo Building pkgconf
 
 cd "%BUILD_PATH%"
 
-if not exist "pkgconf-pkgconf-1.9.4" tar -xvf "%DOWNLOADS_PATH%\pkgconf-1.9.4.tar.gz" || goto end
-cd "pkgconf-pkgconf-1.9.4" || goto end
+if not exist "pkgconf-pkgconf-%PKGCONF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pkgconf-%PKGCONF_VERSION%.tar.gz" || goto end
+cd "pkgconf-pkgconf-%PKGCONF_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -252,11 +308,11 @@ copy /y "%PREFIX_PATH%\bin\pkgconf.exe" "%PREFIX_PATH%\bin\pkg-config.exe" || go
 
 :zlib
 
-@echo Compiling zlib
+@echo Building zlib
 
 cd "%BUILD_PATH%" || goto end
-if not exist "zlib-1.2.13" tar -xvf "%DOWNLOADS_PATH%\zlib-1.2.13.tar.gz" || goto end
-cd "zlib-1.2.13" || goto end
+if not exist "zlib-%ZLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\zlib-%ZLIB_VERSION%.tar.gz" || goto end
+cd "zlib-%ZLIB_VERSION%" || goto end
 if not exist build mkdir build
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
@@ -271,11 +327,11 @@ cmake --install . || goto end
 
 :openssl
 
-@echo Compiling openssl
+@echo Building openssl
 
 cd "%BUILD_PATH%" || goto end
-if not exist "openssl-3.0.8" tar -xvf "%DOWNLOADS_PATH%\openssl-3.0.8.tar.gz" || goto end
-cd openssl-3.0.8 || goto end
+if not exist "openssl-%OPENSSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\openssl-%OPENSSL_VERSION%.tar.gz" || goto end
+cd openssl-%OPENSSL_VERSION% || goto end
 if "%BUILD_TYPE%" == "debug" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH_FORWARD%" --libdir=lib --openssldir=%PREFIX_PATH%\ssl --debug --with-zlib-include=%PREFIX_PATH%\include --with-zlib-lib=%PREFIX_PATH%\lib\zlibd.lib || goto end
 if "%BUILD_TYPE%" == "release" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH%" --libdir=lib --openssldir="%PREFIX_PATH%\ssl" --release --with-zlib-include="%PREFIX_PATH%\include" --with-zlib-lib="%PREFIX_PATH%\lib\zlib.lib" || goto end
 nmake || goto end
@@ -291,7 +347,7 @@ nmake install_sw || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist gnutls mkdir gnutls || goto end
 cd gnutls || goto end
-7z x -aoa "%DOWNLOADS_PATH%\libgnutls_3.7.8_msvc17.zip" || goto end
+7z x -aoa "%DOWNLOADS_PATH%\libgnutls_%GNUTLS_VERSION%_msvc17.zip" || goto end
 xcopy /s /y "bin\x64\*.*" "%PREFIX_PATH%\bin\" || goto end
 xcopy /s /y "lib\x64\*.*" "%PREFIX_PATH%\lib\" || goto end
 if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
@@ -305,7 +361,7 @@ xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 @echo Name: gnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Description: gnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo URL: https://www.gnutls.org/ >> %PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Version: 3.7.8 >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Version: %GNUTLS_VERSION% >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lgnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 
@@ -314,11 +370,11 @@ xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 
 :libpng
 
-@echo Compiling libpng
+@echo Building libpng
 
 cd "%BUILD_PATH%"
-if not exist "libpng-1.6.39" tar -xvf "%DOWNLOADS_PATH%\libpng-1.6.39.tar.gz" || goto end
-cd "libpng-1.6.39" || goto end
+if not exist "libpng-%LIBPNG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpng-%LIBPNG_VERSION%.tar.gz" || goto end
+cd "libpng-%LIBPNG_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/libpng-pkgconf.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -332,11 +388,11 @@ cmake --install . || goto end
 
 :libjpeg
 
-@echo Compiling libjpeg
+@echo Building libjpeg
 
 cd "%BUILD_PATH%"
-if not exist "libjpeg-turbo-2.1.5.1" tar -xvf "%DOWNLOADS_PATH%\libjpeg-turbo-2.1.5.1.tar.gz" || goto end
-cd "libjpeg-turbo-2.1.5.1" || goto end
+if not exist "libjpeg-turbo-%LIBJPEG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz" || goto end
+cd "libjpeg-turbo-%LIBJPEG_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DENABLE_SHARED=ON || goto end
@@ -348,11 +404,11 @@ cmake --install . || goto end
 
 :bzip2
 
-@echo Compiling bzip2
+@echo Building bzip2
 
 cd "%BUILD_PATH%"
-if not exist "bzip2-1.0.8" tar -xvf "%DOWNLOADS_PATH%\bzip2-1.0.8.tar.gz" || goto end
-cd bzip2-1.0.8 || goto end
+if not exist "bzip2-%BZIP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\bzip2-%BZIP2_VERSION%.tar.gz" || goto end
+cd bzip2-%BZIP2_VERSION% || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/bzip2-cmake.patch"
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
@@ -365,12 +421,12 @@ cmake --install . || goto end
 
 :xz
 
-@echo Compiling xz
+@echo Building xz
 
 cd "%BUILD_PATH%"
-if not exist "xz-5.4.1" tar -xvf "%DOWNLOADS_PATH%\xz-5.4.1.tar.bz2" || goto end
-cd xz-5.4.1 || goto end
-cd windows\vs2019 || goto end
+if not exist "xz-%XZ_VERSION%" tar -xvf "%DOWNLOADS_PATH%\xz-%XZ_VERSION%.tar.bz2" || goto end
+cd "xz-%XZ_VERSION%" || goto end
+cd "windows\vs2019" || goto end
 start /w devenv.exe xz_win.sln /upgrade
 msbuild xz_win.sln /property:Configuration=%BUILD_TYPE% || goto end
 copy /y "%BUILD_TYPE%\x64\liblzma_dll\*.lib" "%PREFIX_PATH%\lib\" || goto end
@@ -384,11 +440,11 @@ copy /y "..\..\src\liblzma\api\lzma\*.*" "%PREFIX_PATH%\include\lzma\" || goto e
 
 :brotli
 
-@echo Compiling brotli
+@echo Building brotli
 
 cd "%BUILD_PATH%"
-if not exist "brotli-1.0.9" tar -xvf "%DOWNLOADS_PATH%\v1.0.9.tar.gz" || goto end
-cd "brotli-1.0.9" || goto end
+if not exist "brotli-%BROTLI_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%BROTLI_VERSION%.tar.gz" || goto end
+cd "brotli-%BROTLI_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_TESTING=OFF || goto end
@@ -400,11 +456,11 @@ cmake --install . || goto end
 
 :pcre2
 
-@echo Compiling pcre2
+@echo Building pcre2
 
 cd "%BUILD_PATH%"
-if not exist "pcre2-10.41" tar -xvf "%DOWNLOADS_PATH%\pcre2-10.41.tar.bz2" || goto end
-cd "pcre2-10.41" || goto end
+if not exist "pcre2-%PCRE2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pcre2-%PCRE2_VERSION%.tar.bz2" || goto end
+cd "pcre2-%PCRE2_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
@@ -418,7 +474,7 @@ cmake --install . || goto end
 
 :libiconv
 
-@echo Compiling libiconv
+@echo Building libiconv
 
 cd "%BUILD_PATH%"
 if not exist "libiconv-for-Windows" @(
@@ -439,11 +495,11 @@ copy /y "include\*.h" "%PREFIX_PATH%\include\" || goto end
 
 :pixman
 
-@echo Compiling pixman
+@echo Building pixman
 
 cd "%BUILD_PATH%"
-if not exist "pixman-0.42.2" tar -xvf "%DOWNLOADS_PATH%\pixman-0.42.2.tar.gz" || goto end
-cd "pixman-0.42.2" || goto end
+if not exist "pixman-%PIXMAN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pixman-%PIXMAN_VERSION%.tar.gz" || goto end
+cd "pixman-%PIXMAN_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype=%BUILD_TYPE% --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgtk=disabled -Dlibpng=enabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -454,11 +510,11 @@ ninja install || goto end
 
 :libxml2
 
-@echo Compiling libxml2
+@echo Building libxml2
 
 cd "%BUILD_PATH%"
-if not exist "libxml2-v2.10.3" tar -xvf "%DOWNLOADS_PATH%\libxml2-v2.10.3.tar.bz2"
-cd "libxml2-v2.10.3" || goto end
+if not exist "libxml2-v%LIBXML2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libxml2-v%LIBXML2_VERSION%.tar.bz2"
+cd "libxml2-v%LIBXML2_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DLIBXML2_WITH_PYTHON=OFF -DLIBXML2_WITH_ZLIB=ON || goto end
@@ -471,11 +527,11 @@ cmake --install . || goto end
 
 :nghttp2
 
-@echo Compiling nghttp2
+@echo Building nghttp2
 
 cd "%BUILD_PATH%"
-if not exist "nghttp2-1.52.0" tar -xvf "%DOWNLOADS_PATH%\nghttp2-1.52.0.tar.bz2" || goto end
-cd "nghttp2-1.52.0" || goto end
+if not exist "nghttp2-%NGHTTP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\nghttp2-%NGHTTP2_VERSION%.tar.bz2" || goto end
+cd "nghttp2-%NGHTTP2_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DENABLE_SHARED_LIB=ON || goto end
@@ -487,11 +543,11 @@ cmake --install . || goto end
 
 :sqlite
 
-@echo Compiling sqlite
+@echo Building sqlite
 
 cd "%BUILD_PATH%"
-if not exist "sqlite-autoconf-3410000" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-3410000.tar.gz" || goto end
-cd "sqlite-autoconf-3410000" || goto end
+if not exist "sqlite-autoconf-%SQLITE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\sqlite-autoconf-%SQLITE_VERSION%.tar.gz" || goto end
+cd "sqlite-autoconf-%SQLITE_VERSION%" || goto end
 cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll || goto end
 cl shell.c sqlite3.c -Fe:sqlite3.exe || goto end
 copy /y "*.h" "%PREFIX_PATH%\include\" || goto end
@@ -517,11 +573,11 @@ echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/sql
 
 :libogg
 
-@echo Compiling libogg
+@echo Building libogg
 
 cd "%BUILD_PATH%"
-if not exist "libogg-1.3.5" tar -xvf "%DOWNLOADS_PATH%\libogg-1.3.5.tar.gz" || goto end
-cd "libogg-1.3.5" || goto end
+if not exist "libogg-%LIBOGG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libogg-%LIBOGG_VERSION%.tar.gz" || goto end
+cd "libogg-%LIBOGG_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF || goto end
@@ -533,11 +589,11 @@ cmake --install . || goto end
 
 :libvorbis
 
-@echo Compiling libvorbis
+@echo Building libvorbis
 
 cd "%BUILD_PATH%"
-if not exist "libvorbis-1.3.7" tar -xvf "%DOWNLOADS_PATH%\libvorbis-1.3.7.tar.gz" || goto end
-cd "libvorbis-1.3.7" || goto end
+if not exist "libvorbis-%LIBVORBIS_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libvorbis-%LIBVORBIS_VERSION%.tar.gz" || goto end
+cd "libvorbis-%LIBVORBIS_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF || goto end
@@ -549,11 +605,11 @@ cmake --install . || goto end
 
 :flac
 
-@echo Compiling flac
+@echo Building flac
 
 cd "%BUILD_PATH%"
-if not exist "flac-1.4.2" 7z x "%DOWNLOADS_PATH%\flac-1.4.2.tar.xz" -so | 7z x -aoa -si"flac-1.4.2.tar" || goto end
-cd "flac-1.4.2" || goto end
+if not exist "flac-%FLAC_VERSION%" 7z x "%DOWNLOADS_PATH%\flac-%FLAC_VERSION%.tar.xz" -so | 7z x -aoa -si"flac-%FLAC_VERSION%.tar" || goto end
+cd "flac-%FLAC_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_MANPAGES=OFF -DBUILD_TESTING=OFF -DBUILD_PROGRAMS=OFF || goto end
@@ -565,11 +621,11 @@ cmake --install . || goto end
 
 :wavpack
 
-@echo Compiling wavpack
+@echo Building wavpack
 
 cd "%BUILD_PATH%"
-if not exist "wavpack-5.6.0" tar -xvf "%DOWNLOADS_PATH%\wavpack-5.6.0.tar.bz2" || goto end
-cd "wavpack-5.6.0" || goto end
+if not exist "wavpack-%WAVPACK_VERSION%" tar -xvf "%DOWNLOADS_PATH%\wavpack-%WAVPACK_VERSION%.tar.bz2" || goto end
+cd "wavpack-%WAVPACK_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 if not exist wavpackdll mkdir wavpackdll
@@ -586,11 +642,11 @@ copy /y "%PREFIX_PATH%\bin\wavpackdll.dll" "%PREFIX_PATH%\bin\wavpack.dll" || go
 
 :opus
 
-@echo Compiling opus
+@echo Building opus
 
 cd "%BUILD_PATH%"
-if not exist "opus-1.3.1" tar -xvf "%DOWNLOADS_PATH%\opus-1.3.1.tar.gz" || goto end
-cd opus-1.3.1 || goto end
+if not exist "opus-%OPUS_VERSION%" tar -xvf "%DOWNLOADS_PATH%\opus-%OPUS_VERSION%.tar.gz" || goto end
+cd opus-%OPUS_VERSION% || goto end
 findstr /v /c:"include(opus_buildtype.cmake)" CMakeLists.txt > CMakeLists.txt.new || goto end
 del CMakeLists.txt
 ren CMakeLists.txt.new CMakeLists.txt || goto end
@@ -606,11 +662,11 @@ cmake --install . || goto end
 
 :opusfile
 
-@echo Compiling opusfile
+@echo Building opusfile
 
 cd "%BUILD_PATH%"
-if not exist "opusfile-0.12" tar -xvf "%DOWNLOADS_PATH%\opusfile-0.12.tar.gz" || goto end
-cd "opusfile-0.12" || goto end
+if not exist "opusfile-%OPUSFILE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\opusfile-%OPUSFILE_VERSION%.tar.gz" || goto end
+cd "opusfile-%OPUSFILE_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/opusfile-cmake.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -624,11 +680,11 @@ cmake --install . || goto end
 
 :speex
 
-@echo Compiling speex
+@echo Building speex
 
 cd "%BUILD_PATH%"
-if not exist "speex-Speex-1.2.1" tar -xvf "%DOWNLOADS_PATH%\speex-Speex-1.2.1.tar.gz" || goto end
-cd "speex-Speex-1.2.1" || goto end
+if not exist "speex-Speex-%SPEEX_VERSION%" tar -xvf "%DOWNLOADS_PATH%\speex-Speex-%SPEEX_VERSION%.tar.gz" || goto end
+cd "speex-Speex-%SPEEX_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/speex-cmake.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -645,14 +701,14 @@ cmake --install . || goto end
 
 :mpg123
 
-@echo Compiling mpg123
+@echo Building mpg123
 
 cd "%BUILD_PATH%"
-if not exist "mpg123-1.31.2" tar -xvf "%DOWNLOADS_PATH%\mpg123-1.31.2.tar.bz2" || goto end
-cd "mpg123-1.31.2" || goto end
+if not exist "mpg123-%MPG123_VERSION%" tar -xvf "%DOWNLOADS_PATH%\mpg123-%MPG123_VERSION%.tar.bz2" || goto end
+cd "mpg123-%MPG123_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
 cd build2 || goto end
-cmake ../ports/cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF || goto end
+cmake ../ports/cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF -DYASM_ASSEMBLER="%YASMPATH%\vsyasm.exe" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -661,11 +717,11 @@ cmake --install . || goto end
 
 :lame
 
-@echo Compiling lame
+@echo Building lame
 
 cd "%BUILD_PATH%"
-if not exist "lame-3.100" tar -xvf "%DOWNLOADS_PATH%\lame-3.100.tar.gz" || goto end
-cd "lame-3.100" || goto end
+if not exist "lame-%LAME_VERSION%" tar -xvf "%DOWNLOADS_PATH%\lame-%LAME_VERSION%.tar.gz" || goto end
+cd "lame-%LAME_VERSION%" || goto end
 sed -i "s/MACHINE = \/machine:.*/MACHINE = \/machine:Win64/g" Makefile.MSVC || goto end
 nmake -f Makefile.MSVC MSVCVER=Win64 libmp3lame.dll || goto end
 copy include\*.h "%PREFIX_PATH%\include\" || goto end
@@ -682,7 +738,7 @@ copy output\libmp3lame*.dll "%PREFIX_PATH%\bin\" || goto end
 @echo Name: lame >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 @echo Description: encoder that converts audio to the MP3 file format. >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 @echo URL: https://lame.sourceforge.io/ >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo Version: 3.100 >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo Version: %LAME_VERSION% >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 @echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lmp3lame >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 @echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 
@@ -692,11 +748,11 @@ copy output\libmp3lame*.dll "%PREFIX_PATH%\bin\" || goto end
 
 :twolame
 
-@echo Compiling twolame
+@echo Building twolame
 
 cd "%BUILD_PATH%"
-if not exist "twolame-0.4.0" tar -xvf "%DOWNLOADS_PATH%\twolame-0.4.0.tar.gz" || goto end
-cd "twolame-0.4.0" || goto end
+if not exist "twolame-%TWOLAME_VERSION%" tar -xvf "%DOWNLOADS_PATH%\twolame-%TWOLAME_VERSION%.tar.gz" || goto end
+cd "twolame-%TWOLAME_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/twolame.patch"
 cd "win32" || goto end
 start /w devenv.exe libtwolame_dll.sln /upgrade || goto end
@@ -717,7 +773,7 @@ copy /y lib\*.dll "%PREFIX_PATH%\bin\" || goto end
 @echo Name: lame >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 @echo Description: optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 @echo URL: https://www.twolame.org/ >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo Version: 0.4.0 >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Version: %TWOLAME_VERSION% >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 @echo Libs: -L%PREFIX_PATH_FORWARD%/lib -ltwolame_dll >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 @echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 
@@ -726,11 +782,11 @@ copy /y lib\*.dll "%PREFIX_PATH%\bin\" || goto end
 
 :taglib
 
-@echo Compiling taglib
+@echo Building taglib
 
 cd "%BUILD_PATH%"
-if not exist "taglib-1.13" tar -xvf "%DOWNLOADS_PATH%\taglib-1.13.tar.gz" || goto end
-cd "taglib-1.13" || goto end
+if not exist "taglib-%TAGLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\taglib-%TAGLIB_VERSION%.tar.gz" || goto end
+cd "taglib-%TAGLIB_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
@@ -743,11 +799,11 @@ cmake --install . || goto end
 
 :dlfcn-win32
 
-@echo Compiling dlfcn-win32
+@echo Building dlfcn-win32
 
 cd "%BUILD_PATH%"
-if not exist "dlfcn-win32-1.3.0" tar -xvf "%DOWNLOADS_PATH%\v1.3.0.tar.gz" || goto end
-cd "dlfcn-win32-1.3.0" || goto end
+if not exist "dlfcn-win32-%DLFCN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%DLFCN_VERSION%.tar.gz" || goto end
+cd "dlfcn-win32-%DLFCN_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
@@ -759,7 +815,7 @@ cmake --install . || goto end
 
 :fftw3
 
-@echo Compiling fftw3
+@echo Building fftw3
 
 cd "%BUILD_PATH%"
 
@@ -774,7 +830,7 @@ cd "%BUILD_PATH%"
 if not exist "fftw" @(
   mkdir fftw || goto end
   cd fftw || goto end
-  7z x "%DOWNLOADS_PATH%\fftw-3.3.5-dll64.zip" || goto end
+  7z x "%DOWNLOADS_PATH%\fftw-%FFTW_VERSION%-dll64.zip" || goto end
   cd ..
 ) || goto end
 cd fftw
@@ -788,7 +844,7 @@ xcopy /s /y fftw3.h "%PREFIX_PATH%\include\"
 
 :libffi
 
-@echo Compiling libffi
+@echo Building libffi
 
 cd "%BUILD_PATH%"
 if not exist "libffi" @(
@@ -808,7 +864,7 @@ ninja install || goto end
 
 :libintl
 
-@echo Compiling libintl
+@echo Building libintl
 
 cd "%BUILD_PATH%"
 if not exist "proxy-libintl" @(
@@ -826,15 +882,32 @@ ninja install || goto end
 @goto continue
 
 
+:libproxy
+
+@echo Building libproxy
+
+cd "%BUILD_PATH%"
+if not exist "libproxy-%LIBPROXY_VERSION%" 7z x "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.xz" -so | 7z x -aoa -si"libproxy-%LIBPROXY_VERSION%.tar"
+cd "libproxy-%LIBPROXY_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cd build || goto end
+cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DLIB_INSTALL_DIR="%PREFIX_PATH%\lib" -DBIN_INSTALL_DIR="%PREFIX_PATH%\bin" -DLIBEXEC_INSTALL_DIR="%PREFIX_PATH%\bin" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWITH_DBUS=OFF -DWITH_DOTNET=OFF -DWITH_DUKTAPE=OFF -DWITH_GNOME2=OFF -DWITH_GNOME3=OFF -DWITH_KDE=OFF -DWITH_MOZJS=OFF -DWITH_NATUS=OFF -DWITH_NM=OFF -DWITH_NMold=OFF -DWITH_PERL=OFF -DWITH_PYTHON2=OFF -DWITH_PYTHON3=OFF -DWITH_SYSCONFIG=OFF -DWITH_VALA=OFF -DWITH_WEBKIT=OFF -DWITH_WEBKIT3=OFF || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || goto end
+
+@goto continue
+
+
 :glib
 
-@echo Compiling glib
+@echo Building glib
 
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "glib-2.75.4" 7z x "%DOWNLOADS_PATH%\glib-2.75.4.tar.xz" -so | 7z x -aoa -si"glib-2.75.4.tar"
-cd "glib-2.75.4" || goto end
+if not exist "glib-%GLIB_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-%GLIB_VERSION%.tar"
+cd "glib-%GLIB_VERSION%" || goto end
 @rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
@@ -848,13 +921,12 @@ ninja install || goto end
 
 :glib-networking
 
-@echo Compiling glib-networking
+@echo Building glib-networking
 
 cd "%BUILD_PATH%"
-if not exist "glib-networking-2.74.0" 7z x "%DOWNLOADS_PATH%\glib-networking-2.74.0.tar.xz" -so | 7z x -aoa -si"glib-networking-2.74.0.tar" || goto end
-cd "glib-networking-2.74.0" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/glib-networking-tests.patch"
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled build || goto end
+if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-networking-%GLIB_NETWORKING_VERSION%.tar" || goto end
+cd "glib-networking-%GLIB_NETWORKING_VERSION%" || goto end
+if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled -Dgnome_proxy=disabled -Dlibproxy=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -864,11 +936,11 @@ ninja install || goto end
 
 :libpsl
 
-@echo Compiling libpsl
+@echo Building libpsl
 
 cd "%BUILD_PATH%"
-if not exist "libpsl-0.21.2" tar -xvf "%DOWNLOADS_PATH%\libpsl-0.21.2.tar.gz" || goto end
-cd "libpsl-0.21.2" || goto end
+if not exist "libpsl-%LIBPSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpsl-%LIBPSL_VERSION%.tar.gz" || goto end
+cd "libpsl-%LIBPSL_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\libpsl-time.patch"
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
@@ -880,11 +952,11 @@ ninja install || goto end
 
 :libsoup
 
-@echo Compiling libsoup
+@echo Building libsoup
 
 cd "%BUILD_PATH%"
-if not exist "libsoup-3.2.2" 7z x "%DOWNLOADS_PATH%\libsoup-3.2.2.tar.xz" -so | 7z x -aoa -si"libsoup-3.2.2.tar" || goto end
-cd "libsoup-3.2.2" || goto end
+if not exist "libsoup-%LIBSOUP_VERSION%" 7z x "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" -so | 7z x -aoa -si"libsoup-%LIBSOUP_VERSION%.tar" || goto end
+cd "libsoup-%LIBSOUP_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
 cd build || goto end
 ninja || goto end
@@ -896,11 +968,11 @@ ninja install || goto end
 
 :orc
 
-@echo Compiling orc
+@echo Building orc
 
 cd "%BUILD_PATH%"
-if not exist "orc-0.4.33" 7z x "%DOWNLOADS_PATH%\orc-0.4.33.tar.xz" -so | 7z x -aoa -si"orc-0.4.33.tar" || goto end
-cd "orc-0.4.33" || goto end
+if not exist "orc-%ORC_VERSION%" 7z x "%DOWNLOADS_PATH%\orc-%ORC_VERSION%.tar.xz" -so | 7z x -aoa -si"orc-%ORC_VERSION%.tar" || goto end
+cd "orc-%ORC_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
@@ -912,11 +984,11 @@ ninja install || goto end
 
 :musepack
 
-@echo Compiling musepack
+@echo Building musepack
 
 cd "%BUILD_PATH%"
-if not exist "musepack_src_r475" tar -xvf "%DOWNLOADS_PATH%\musepack_src_r475.tar.gz" || goto end
-cd "musepack_src_r475" || goto end
+if not exist "musepack_src_r%MUSEPACK_VERSION%" tar -xvf "%DOWNLOADS_PATH%\musepack_src_r%MUSEPACK_VERSION%.tar.gz" || goto end
+cd "musepack_src_r%MUSEPACK_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\musepack-fixes.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -932,13 +1004,13 @@ goto continue
 
 :libopenmpt
 
-@echo Compiling libopenmpt
+@echo Building libopenmpt
 
 cd "%BUILD_PATH%"
 if not exist "libopenmpt" @(
   mkdir libopenmpt || goto end
   cd libopenmpt || goto end
-  7z x "%DOWNLOADS_PATH%\libopenmpt-0.6.8+release.msvc.zip" || goto end
+  7z x "%DOWNLOADS_PATH%\libopenmpt-%LIBOPENMPT_VERSION%+release.msvc.zip" || goto end
   cd ..
  ) || goto end
 cd "libopenmpt" || goto end
@@ -954,13 +1026,13 @@ goto continue
 
 :libgme
 
-@echo Compiling libgme
+@echo Building libgme
 
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "game-music-emu-0.6.3" tar -xf "%DOWNLOADS_PATH%/game-music-emu-0.6.3.tar.gz" || goto end
-cd game-music-emu-0.6.3 || goto end
+if not exist "game-music-emu-%LIBGME_VERSION%" tar -xf "%DOWNLOADS_PATH%/game-music-emu-%LIBGME_VERSION%.tar.gz" || goto end
+cd game-music-emu-%LIBGME_VERSION% || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
@@ -974,11 +1046,11 @@ goto continue
 
 :fdk-aac
 
-@echo Compiling fdk-aac
+@echo Building fdk-aac
 
 cd "%BUILD_PATH%"
-if not exist "fdk-aac-2.0.2" tar -xvf "%DOWNLOADS_PATH%\fdk-aac-2.0.2.tar.gz" || goto end
-cd "fdk-aac-2.0.2" || goto end
+if not exist "fdk-aac-%FDK_AAC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\fdk-aac-%FDK_AAC_VERSION%.tar.gz" || goto end
+cd "fdk-aac-%FDK_AAC_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF || goto end
@@ -991,10 +1063,10 @@ cmake --install . || goto end
 
 :faad2
 
-@echo Compiling faad2
+@echo Building faad2
 
 cd "%BUILD_PATH%"
-if not exist "knik0-faad2-*" tar -xvf "%DOWNLOADS_PATH%\faad2-2.10.1.tar.gz" || goto end
+if not exist "knik0-faad2-*" tar -xvf "%DOWNLOADS_PATH%\faad2-%FAAD2_VERSION%.tar.gz" || goto end
 cd "knik0-faad2-*" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\faad2-cmake.patch"
 if not exist build mkdir build || goto end
@@ -1010,7 +1082,7 @@ copy /y "..\include\*.h" "%PREFIX_PATH%\include\" || goto end
 
 :faac
 
-@echo Compiling faac
+@echo Building faac
 
 cd "%BUILD_PATH%"
 if not exist "faac" @(
@@ -1034,11 +1106,11 @@ copy /y "bin\%BUILD_TYPE%\*.dll" "%PREFIX_PATH%\bin\" || goto end
 
 :libbs2b
 
-@echo Compiling libbs2b
+@echo Building libbs2b
 
 cd "%BUILD_PATH%"
-if not exist "libbs2b-3.1.0" tar -xvf "%DOWNLOADS_PATH%\libbs2b-3.1.0.tar.bz2" || goto end
-cd "libbs2b-3.1.0" || goto end
+if not exist "libbs2b-%LIBBS2B_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libbs2b-%LIBBS2B_VERSION%.tar.bz2" || goto end
+cd "libbs2b-%LIBBS2B_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\libbs2b-msvc.patch"
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -1052,7 +1124,7 @@ cmake --install . || goto end
 
 :ffmpeg
 
-@echo Compiling ffmpeg
+@echo Building ffmpeg
 
 cd "%BUILD_PATH%"
 if not exist "ffmpeg" @(
@@ -1074,11 +1146,11 @@ ninja install || goto end
 
 :chromaprint
 
-@echo Compiling chromaprint
+@echo Building chromaprint
 
 cd "%BUILD_PATH%"
-if not exist "chromaprint-1.5.1" tar -xvf "%DOWNLOADS_PATH%\chromaprint-1.5.1.tar.gz"
-cd "chromaprint-1.5.1" || goto end
+if not exist "chromaprint-%CHROMEPRINT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\chromaprint-%CHROMEPRINT_VERSION%.tar.gz"
+cd "chromaprint-%CHROMEPRINT_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="%PREFIX_PATH%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
@@ -1090,11 +1162,11 @@ cmake --install . || goto end
 
 :gstreamer
 
-@echo Compiling GStreamer
+@echo Building GStreamer
 
 cd "%BUILD_PATH%"
-if not exist "gstreamer-1.22.1" 7z x "%DOWNLOADS_PATH%\gstreamer-1.22.1.tar.xz" -so | 7z x -aoa -si"gstreamer-1.22.1.tar" || goto end
-cd "gstreamer-1.22.1" || goto end
+if not exist "gstreamer-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gstreamer-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gstreamer-%GSTREAMER_VERSION%.tar" || goto end
+cd "gstreamer-%GSTREAMER_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
@@ -1105,11 +1177,11 @@ goto continue
 
 :gst-plugins-base
 
-@echo Compiling gst-plugins-base
+@echo Building gst-plugins-base
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-base-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-1.22.1.tar" || goto end
-cd "gst-plugins-base-1.22.1" || goto end
+if not exist "gst-plugins-base-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-%GSTREAMER_VERSION%.tar" || goto end
+cd "gst-plugins-base-%GSTREAMER_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Ddoc=disabled -Dorc=enabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Dcompositor=disabled -Dencoding=disabled -Dgio=enabled -Dgio-typefinder=enabled -Doverlaycomposition=disabled -Dpbtypes=enabled -Dplayback=enabled -Drawparse=disabled -Dsubparse=disabled -Dtcp=enabled -Dtypefind=enabled -Dvideoconvertscale=disabled -Dvideorate=disabled -Dvideotestsrc=disabled -Dvolume=enabled -Dalsa=disabled -Dcdparanoia=disabled -Dlibvisual=disabled -Dogg=enabled -Dopus=enabled -Dpango=disabled -Dtheora=disabled -Dtremor=disabled -Dvorbis=enabled -Dx11=disabled -Dxshm=disabled -Dxvideo=disabled -Dgl=disabled -Dgl-graphene=disabled -Dgl-jpeg=disabled -Dgl-png=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1120,11 +1192,11 @@ ninja install || goto end
 
 :gst-plugins-good
 
-@echo Compiling gst-plugins-good
+@echo Building gst-plugins-good
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-good-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-1.22.1.tar" || goto end
-cd "gst-plugins-good-1.22.1" || goto end
+if not exist "gst-plugins-good-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-%GSTREAMER_VERSION%.tar" || goto end
+cd "gst-plugins-good-%GSTREAMER_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dxingmux=enabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
@@ -1135,11 +1207,11 @@ ninja install || goto end
 
 :gst-plugins-bad
 
-@echo Compiling gst-plugins-bad
+@echo Building gst-plugins-bad
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-bad-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-1.22.1.tar" || goto end
-cd "gst-plugins-bad-1.22.1" || goto end
+if not exist "gst-plugins-bad-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-%GSTREAMER_VERSION%.tar" || goto end
+cd "gst-plugins-bad-%GSTREAMER_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-libpaths.patch"
 sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faad\meson.build || goto end
 sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faac\meson.build || goto end
@@ -1155,11 +1227,11 @@ ninja install || goto end
 
 :gst-plugins-ugly
 
-@echo Compiling gst-plugins-ugly
+@echo Building gst-plugins-ugly
 
 cd "%BUILD_PATH%"
-if not exist "gst-plugins-ugly-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-1.22.1.tar" || goto end
-cd "gst-plugins-ugly-1.22.1" || goto end
+if not exist "gst-plugins-ugly-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-%GSTREAMER_VERSION%.tar" || goto end
+cd "gst-plugins-ugly-%GSTREAMER_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dorc=enabled -Dasfdemux=enabled -Ddvdlpcmdec=disabled -Ddvdsub=disabled -Drealmedia=disabled -Da52dec=disabled -Damrnb=disabled -Damrwbdec=disabled -Dcdio=disabled -Ddvdread=disabled -Dmpeg2dec=disabled -Dsidplay=disabled -Dx264=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1170,11 +1242,11 @@ ninja install || goto end
 
 :gst-libav
 
-@echo Compiling gst-libav
+@echo Building gst-libav
 
 cd "%BUILD_PATH%"
-if not exist "gst-libav-1.22.1" 7z x "%DOWNLOADS_PATH%\gst-libav-1.22.1.tar.xz" -so | 7z x -aoa -si"gst-libav-1.22.1.tar" || goto end
-cd "gst-libav-1.22.1" || goto end
+if not exist "gst-libav-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-libav-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-libav-%GSTREAMER_VERSION%.tar" || goto end
+cd "gst-libav-%GSTREAMER_VERSION%" || goto end
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled build || goto end
 cd build || goto end
 ninja || goto end
@@ -1185,11 +1257,11 @@ ninja install || goto end
 
 :abseil-cpp
 
-@echo Compiling abseil-cpp
+@echo Building abseil-cpp
 
 cd "%BUILD_PATH%"
-if not exist "abseil-cpp-20230125.1" tar -xvf "%DOWNLOADS_PATH%\20230125.1.tar.gz" || goto end
-cd "abseil-cpp-20230125.1" || goto end
+if not exist "abseil-cpp-%ABSEIL_CPP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
+cd "abseil-cpp-%ABSEIL_CPP_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
@@ -1201,16 +1273,16 @@ cmake --install . || goto end
 
 :protobuf
 
-@echo Compiling protobuf
+@echo Building protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-22.1" tar -xvf "%DOWNLOADS_PATH%\protobuf-22.1.tar.gz" || goto end
-cd "protobuf-22.1" || goto end
+if not exist "protobuf-%PROTOBUF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
+cd "protobuf-%PROTOBUF_VERSION%" || goto end
 if not exist "third_party\abseil-cpp\CMakeLists.txt" @(
   cd "third_party" || goto end
   rmdir "abseil-cpp" || goto end
-  tar -xvf "%DOWNLOADS_PATH%\20230125.1.tar.gz" || goto end
-  move "abseil-cpp-20230125.1" "abseil-cpp" || goto end
+  tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
+  move "abseil-cpp-%ABSEIL_CPP_VERSION%" "abseil-cpp" || goto end
   cd .. || goto end
 ) || goto end
 if not exist build mkdir build || goto end
@@ -1225,10 +1297,10 @@ copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 
 :icu4c
 
-@echo Compiling icu4c
+@echo Building icu4c
 
 cd "%BUILD_PATH%"
-if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-72_1-src.zip" || goto end
+if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-%ICU4C_VERSION%-src.zip" || goto end
 cd "icu" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/icu-uwp.patch"
 cd "source\allinone" || goto end
@@ -1245,11 +1317,11 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 
 :expat
 
-@echo Compiling expat
+@echo Building expat
 
 cd "%BUILD_PATH%"
-if not exist "expat-2.5.0" tar -xvf "%DOWNLOADS_PATH%\expat-2.5.0.tar.bz2" || goto end
-cd "expat-2.5.0" || goto end
+if not exist "expat-%EXPAT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\expat-%EXPAT_VERSION%.tar.bz2" || goto end
+cd "expat-%EXPAT_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DEXPAT_SHARED_LIBS=ON -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_FUZZERS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_PKGCONFIG=ON || goto end
@@ -1261,11 +1333,11 @@ cmake --install . || goto end
 
 :freetype
 
-@echo Compiling freetype without harfbuzz
+@echo Building freetype without harfbuzz
 
 cd "%BUILD_PATH%"
-if not exist "freetype-2.13.0" tar -xvf "%DOWNLOADS_PATH%\freetype-2.13.0.tar.gz" || goto end
-cd "freetype-2.13.0" || goto end
+if not exist "freetype-%FREETYPE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\freetype-%FREETYPE_VERSION%.tar.gz" || goto end
+cd "freetype-%FREETYPE_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
@@ -1278,13 +1350,13 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 :harfbuzz
 
-@echo Compiling harfbuzz
+@echo Building harfbuzz
 
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%"
-if not exist "harfbuzz-7.1.0" 7z x "%DOWNLOADS_PATH%\harfbuzz-7.1.0.tar.xz" -so | 7z x -aoa -si"harfbuzz-7.1.0.tar" || goto end
-cd "harfbuzz-7.1.0" || goto end
+if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar" || goto end
+cd "harfbuzz-%HARFBUZZ_VERSION%" || goto end
 
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
@@ -1297,11 +1369,11 @@ ninja install || goto end
 @rem cmake --build . || goto end
 @rem cmake --install . || goto end
 
-@echo Compiling freetype with harfbuzz
+@echo Building freetype with harfbuzz
 
 cd "%BUILD_PATH%"
-if not exist "freetype-2.13.0" tar -xvf "%DOWNLOADS_PATH%\freetype-2.13.0.tar.gz" || goto end
-cd "freetype-2.13.0" || goto end
+if not exist "freetype-%FREETYPE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\freetype-%FREETYPE_VERSION%.tar.gz" || goto end
+cd "freetype-%FREETYPE_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
@@ -1316,14 +1388,24 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 :qtbase
 
-@echo Compiling qtbase
+@echo Building qtbase
 
 @rem "Workaround Qt issue with harfbuzz pc file."
 del "%PREFIX_PATH%\lib\pkgconfig\harfbuzz.pc"
 
 cd "%BUILD_PATH%"
-if not exist "qtbase-everywhere-src-6.4.2" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-6.4.2.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-6.4.2.tar" || goto end
-cd "qtbase-everywhere-src-6.4.2" || goto end
+
+if "%QT_DEV%" == "ON" @(
+  if not exist "qtbase" @(
+    mkdir "qtbase" || goto end
+    cd "qtbase" || goto end
+    xcopy /s /y /h "%DOWNLOADS_PATH%\qtbase" . || goto end
+  )
+) else @(
+  if not exist "qtbase-everywhere-src-%QT_VERSION%" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-%QT_VERSION%.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-%QT_VERSION%.tar" || goto end
+  cd "qtbase-everywhere-src-%QT_VERSION%" || goto end
+)
+
 if not exist build mkdir build || goto end
 cd build || goto end
 cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH_FORWARD%/bin/pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_brotli=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_schannel=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=ON -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
@@ -1335,11 +1417,21 @@ cmake --install . || goto end
 
 :qttools
 
-@echo Compiling qttools
+@echo Building qttools
 
 cd "%BUILD_PATH%"
-if not exist "qttools-everywhere-src-6.4.2" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-6.4.2.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-6.4.2.tar" || goto end
-cd "qttools-everywhere-src-6.4.2" || goto end
+
+if "%QT_DEV%" == "ON" @(
+  if not exist "qttools" @(
+    mkdir "qttools" || goto end
+    cd "qttools" || goto end
+    xcopy /s /y /h "%DOWNLOADS_PATH%\qttools" . || goto end
+  )
+) else (
+  if not exist "qttools-everywhere-src-%QT_VERSION%" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-%QT_VERSION%.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-%QT_VERSION%.tar" || goto end
+  cd "qttools-everywhere-src-%QT_VERSION%" || goto end
+)
+
 if not exist build mkdir build || goto end
 cd build || goto end
 call %PREFIX_PATH%\bin\qt-configure-module.bat .. -feature-linguist -no-feature-assistant -no-feature-designer || goto end
@@ -1351,7 +1443,7 @@ cmake --install . || goto end
 
 :qtsparkle
 
-@echo Compiling qtsparkle
+@echo Building qtsparkle
 
 cd "%BUILD_PATH%"
 if not exist "qtsparkle" @(
@@ -1385,7 +1477,7 @@ cmake --install . || goto end
 
 :strawberry
 
-@echo Compiling strawberry
+@echo Building strawberry
 
 cd "%BUILD_PATH%"
 if not exist "strawberry" @(
