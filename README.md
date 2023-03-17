@@ -57,7 +57,7 @@ Extract them to ie.: "c:\strawberry_msvc_x86_64_debug" for the debug version, or
 
 ### Alternative 2: Building all dependencies from source
 
-This guide provides a "download.bat" and "compile.bat" file to automatically build all dependencies.
+This guide provides a "download.bat" and "build.bat" file to automatically build all dependencies.
 
 Start "x64 Native Tools Command Prompt for VS 2022"
 
@@ -68,12 +68,12 @@ This should download all necessary sources.
 
 #### Compile for debug
 
-    compile.bat "debug"
+    build.bat "debug"
 
 
 #### Compile for release
 
-    compile.bat "release"
+    build.bat "release"
 
 
 ### Building strawberry
