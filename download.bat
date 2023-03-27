@@ -108,7 +108,7 @@ https://download.qt.io/official_releases/qt/6.4/6.4.3/submodules/qttools-everywh
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-72-1/icu4c-72_1-src.zip
 https://downloads.sourceforge.net/twolame/twolame-0.4.0.tar.gz
-https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.1.tar.gz
+https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.2.tar.gz
 https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
 https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-windows-x86_64.msi
 https://github.com/mesonbuild/meson/releases/download/1.0.1/meson-1.0.1-64.msi
