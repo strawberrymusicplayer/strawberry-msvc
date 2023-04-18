@@ -1554,9 +1554,9 @@ copy /y "%prefix_path%\bin\gsttag-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gsturidownloader-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstvideo-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\harfbuzz*.dll" || goto end
-copy /y "%prefix_path%\bin\icudt72*.dll" || goto end
-copy /y "%prefix_path%\bin\icuin72*.dll" || goto end
-copy /y "%prefix_path%\bin\icuuc72*.dll" || goto end
+copy /y "%prefix_path%\bin\icudt73*.dll" || goto end
+copy /y "%prefix_path%\bin\icuin73*.dll" || goto end
+copy /y "%prefix_path%\bin\icuuc73*.dll" || goto end
 copy /y "%prefix_path%\bin\intl-8.dll" || goto end
 copy /y "%prefix_path%\bin\jpeg62.dll" || goto end
 copy /y "%prefix_path%\bin\libbs2b.dll" || goto end
