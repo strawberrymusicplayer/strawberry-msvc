@@ -80,11 +80,11 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
 https://www.fftw.org/fftw-3.3.10.tar.gz
 https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.76/glib-2.76.1.tar.xz
+https://download.gnome.org/sources/glib/2.76/glib-2.76.2.tar.xz
 https://download.gnome.org/sources/glib-networking/2.76/glib-networking-2.76.0.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz
 https://github.com/libproxy/libproxy/releases/download/0.4.18/libproxy-0.4.18.tar.xz
-https://download.gnome.org/sources/libsoup/3.4/libsoup-3.4.0.tar.xz
+https://download.gnome.org/sources/libsoup/3.4/libsoup-3.4.1.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-0.4.33.tar.xz
 https://files.musepack.net/source/musepack_src_r475.tar.gz
 https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.6.10+release.msvc.zip
