@@ -52,7 +52,7 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.40.0.w
 
 @for %%x in (
 https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz
-https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.4.tar.gz
+https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.5.tar.gz
 https://zlib.net/zlib-1.2.13.tar.gz
 https://www.openssl.org/source/openssl-3.1.0.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/3.8.0/libgnutls_3.8.0_msvc17.zip
@@ -60,7 +60,7 @@ https://downloads.sourceforge.net/project/libpng/libpng16/1.6.39/libpng-1.6.39.t
 https://downloads.sourceforge.net/project/libjpeg-turbo/2.1.5.1/libjpeg-turbo-2.1.5.1.tar.gz
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.41/pcre2-10.41.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-https://tukaani.org/xz/xz-5.4.2.tar.bz2
+https://tukaani.org/xz/xz-5.4.3.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.11.1/libxml2-v2.11.1.tar.bz2
@@ -108,7 +108,7 @@ https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qttools-everywh
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.zip
 https://downloads.sourceforge.net/twolame/twolame-0.4.0.tar.gz
-https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.2.tar.gz
+https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.3.tar.gz
 https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
 https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-windows-x86_64.msi
 https://github.com/mesonbuild/meson/releases/download/1.0.1/meson-1.0.1-64.msi
