@@ -42,7 +42,7 @@
 @set TWOLAME_VERSION=0.4.0
 @set TAGLIB_VERSION=1.13
 @set DLFCN_VERSION=1.3.0
-@set FFTW_VERSION=3.3.5
+@set FFTW_VERSION=3.3.10
 @set LIBPROXY_VERSION=0.4.18
 @set GLIB_VERSION=2.76.2
 @set GLIB_NETWORKING_VERSION=2.76.0
@@ -828,29 +828,26 @@ cmake --install . || goto end
 
 :fftw3
 
+@rem Use FFTW compiled with mingw as it's recommended by FFTW.
+
 @echo Building fftw3
 
 cd "%BUILD_PATH%"
 
-@REM if not exist "fftw-3.3.10" tar -xvf "%DOWNLOADS_PATH%\fftw-3.3.10.tar.gz" || goto end
-@REM cd "fftw-3.3.10" || goto end
-@REM if not exist build mkdir build || goto end
-@REM cd build || goto end
-@REM cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTS=OFF -DENABLE_AVX=ON -DENABLE_AVX2=ON -DENABLE_SSE=ON -DENABLE_SSE2=ON -DENABLE_THREADS=ON -DWITH_COMBINED_THREADS=ON || goto end
-@REM cmake --build . || goto end
-@REM cmake --install . || goto end
-
 if not exist "fftw" @(
   mkdir fftw || goto end
   cd fftw || goto end
-  7z x "%DOWNLOADS_PATH%\fftw-%FFTW_VERSION%-dll64.zip" || goto end
+  7z x "%DOWNLOADS_PATH%\fftw-%FFTW_VERSION%-x64-%BUILD_TYPE%.zip" || goto end
   cd ..
 ) || goto end
-cd fftw
-lib /def:libfftw3-3.def
-xcopy /s /y libfftw3-3.dll "%PREFIX_PATH%\bin\"
-xcopy /s /y libfftw3-3.lib "%PREFIX_PATH%\lib\"
-xcopy /s /y fftw3.h "%PREFIX_PATH%\include\"
+cd fftw || goto end
+@rem echo LIBRARY libfftw3-3.dll > libfftw3-3.def
+@rem echo EXPORTS >> libfftw3-3.def
+@rem for /f "skip=19 tokens=4" %A in ('dumpbin /exports libfftw3-3.dll') do echo %A>> libfftw3-3.def
+lib /machine:x64 /def:libfftw3-3.def || goto end
+xcopy /s /y libfftw3-3.dll "%PREFIX_PATH%\bin\" || goto end
+xcopy /s /y libfftw3-3.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y fftw3.h "%PREFIX_PATH%\include\" || goto end
 
 @goto continue
 

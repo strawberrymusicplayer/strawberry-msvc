@@ -77,8 +77,8 @@ https://downloads.sourceforge.net/project/mpg123/mpg123/1.31.3/mpg123-1.31.3.tar
 https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz
 https://taglib.org/releases/taglib-1.13.tar.gz
 https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
-https://www.fftw.org/fftw-3.3.10.tar.gz
-https://fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
+https://files.strawberrymusicplayer.org/fftw-3.3.10-x64-debug.zip
+https://files.strawberrymusicplayer.org/fftw-3.3.10-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
 https://download.gnome.org/sources/glib/2.76/glib-2.76.2.tar.xz
 https://download.gnome.org/sources/glib-networking/2.76/glib-networking-2.76.0.tar.xz
