@@ -27,7 +27,7 @@
 @set BROTLI_VERSION=1.0.9
 @set PCRE2_VERSION=10.41
 @set PIXMAN_VERSION=0.42.2
-@set LIBXML2_VERSION=2.11.1
+@set LIBXML2_VERSION=2.11.2
 @set NGHTTP2_VERSION=1.52.0
 @set SQLITE_VERSION=3410200
 @set LIBOGG_VERSION=1.3.5
@@ -50,7 +50,7 @@
 @set LIBSOUP_VERSION=3.4.2
 @set ORC_VERSION=0.4.33
 @set MUSEPACK_VERSION=475
-@set LIBOPENMPT_VERSION=0.7.0
+@set LIBOPENMPT_VERSION=0.7.1
 @set LIBGME_VERSION=0.6.3
 @set FDK_AAC_VERSION=2.0.2
 @set FAAD2_VERSION=2.10.1
@@ -58,7 +58,7 @@
 @set CHROMEPRINT_VERSION=1.5.1
 @set GSTREAMER_VERSION=1.22.2
 @set ABSEIL_CPP_VERSION=20230125.3
-@set PROTOBUF_VERSION=22.3
+@set PROTOBUF_VERSION=22.4
 @set ICU4C_VERSION=73_1
 @set EXPAT_VERSION=2.5.0
 @set FREETYPE_VERSION=2.13.0
@@ -526,7 +526,7 @@ ninja install || goto end
 @echo Building libxml2
 
 cd "%BUILD_PATH%"
-if not exist "libxml2-v%LIBXML2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libxml2-v%LIBXML2_VERSION%.tar.bz2"
+if not exist "libxml2-v%LIBXML2_VERSION%" tar --force-local -xvf "%DOWNLOADS_PATH%\libxml2-v%LIBXML2_VERSION%.tar.bz2"
 cd "libxml2-v%LIBXML2_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cd build || goto end
@@ -1290,12 +1290,12 @@ cmake --install . || goto end
 @echo Building protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-%PROTOBUF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
+if not exist "protobuf-%PROTOBUF_VERSION%" tar --force-local -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
 cd "protobuf-%PROTOBUF_VERSION%" || goto end
 if not exist "third_party\abseil-cpp\CMakeLists.txt" @(
   cd "third_party" || goto end
   rmdir "abseil-cpp" || goto end
-  tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
+  tar --force-local -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
   move "abseil-cpp-%ABSEIL_CPP_VERSION%" "abseil-cpp" || goto end
   cd .. || goto end
 ) || goto end
