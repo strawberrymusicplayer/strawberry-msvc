@@ -27,8 +27,8 @@
 @set BROTLI_VERSION=1.0.9
 @set PCRE2_VERSION=10.41
 @set PIXMAN_VERSION=0.42.2
-@set LIBXML2_VERSION=2.11.2
-@set NGHTTP2_VERSION=1.52.0
+@set LIBXML2_VERSION=2.11.3
+@set NGHTTP2_VERSION=1.53.0
 @set SQLITE_VERSION=3410200
 @set LIBOGG_VERSION=1.3.5
 @set LIBVORBIS_VERSION=1.3.7
@@ -58,11 +58,11 @@
 @set CHROMEPRINT_VERSION=1.5.1
 @set GSTREAMER_VERSION=1.22.2
 @set ABSEIL_CPP_VERSION=20230125.3
-@set PROTOBUF_VERSION=22.4
+@set PROTOBUF_VERSION=23.0
 @set ICU4C_VERSION=73_1
 @set EXPAT_VERSION=2.5.0
 @set FREETYPE_VERSION=2.13.0
-@set HARFBUZZ_VERSION=7.2.0
+@set HARFBUZZ_VERSION=7.3.0
 @set QT_VERSION=6.5.0
 @set QT_DEV=OFF
 
@@ -311,8 +311,8 @@ cd "%BUILD_PATH%"
 if not exist "yasm-%YASM_VERSION%" tar -xvf "%DOWNLOADS_PATH%\yasm-%YASM_VERSION%.tar.gz" || goto end
 cd "yasm-%YASM_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -327,8 +327,8 @@ cd "%BUILD_PATH%" || goto end
 if not exist "zlib-%ZLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\zlib-%ZLIB_VERSION%.tar.gz" || goto end
 cd "zlib-%ZLIB_VERSION%" || goto end
 if not exist build mkdir build
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -390,8 +390,8 @@ if not exist "libpng-%LIBPNG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpng-%LIBPNG
 cd "libpng-%LIBPNG_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/libpng-pkgconf.patch"
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 @if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\libpng16d.lib" "%PREFIX_PATH%\lib\png16.lib" || goto end
@@ -407,8 +407,8 @@ cd "%BUILD_PATH%"
 if not exist "libjpeg-turbo-%LIBJPEG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz" || goto end
 cd "libjpeg-turbo-%LIBJPEG_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DENABLE_SHARED=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DENABLE_SHARED=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -424,8 +424,8 @@ if not exist "bzip2-%BZIP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\bzip2-%BZIP2_VER
 cd bzip2-%BZIP2_VERSION% || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/bzip2-cmake.patch"
 if not exist build2 mkdir build2 || goto end
+cmake -S . -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build2 || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -459,8 +459,8 @@ cd "%BUILD_PATH%"
 if not exist "brotli-%BROTLI_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%BROTLI_VERSION%.tar.gz" || goto end
 cd "brotli-%BROTLI_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
+cmake -S . -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_TESTING=OFF || goto end
 cd build2 || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_TESTING=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -475,8 +475,8 @@ cd "%BUILD_PATH%"
 if not exist "pcre2-%PCRE2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pcre2-%PCRE2_VERSION%.tar.bz2" || goto end
 cd "pcre2-%PCRE2_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -526,11 +526,11 @@ ninja install || goto end
 @echo Building libxml2
 
 cd "%BUILD_PATH%"
-if not exist "libxml2-v%LIBXML2_VERSION%" tar --force-local -xvf "%DOWNLOADS_PATH%\libxml2-v%LIBXML2_VERSION%.tar.bz2"
+if not exist "libxml2-v%LIBXML2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libxml2-v%LIBXML2_VERSION%.tar.bz2"
 cd "libxml2-v%LIBXML2_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DLIBXML2_WITH_PYTHON=OFF -DLIBXML2_WITH_ZLIB=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DLIBXML2_WITH_PYTHON=OFF -DLIBXML2_WITH_ZLIB=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 @if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\libxml2d.lib" "%PREFIX_PATH%/lib/libxml2.lib"
@@ -546,8 +546,8 @@ cd "%BUILD_PATH%"
 if not exist "nghttp2-%NGHTTP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\nghttp2-%NGHTTP2_VERSION%.tar.bz2" || goto end
 cd "nghttp2-%NGHTTP2_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DENABLE_SHARED_LIB=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DENABLE_SHARED_LIB=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -592,8 +592,8 @@ cd "%BUILD_PATH%"
 if not exist "libogg-%LIBOGG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libogg-%LIBOGG_VERSION%.tar.gz" || goto end
 cd "libogg-%LIBOGG_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -608,8 +608,8 @@ cd "%BUILD_PATH%"
 if not exist "libvorbis-%LIBVORBIS_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libvorbis-%LIBVORBIS_VERSION%.tar.gz" || goto end
 cd "libvorbis-%LIBVORBIS_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -624,8 +624,8 @@ cd "%BUILD_PATH%"
 if not exist "flac-%FLAC_VERSION%" 7z x "%DOWNLOADS_PATH%\flac-%FLAC_VERSION%.tar.xz" -so | 7z x -aoa -si"flac-%FLAC_VERSION%.tar" || goto end
 cd "flac-%FLAC_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
+cmake -S . -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_MANPAGES=OFF -DBUILD_TESTING=OFF -DBUILD_PROGRAMS=OFF || goto end
 cd build2 || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_MANPAGES=OFF -DBUILD_TESTING=OFF -DBUILD_PROGRAMS=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -640,9 +640,8 @@ cd "%BUILD_PATH%"
 if not exist "wavpack-%WAVPACK_VERSION%" tar -xvf "%DOWNLOADS_PATH%\wavpack-%WAVPACK_VERSION%.tar.bz2" || goto end
 cd "wavpack-%WAVPACK_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWAVPACK_BUILD_DOCS=OFF -DWAVPACK_BUILD_PROGRAMS=OFF -DWAVPACK_ENABLE_ASM=OFF -DWAVPACK_ENABLE_LEGACY=OFF -DWAVPACK_BUILD_WINAMP_PLUGIN=OFF -DWAVPACK_BUILD_COOLEDIT_PLUGIN=OFF || goto end
 cd build || goto end
-if not exist wavpackdll mkdir wavpackdll
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWAVPACK_BUILD_DOCS=OFF -DWAVPACK_BUILD_PROGRAMS=OFF -DWAVPACK_ENABLE_ASM=OFF -DWAVPACK_ENABLE_LEGACY=OFF -DWAVPACK_BUILD_WINAMP_PLUGIN=OFF -DWAVPACK_BUILD_COOLEDIT_PLUGIN=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 if not exist "%PREFIX_PATH%\include\wavpack" mkdir "%PREFIX_PATH%\include\wavpack" || goto end
@@ -664,8 +663,8 @@ findstr /v /c:"include(opus_buildtype.cmake)" CMakeLists.txt > CMakeLists.txt.ne
 del CMakeLists.txt
 ren CMakeLists.txt.new CMakeLists.txt || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -682,8 +681,8 @@ if not exist "opusfile-%OPUSFILE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\opusfile-%
 cd "opusfile-%OPUSFILE_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/opusfile-cmake.patch"
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -700,8 +699,8 @@ if not exist "speex-Speex-%SPEEX_VERSION%" tar -xvf "%DOWNLOADS_PATH%\speex-Spee
 cd "speex-Speex-%SPEEX_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/speex-cmake.patch"
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 @if "%BUILD_TYPE%" == "debug" (
@@ -720,8 +719,8 @@ cd "%BUILD_PATH%"
 if not exist "mpg123-%MPG123_VERSION%" tar -xvf "%DOWNLOADS_PATH%\mpg123-%MPG123_VERSION%.tar.bz2" || goto end
 cd "mpg123-%MPG123_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
+cmake -S ports/cmake -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF -DYASM_ASSEMBLER="%PREFIX_PATH_FORWARD%/bin/vsyasm.exe" || goto end
 cd build2 || goto end
-cmake ../ports/cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF -DYASM_ASSEMBLER="%PREFIX_PATH_FORWARD%/bin/vsyasm.exe" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -801,8 +800,8 @@ cd "%BUILD_PATH%"
 if not exist "taglib-%TAGLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\taglib-%TAGLIB_VERSION%.tar.gz" || goto end
 cd "taglib-%TAGLIB_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -818,8 +817,8 @@ cd "%BUILD_PATH%"
 if not exist "dlfcn-win32-%DLFCN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%DLFCN_VERSION%.tar.gz" || goto end
 cd "dlfcn-win32-%DLFCN_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -900,8 +899,8 @@ cd "%BUILD_PATH%"
 if not exist "libproxy-%LIBPROXY_VERSION%" 7z x "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.xz" -so | 7z x -aoa -si"libproxy-%LIBPROXY_VERSION%.tar"
 cd "libproxy-%LIBPROXY_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DLIB_INSTALL_DIR="%PREFIX_PATH%\lib" -DBIN_INSTALL_DIR="%PREFIX_PATH%\bin" -DLIBEXEC_INSTALL_DIR="%PREFIX_PATH%\bin" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWITH_DBUS=OFF -DWITH_DOTNET=OFF -DWITH_DUKTAPE=OFF -DWITH_GNOME2=OFF -DWITH_GNOME3=OFF -DWITH_KDE=OFF -DWITH_MOZJS=OFF -DWITH_NATUS=OFF -DWITH_NM=OFF -DWITH_NMold=OFF -DWITH_PERL=OFF -DWITH_PYTHON2=OFF -DWITH_PYTHON3=OFF -DWITH_SYSCONFIG=OFF -DWITH_VALA=OFF -DWITH_WEBKIT=OFF -DWITH_WEBKIT3=OFF || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DLIB_INSTALL_DIR="%PREFIX_PATH%\lib" -DBIN_INSTALL_DIR="%PREFIX_PATH%\bin" -DLIBEXEC_INSTALL_DIR="%PREFIX_PATH%\bin" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWITH_DBUS=OFF -DWITH_DOTNET=OFF -DWITH_DUKTAPE=OFF -DWITH_GNOME2=OFF -DWITH_GNOME3=OFF -DWITH_KDE=OFF -DWITH_MOZJS=OFF -DWITH_NATUS=OFF -DWITH_NM=OFF -DWITH_NMold=OFF -DWITH_PERL=OFF -DWITH_PYTHON2=OFF -DWITH_PYTHON3=OFF -DWITH_SYSCONFIG=OFF -DWITH_VALA=OFF -DWITH_WEBKIT=OFF -DWITH_WEBKIT3=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || goto end
@@ -1002,8 +1001,8 @@ if not exist "musepack_src_r%MUSEPACK_VERSION%" tar -xvf "%DOWNLOADS_PATH%\musep
 cd "musepack_src_r%MUSEPACK_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\musepack-fixes.patch"
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DSHARED=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DSHARED=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy libmpcdec\*.lib %PREFIX_PATH%\lib\ || goto end
@@ -1027,8 +1026,8 @@ if not exist "libopenmpt" @(
 cd "libopenmpt" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\libopenmpt-cmake.patch"
 if not exist build2 mkdir build2 || goto end
+cmake -S . -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build2 || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1045,8 +1044,8 @@ cd "%BUILD_PATH%"
 if not exist "game-music-emu-%LIBGME_VERSION%" tar -xf "%DOWNLOADS_PATH%/game-music-emu-%LIBGME_VERSION%.tar.gz" || goto end
 cd game-music-emu-%LIBGME_VERSION% || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1063,8 +1062,8 @@ cd "%BUILD_PATH%"
 if not exist "fdk-aac-%FDK_AAC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\fdk-aac-%FDK_AAC_VERSION%.tar.gz" || goto end
 cd "fdk-aac-%FDK_AAC_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1081,8 +1080,8 @@ if not exist "knik0-faad2-*" tar -xvf "%DOWNLOADS_PATH%\faad2-%FAAD2_VERSION%.ta
 cd "knik0-faad2-*" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\faad2-cmake.patch"
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "..\include\*.h" "%PREFIX_PATH%\include\" || goto end
@@ -1124,8 +1123,8 @@ if not exist "libbs2b-%LIBBS2B_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libbs2b-%LIB
 cd "libbs2b-%LIBBS2B_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\libbs2b-msvc.patch"
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1163,8 +1162,8 @@ cd "%BUILD_PATH%"
 if not exist "chromaprint-%CHROMEPRINT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\chromaprint-%CHROMEPRINT_VERSION%.tar.gz"
 cd "chromaprint-%CHROMEPRINT_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="%PREFIX_PATH%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="%PREFIX_PATH%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 nmake || goto end
 cmake --install . || goto end
 
@@ -1274,8 +1273,8 @@ cd "%BUILD_PATH%"
 if not exist "abseil-cpp-%ABSEIL_CPP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
 cd "abseil-cpp-%ABSEIL_CPP_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1287,18 +1286,18 @@ cmake --install . || goto end
 @echo Building protobuf
 
 cd "%BUILD_PATH%"
-if not exist "protobuf-%PROTOBUF_VERSION%" tar --force-local -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
+if not exist "protobuf-%PROTOBUF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
 cd "protobuf-%PROTOBUF_VERSION%" || goto end
 if not exist "third_party\abseil-cpp\CMakeLists.txt" @(
   cd "third_party" || goto end
   rmdir "abseil-cpp" || goto end
-  tar --force-local -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
+  tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
   move "abseil-cpp-%ABSEIL_CPP_VERSION%" "abseil-cpp" || goto end
   cd .. || goto end
 ) || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_ABSL_PROVIDER="module" -Dprotobuf_BUILD_LIBPROTOC=OFF || goto end
 cd build || goto end
-cmake ..\cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_ABSL_PROVIDER="module" -Dprotobuf_BUILD_LIBPROTOC=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
@@ -1334,8 +1333,8 @@ cd "%BUILD_PATH%"
 if not exist "expat-%EXPAT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\expat-%EXPAT_VERSION%.tar.bz2" || goto end
 cd "expat-%EXPAT_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DEXPAT_SHARED_LIBS=ON -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_FUZZERS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_PKGCONFIG=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DEXPAT_SHARED_LIBS=ON -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_FUZZERS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_PKGCONFIG=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1350,8 +1349,8 @@ cd "%BUILD_PATH%"
 if not exist "freetype-%FREETYPE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\freetype-%FREETYPE_VERSION%.tar.gz" || goto end
 cd "freetype-%FREETYPE_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
@@ -1375,8 +1374,8 @@ ninja || goto end
 ninja install || goto end
 
 @rem if not exist build mkdir build || goto end
+@rem cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
 @rem cd build || goto end
-@rem cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
 @rem cmake --build . || goto end
 @rem cmake --install . || goto end
 
@@ -1386,8 +1385,8 @@ cd "%BUILD_PATH%"
 if not exist "freetype-%FREETYPE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\freetype-%FREETYPE_VERSION%.tar.gz" || goto end
 cd "freetype-%FREETYPE_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
@@ -1418,8 +1417,8 @@ if "%QT_DEV%" == "ON" @(
 )
 
 if not exist build mkdir build || goto end
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH_FORWARD%/bin/pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_brotli=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_schannel=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=ON -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
-cmake .. -G Ninja -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DPKG_CONFIG_EXECUTABLE="%PREFIX_PATH_FORWARD%/bin/pkgconf.exe" -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_BENCHMARKS=OFF -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_BY_DEFAULT=ON -DQT_WILL_BUILD_TOOLS=ON -DBUILD_WITH_PCH=OFF -DFEATURE_rpath=OFF -DFEATURE_pkg_config=ON -DFEATURE_accessibility=ON -DFEATURE_brotli=ON -DFEATURE_fontconfig=OFF -DFEATURE_freetype=ON -DFEATURE_harfbuzz=ON -DFEATURE_pcre2=ON -DFEATURE_schannel=ON -DFEATURE_openssl=ON -DFEATURE_openssl_linked=ON -DFEATURE_opengl=ON -DFEATURE_opengl_dynamic=ON -DFEATURE_use_gold_linker_alias=OFF -DFEATURE_glib=ON -DFEATURE_icu=ON -DFEATURE_directfb=OFF -DFEATURE_dbus=OFF -DFEATURE_sql=ON -DFEATURE_sql_sqlite=ON -DFEATURE_sql_odbc=OFF -DFEATURE_jpeg=ON -DFEATURE_png=ON -DFEATURE_gif=ON -DFEATURE_style_windows=ON -DFEATURE_style_windowsvista=ON -DFEATURE_system_zlib=ON -DFEATURE_system_png=ON -DFEATURE_system_jpeg=ON -DFEATURE_system_pcre2=ON -DFEATURE_system_freetype=ON -DFEATURE_system_harfbuzz=ON -DFEATURE_system_sqlite=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1466,8 +1465,8 @@ if not exist "qtsparkle" @(
 cd "qtsparkle" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/qtsparkle-msvc.patch"
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
@@ -1499,8 +1498,8 @@ if not exist "strawberry" @(
  ) || goto end
 cd "strawberry" || goto end
 if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DARCH=x86_64 -DENABLE_TRANSLATIONS=OFF -DENABLE_WIN32_CONSOLE=OFF -DICU_ROOT="%PREFIX_PATH%" || goto end
 cd build || goto end
-cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DARCH=x86_64 -DENABLE_TRANSLATIONS=OFF -DENABLE_WIN32_CONSOLE=OFF -DICU_ROOT="%PREFIX_PATH%" || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 

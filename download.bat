@@ -63,8 +63,8 @@ https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
 https://tukaani.org/xz/xz-5.4.3.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
-https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.11.2/libxml2-v2.11.2.tar.bz2
-https://github.com/nghttp2/nghttp2/releases/download/v1.52.0/nghttp2-1.52.0.tar.bz2
+https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.11.3/libxml2-v2.11.3.tar.bz2
+https://github.com/nghttp2/nghttp2/releases/download/v1.53.0/nghttp2-1.53.0.tar.bz2
 https://sqlite.org/2023/sqlite-autoconf-3410200.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
@@ -97,12 +97,12 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.2.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.2.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.2.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.2.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v22.4/protobuf-22.4.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v23.0/protobuf-23.0.tar.gz
 https://downloads.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://downloads.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-73-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
-https://github.com/harfbuzz/harfbuzz/releases/download/7.2.0/harfbuzz-7.2.0.tar.xz
+https://github.com/harfbuzz/harfbuzz/releases/download/7.3.0/harfbuzz-7.3.0.tar.xz
 https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qtbase-everywhere-src-6.5.0.tar.xz
 https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qttools-everywhere-src-6.5.0.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
