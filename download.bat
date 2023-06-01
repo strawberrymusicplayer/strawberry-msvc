@@ -54,7 +54,7 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.40.0.w
 https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.5.tar.gz
 https://zlib.net/zlib-1.2.13.tar.gz
-https://www.openssl.org/source/openssl-3.1.0.tar.gz
+https://www.openssl.org/source/openssl-3.1.1.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/3.8.0/libgnutls_3.8.0_msvc17.zip
 https://downloads.sourceforge.net/project/libpng/libpng16/1.6.39/libpng-1.6.39.tar.gz
 https://downloads.sourceforge.net/project/libjpeg-turbo/2.1.5.1/libjpeg-turbo-2.1.5.1.tar.gz
@@ -76,7 +76,7 @@ https://gitlab.xiph.org/xiph/speex/-/archive/Speex-1.2.1/speex-Speex-1.2.1.tar.g
 https://downloads.sourceforge.net/project/mpg123/mpg123/1.31.3/mpg123-1.31.3.tar.bz2
 https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz
 https://taglib.org/releases/taglib-1.13.tar.gz
-https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.0.tar.gz
+https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.4.0.tar.gz
 https://files.strawberrymusicplayer.org/fftw-3.3.10-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-3.3.10-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
@@ -85,7 +85,7 @@ https://download.gnome.org/sources/glib-networking/2.76/glib-networking-2.76.0.t
 https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz
 https://github.com/libproxy/libproxy/releases/download/0.4.18/libproxy-0.4.18.tar.xz
 https://download.gnome.org/sources/libsoup/3.4/libsoup-3.4.2.tar.xz
-https://gstreamer.freedesktop.org/src/orc/orc-0.4.33.tar.xz
+https://gstreamer.freedesktop.org/src/orc/orc-0.4.34.tar.xz
 https://files.musepack.net/source/musepack_src_r475.tar.gz
 https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.7.1+release.msvc.zip
 https://github.com/knik0/faad2/tarball/2.10.1/faad2-2.10.1.tar.gz
@@ -97,7 +97,7 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.3.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.3.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.3.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.3.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v23.1/protobuf-23.1.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v23.2/protobuf-23.2.tar.gz
 https://downloads.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://downloads.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-73-1.tar.gz
