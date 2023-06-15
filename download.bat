@@ -64,7 +64,7 @@ https://tukaani.org/xz/xz-5.4.3.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.11.4/libxml2-v2.11.4.tar.bz2
-https://github.com/nghttp2/nghttp2/releases/download/v1.53.0/nghttp2-1.53.0.tar.bz2
+https://github.com/nghttp2/nghttp2/releases/download/v1.54.0/nghttp2-1.54.0.tar.bz2
 https://sqlite.org/2023/sqlite-autoconf-3420000.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
@@ -97,7 +97,7 @@ https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.3.t
 https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.3.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.3.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.3.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v23.2/protobuf-23.2.tar.gz
+https://github.com/protocolbuffers/protobuf/releases/download/v23.3/protobuf-23.3.tar.gz
 https://downloads.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://downloads.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
 https://github.com/unicode-org/icu/archive/release-73-1.tar.gz
@@ -134,6 +134,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/icu-uwp.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpsl-time.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtbase-tabbar.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/gst-plugins-good-adaptivedemux2.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx

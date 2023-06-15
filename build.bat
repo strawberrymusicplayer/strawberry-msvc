@@ -28,7 +28,7 @@
 @set PCRE2_VERSION=10.41
 @set PIXMAN_VERSION=0.42.2
 @set LIBXML2_VERSION=2.11.4
-@set NGHTTP2_VERSION=1.53.0
+@set NGHTTP2_VERSION=1.54.0
 @set SQLITE_VERSION=3420000
 @set LIBOGG_VERSION=1.3.5
 @set LIBVORBIS_VERSION=1.3.7
@@ -58,7 +58,7 @@
 @set CHROMEPRINT_VERSION=1.5.1
 @set GSTREAMER_VERSION=1.22.3
 @set ABSEIL_CPP_VERSION=20230125.3
-@set PROTOBUF_VERSION=23.2
+@set PROTOBUF_VERSION=23.3
 @set ICU4C_VERSION=73_1
 @set EXPAT_VERSION=2.5.0
 @set FREETYPE_VERSION=2.13.0
@@ -1207,6 +1207,7 @@ ninja install || goto end
 cd "%BUILD_PATH%"
 if not exist "gst-plugins-good-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-%GSTREAMER_VERSION%.tar" || goto end
 cd "gst-plugins-good-%GSTREAMER_VERSION%" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-good-adaptivedemux2.patch"
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dxingmux=enabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
