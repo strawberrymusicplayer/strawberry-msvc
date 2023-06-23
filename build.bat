@@ -20,7 +20,7 @@
 @set ZLIB_VERSION=1.2.13
 @set OPENSSL_VERSION=3.1.1
 @set GNUTLS_VERSION=3.8.0
-@set LIBPNG_VERSION=1.6.39
+@set LIBPNG_VERSION=1.6.40
 @set LIBJPEG_VERSION=2.1.5.1
 @set BZIP2_VERSION=1.0.8
 @set XZ_VERSION=5.4.3
@@ -32,7 +32,7 @@
 @set SQLITE_VERSION=3420000
 @set LIBOGG_VERSION=1.3.5
 @set LIBVORBIS_VERSION=1.3.7
-@set FLAC_VERSION=1.4.2
+@set FLAC_VERSION=1.4.3
 @set WAVPACK_VERSION=5.6.0
 @set OPUS_VERSION=1.3.1
 @set OPUSFILE_VERSION=0.12
@@ -50,13 +50,13 @@
 @set LIBSOUP_VERSION=3.4.2
 @set ORC_VERSION=0.4.34
 @set MUSEPACK_VERSION=475
-@set LIBOPENMPT_VERSION=0.7.1
+@set LIBOPENMPT_VERSION=0.7.2
 @set LIBGME_VERSION=0.6.3
 @set FDK_AAC_VERSION=2.0.2
 @set FAAD2_VERSION=2.10.1
 @set LIBBS2B_VERSION=3.1.0
 @set CHROMEPRINT_VERSION=1.5.1
-@set GSTREAMER_VERSION=1.22.3
+@set GSTREAMER_VERSION=1.22.4
 @set ABSEIL_CPP_VERSION=20230125.3
 @set PROTOBUF_VERSION=23.3
 @set ICU4C_VERSION=73_1
@@ -1207,7 +1207,6 @@ ninja install || goto end
 cd "%BUILD_PATH%"
 if not exist "gst-plugins-good-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-%GSTREAMER_VERSION%.tar" || goto end
 cd "gst-plugins-good-%GSTREAMER_VERSION%" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-good-adaptivedemux2.patch"
 if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dy4m=disabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dqt5=disabled -Dshout2=disabled -Dsoup=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dximagesrc=disabled -Dxingmux=enabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
