@@ -55,6 +55,7 @@
 @set FDK_AAC_VERSION=2.0.2
 @set FAAD2_VERSION=2.10.1
 @set LIBBS2B_VERSION=3.1.0
+@set LIBEBUR128_VERSION=1.2.6
 @set CHROMEPRINT_VERSION=1.5.1
 @set GSTREAMER_VERSION=1.22.4
 @set ABSEIL_CPP_VERSION=20230125.3
@@ -248,6 +249,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\faad.lib" goto faad2
 @if not exist "%PREFIX_PATH%\lib\libfaac.lib" goto faac
 @if not exist "%PREFIX_PATH%\lib\libbs2b.lib" goto libbs2b
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libebur128.pc" goto libebur128
 @if not exist "%PREFIX_PATH%\lib\avutil.lib" goto ffmpeg
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libchromaprint.pc" goto chromaprint
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-1.0.pc" goto gstreamer
@@ -1122,6 +1124,23 @@ cd "%BUILD_PATH%"
 if not exist "libbs2b-%LIBBS2B_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libbs2b-%LIBBS2B_VERSION%.tar.bz2" || goto end
 cd "libbs2b-%LIBBS2B_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\libbs2b-msvc.patch"
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+
+@goto continue
+
+
+:libebur128
+
+@echo Building libebur128
+
+cd "%BUILD_PATH%"
+if not exist "libebur128 -%LIBEBUR128_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%LIBEBUR128_VERSION%.tar.gz" || goto end
+cd "libebur128-%LIBEBUR128_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end

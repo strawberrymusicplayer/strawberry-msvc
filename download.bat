@@ -91,6 +91,7 @@ https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.7.2+release.msvc.zip
 https://github.com/knik0/faad2/tarball/2.10.1/faad2-2.10.1.tar.gz
 https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-2.0.2.tar.gz
 https://downloads.sourceforge.net/project/bs2b/libbs2b/3.1.0/libbs2b-3.1.0.tar.bz2
+https://github.com/jiixyj/libebur128/archive/refs/tags/v1.2.6.tar.gz
 https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.22.4.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.22.4.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.4.tar.xz
