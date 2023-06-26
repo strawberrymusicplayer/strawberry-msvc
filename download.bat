@@ -100,7 +100,7 @@ https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.4.t
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.4.tar.xz
 https://github.com/protocolbuffers/protobuf/releases/download/v23.3/protobuf-23.3.tar.gz
 https://downloads.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
-https://downloads.sourceforge.net/project/freetype/freetype2/2.13.0/freetype-2.13.0.tar.gz
+https://downloads.sourceforge.net/project/freetype/freetype2/2.13.1/freetype-2.13.1.tar.gz
 https://github.com/unicode-org/icu/archive/release-73-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/7.3.0/harfbuzz-7.3.0.tar.xz
