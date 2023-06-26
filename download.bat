@@ -151,6 +151,7 @@ https://github.com/davidsansome/qtsparkle
 https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi
 https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg
 https://github.com/frida/proxy-libintl
+https://gitlab.freedesktop.org/gstreamer/gstreamer
 https://github.com/strawberrymusicplayer/strawberry
 ) do @(
   if exist %%~nxx @(
