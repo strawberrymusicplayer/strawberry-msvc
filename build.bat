@@ -16,6 +16,7 @@
 
 @set BOOST_VERSION=1_82_0
 @set PKGCONF_VERSION=1.9.5
+@set MIMALLOC_VERSION=2.1.2
 @set YASM_VERSION=1.3.0
 @set ZLIB_VERSION=1.2.13
 @set OPENSSL_VERSION=3.1.1
@@ -208,6 +209,7 @@ goto continue
 
 @if not exist "%PREFIX_PATH%\include\boost\config.hpp" goto boost
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
 @if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\lib\zlib*.lib" goto zlib
 @if not exist "%PREFIX_PATH%\bin\libssl-3-x64.dll" goto openssl
@@ -302,6 +304,23 @@ cd build || goto end
 ninja || goto end
 ninja install || goto end
 copy /y "%PREFIX_PATH%\bin\pkgconf.exe" "%PREFIX_PATH%\bin\pkg-config.exe" || goto end
+
+@goto continue
+
+
+:mimalloc
+
+@echo Building mimalloc
+
+cd "%BUILD_PATH%"
+
+if not exist "mimalloc-%MIMALLOC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%MIMALLOC_VERSION%.tar.gz" || goto end
+cd "mimalloc-%MIMALLOC_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
 
 @goto continue
 

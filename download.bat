@@ -53,6 +53,7 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.40.0.w
 @for %%x in (
 https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.5.tar.gz
+https://github.com/microsoft/mimalloc/archive/refs/tags/v2.1.2.tar.gz
 https://zlib.net/zlib-1.2.13.tar.gz
 https://www.openssl.org/source/openssl-3.1.1.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/3.8.0/libgnutls_3.8.0_msvc17.zip
