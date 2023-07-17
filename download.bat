@@ -64,7 +64,7 @@ https://tukaani.org/xz/xz-5.4.3.tar.bz2
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.11.4/libxml2-v2.11.4.tar.bz2
-https://github.com/nghttp2/nghttp2/releases/download/v1.54.0/nghttp2-1.54.0.tar.bz2
+https://github.com/nghttp2/nghttp2/releases/download/v1.54.1/nghttp2-1.54.1.tar.bz2
 https://sqlite.org/2023/sqlite-autoconf-3420000.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
@@ -103,7 +103,7 @@ https://downloads.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
 https://downloads.sourceforge.net/project/freetype/freetype2/2.13.1/freetype-2.13.1.tar.gz
 https://github.com/unicode-org/icu/archive/release-73-1.tar.gz
 https://cairographics.org/releases/cairo-1.16.0.tar.xz
-https://github.com/harfbuzz/harfbuzz/releases/download/8.0.0/harfbuzz-8.0.0.tar.xz
+https://github.com/harfbuzz/harfbuzz/releases/download/8.0.1/harfbuzz-8.0.1.tar.xz
 https://download.qt.io/official_releases/qt/6.5/6.5.1/submodules/qtbase-everywhere-src-6.5.1.tar.xz
 https://download.qt.io/official_releases/qt/6.5/6.5.1/submodules/qttools-everywhere-src-6.5.1.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
