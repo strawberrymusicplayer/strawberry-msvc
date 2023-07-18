@@ -1613,6 +1613,7 @@ if not exist sqldrivers mkdir sqldrivers || goto end
 if not exist imageformats mkdir imageformats || goto end
 if not exist gstreamer-plugins mkdir gstreamer-plugins || goto end
 
+copy /y "%prefix_path%\bin\abseil_dll.dll" || goto end
 copy /y "%prefix_path%\bin\avcodec*.dll" || goto end
 copy /y "%prefix_path%\bin\avfilter*.dll" || goto end
 copy /y "%prefix_path%\bin\avformat*.dll" || goto end
@@ -1621,6 +1622,7 @@ copy /y "%prefix_path%\bin\avutil*.dll" || goto end
 copy /y "%prefix_path%\bin\brotlicommon.dll" || goto end
 copy /y "%prefix_path%\bin\brotlidec.dll" || goto end
 copy /y "%prefix_path%\bin\chromaprint.dll" || goto end
+copy /y "%prefix_path%\bin\ebur128.dll" || goto end
 copy /y "%prefix_path%\bin\faad.dll" || goto end
 copy /y "%prefix_path%\bin\fdk-aac.dll" || goto end
 copy /y "%prefix_path%\bin\ffi-7.dll" || goto end
@@ -1699,7 +1701,6 @@ copy /y "%prefix_path%\bin\vorbis.dll" || goto end
 copy /y "%prefix_path%\bin\vorbisfile.dll" || goto end
 copy /y "%prefix_path%\bin\wavpackdll.dll" || goto end
 copy /y "%prefix_path%\bin\zlib*.dll" || goto end
-copy /y "%prefix_path%\bin\abseil_dll.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end
