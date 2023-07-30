@@ -55,8 +55,7 @@ goto setup
 @set PKG_CONFIG_EXECUTABLE=%PREFIX_PATH%\bin\pkgconf.exe
 @set PKG_CONFIG_PATH=%PREFIX_PATH%\lib\pkgconfig
 
-@if "%BUILD_TYPE%" == "debug" @set CL=/MP /MDd
-@if "%BUILD_TYPE%" == "release" @set CL=/MP /MD
+@set CL=/MP
 
 @set CFLAGS=-I%PREFIX_PATH_FORWARD%/include -I%PREFIX_PATH_FORWARD%/include/opus
 
