@@ -1118,6 +1118,7 @@ if not exist "ffmpeg" @(
   cd ..
  ) || goto end
 cd ffmpeg || goto end
+git checkout meson-%FFMPEG_VERSION% || goto end
 @rem --buildtype="%BUILD_TYPE%"
 if not exist "build\build.ninja" meson setup --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Dgpl=enabled build || goto end
 cd build || goto end
