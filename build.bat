@@ -232,7 +232,7 @@ cd "%BUILD_PATH%" || goto end
 
 if not exist "pkgconf-pkgconf-%PKGCONF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pkgconf-%PKGCONF_VERSION%.tar.gz" || goto end
 cd "pkgconf-pkgconf-%PKGCONF_VERSION%" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -470,7 +470,7 @@ copy /y "include\*.h" "%PREFIX_PATH%\include\" || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "pixman-%PIXMAN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pixman-%PIXMAN_VERSION%.tar.gz" || goto end
 cd "pixman-%PIXMAN_VERSION%" || goto end
-if not exist "build\build.ninja" meson --buildtype=%BUILD_TYPE% --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgtk=disabled -Dlibpng=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype=%BUILD_TYPE% --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgtk=disabled -Dlibpng=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -820,7 +820,7 @@ if not exist "libffi" @(
   cd ..
  ) || goto end
 cd libffi || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -840,7 +840,7 @@ if not exist "proxy-libintl" @(
   cd ..
  ) || goto end
 cd proxy-libintl || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -875,7 +875,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "glib-%GLIB_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-%GLIB_VERSION%.tar"
 cd "glib-%GLIB_VERSION%" || goto end
 @rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -893,7 +893,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-networking-%GLIB_NETWORKING_VERSION%.tar" || goto end
 cd "glib-networking-%GLIB_NETWORKING_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/glib-networking-tests.patch"
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled -Dgnome_proxy=disabled -Dlibproxy=disabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled -Dgnome_proxy=disabled -Dlibproxy=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -909,7 +909,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "libpsl-%LIBPSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpsl-%LIBPSL_VERSION%.tar.gz" || goto end
 cd "libpsl-%LIBPSL_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\libpsl-time.patch"
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -924,7 +924,7 @@ ninja install || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "libsoup-%LIBSOUP_VERSION%" 7z x "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" -so | 7z x -aoa -si"libsoup-%LIBSOUP_VERSION%.tar" || goto end
 cd "libsoup-%LIBSOUP_VERSION%" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -940,7 +940,7 @@ ninja install || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "orc-%ORC_VERSION%" 7z x "%DOWNLOADS_PATH%\orc-%ORC_VERSION%.tar.xz" -so | 7z x -aoa -si"orc-%ORC_VERSION%.tar" || goto end
 cd "orc-%ORC_VERSION%" || goto end
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1119,7 +1119,7 @@ if not exist "ffmpeg" @(
  ) || goto end
 cd ffmpeg || goto end
 @rem --buildtype="%BUILD_TYPE%"
-if not exist "build\build.ninja" meson --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Dgpl=enabled build || goto end
+if not exist "build\build.ninja" meson setup --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Dgpl=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1402,7 +1402,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar" || goto end
 cd "harfbuzz-%HARFBUZZ_VERSION%" || goto end
 
-if not exist "build\build.ninja" meson --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
