@@ -37,13 +37,13 @@
 
 :install
 
-@rem @if not exist "%PREFIX_PATH%\bin\sed.exe" goto sed
+@if not exist "%PREFIX_PATH%\bin\sed.exe" goto sed
 
 goto setup
 
 :sed
 
-@rem copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
+copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
 
 @goto install
 
