@@ -1,5 +1,3 @@
-@echo off
-
 @set GIT_VERSION=2.38.1
 @set CMAKE_VERSION=3.26.0
 @set MESON_VERSION=1.0.1
