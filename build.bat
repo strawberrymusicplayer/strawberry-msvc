@@ -268,8 +268,7 @@ cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMA
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-move "%PREFIX_PATH%\lib\mimalloc.dll" "%PREFIX_PATH%\bin\" || goto end
-move "%PREFIX_PATH%\lib\mimalloc-redirect.dll" "%PREFIX_PATH%\bin\" || goto end
+move "%PREFIX_PATH%\lib\mimalloc*.dll" "%PREFIX_PATH%\bin\" || goto end
 
 @goto continue
 
