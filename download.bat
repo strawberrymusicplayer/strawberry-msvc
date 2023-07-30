@@ -116,7 +116,7 @@ https://github.com/Kitware/CMake/releases/download/v%CMAKE_VERSION%/cmake-%CMAKE
 https://github.com/mesonbuild/meson/releases/download/%MESON_VERSION%/meson-%MESON_VERSION%-64.msi
 https://www.nasm.us/pub/nasm/releasebuilds/%NASM_VERSION%/win64/nasm-%NASM_VERSION%-installer-x64.exe
 http://www.tortall.net/projects/yasm/releases/yasm-%YASM_VERSION%.tar.gz
-https://github.com/lexxmark/winflexbison/releases/download/v%WINFLEXBISON_VERSION%/win_flex_bison-2.5.25.zip
+https://github.com/lexxmark/winflexbison/releases/download/v%WINFLEXBISON_VERSION%/win_flex_bison-%WINFLEXBISON_VERSION%.zip
 https://strawberryperl.com/download/%PERL_VERSION%/strawberry-perl-%PERL_VERSION%-64bit.msi
 https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%-amd64.exe
 https://7-zip.org/a/7z2201-x64.exe
