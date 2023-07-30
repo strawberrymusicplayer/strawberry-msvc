@@ -109,7 +109,9 @@ copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
 @set PKG_CONFIG_EXECUTABLE=%PREFIX_PATH%\bin\pkgconf.exe
 @set PKG_CONFIG_PATH=%PREFIX_PATH%\lib\pkgconfig
 
-@set CL=/MP
+@if "%BUILD_TYPE%" == "debug" @set CL=/MP /MDd
+@if "%BUILD_TYPE%" == "release" @set CL=/MP /MD
+
 @set CFLAGS=-I%PREFIX_PATH_FORWARD%/include -I%PREFIX_PATH_FORWARD%/include/opus
 
 @set PATH=%PREFIX_PATH%\bin;%PATH%
@@ -317,10 +319,12 @@ cd "%BUILD_PATH%"
 if not exist "mimalloc-%MIMALLOC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%MIMALLOC_VERSION%.tar.gz" || goto end
 cd "mimalloc-%MIMALLOC_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DMI_BUILD_SHARED=ON -DMI_BUILD_STATIC=OFF -DMI_BUILD_TESTS=OFF -DMI_CHECK_FULL=OFF -DMI_DEBUG_FULL=OFF -DMI_DEBUG_TSAN=OFF -DMI_DEBUG_UBSAN=OFF -DMI_OVERRIDE=ON -DMI_USE_CXX=ON -DMI_WIN_REDIRECT=ON || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
+move "%PREFIX_PATH%\lib\mimalloc.dll" "%PREFIX_PATH%\bin\" || goto end
+move "%PREFIX_PATH%\lib\mimalloc-redirect.dll" "%PREFIX_PATH%\bin\" || goto end
 
 @goto continue
 
