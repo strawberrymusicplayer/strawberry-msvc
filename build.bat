@@ -154,7 +154,6 @@ goto continue
 :continue
 
 
-@if not exist "%PREFIX_PATH%\include\boost\config.hpp" goto boost
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
 @if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
@@ -215,7 +214,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\expat.pc" goto expat
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\freetype2.pc" goto freetype
 @if not exist "%PREFIX_PATH%\lib\harfbuzz*.lib" goto harfbuzz
-
+@if not exist "%PREFIX_PATH%\include\boost\config.hpp" goto boost
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
@@ -223,19 +222,6 @@ goto continue
 
 
 @goto end
-
-
-
-:boost
-
-@echo Installing boost
-
-cd "%BUILD_PATH%"
-if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.gz" || goto end
-if not exist "%PREFIX_PATH%\include\boost" mkdir "%PREFIX_PATH%\include\boost"
-xcopy /s /y /h "boost_%BOOST_VERSION_UNDERSCORE%\boost" "%PREFIX_PATH%\include\boost\" || goto end
-
-@goto continue
 
 
 :pkgconf
@@ -1442,6 +1428,23 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 @goto continue
 
 @set LDFLAGS=
+
+
+:boost
+
+@echo Building boost
+
+cd "%BUILD_PATH%" || goto end
+
+if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.gz" || goto end
+cd "%BUILD_PATH%\boost_%BOOST_VERSION_UNDERSCORE%" || goto end
+if exist b2.exe del b2.exe
+if exist bjam.exe del bjam.exe
+if exist stage rmdir /s /q stage
+call .\bootstrap.bat || goto end
+.\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --without-mpi --without-python --prefix="%PREFIX_PATH%" --exec-prefix="%PREFIX_PATH%\bin" --libdir="%PREFIX_PATH%\lib" --includedir="%PREFIX_PATH%\include" -sEXPAT_INCLUDE="%PREFIX_PATH%\include" -sEXPAT_LIBPATH="%PREFIX_PATH%\lib" -sPTW32_INCLUDE="%PREFIX_PATH%\include" -sPTW32_LIB="%PREFIX_PATH%\lib" toolset=msvc architecture=x86 address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi variant=%BUILD_TYPE% install || goto end
+
+@goto continue
 
 
 :qtbase
