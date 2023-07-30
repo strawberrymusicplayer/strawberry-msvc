@@ -4,6 +4,8 @@
 
 @set DOWNLOADS_PATH=c:\data\projects\strawberry\msvc_\downloads
 
+@call versions.bat
+
 
 :install
 
@@ -24,7 +26,7 @@ goto end
 
 @echo Installing Git...
 
-"%DOWNLOADS_PATH%\Git-2.40.0-64-bit.exe" /silent /norestart || goto end
+"%DOWNLOADS_PATH%\Git-%GIT_VERSION%-64-bit.exe" /silent /norestart || goto end
 
 @goto install
 
@@ -33,7 +35,7 @@ goto end
 
 @echo Installing CMake...
 
-"%DOWNLOADS_PATH%\cmake-3.26.0-windows-x86_64.msi" /quiet /norestart || goto end
+"%DOWNLOADS_PATH%\cmake-%CMAKE_VERSION%-windows-x86_64.msi" /quiet /norestart || goto end
 
 @goto install
 
@@ -42,7 +44,7 @@ goto end
 
 @echo Installing Meson...
 
-"%DOWNLOADS_PATH%\meson-1.0.1-64.msi" /quiet /norestart || goto end
+"%DOWNLOADS_PATH%\meson-%MESON_VERSION%-64.msi" /quiet /norestart || goto end
 
 @goto install
 
@@ -51,7 +53,7 @@ goto end
 
 @echo Installing NASM...
 
-"%DOWNLOADS_PATH%\nasm-2.16.01-installer-x64.exe" /S || goto end
+"%DOWNLOADS_PATH%\nasm-%NASM_VERSION%-installer-x64.exe" /S || goto end
 
 @goto install
 
@@ -60,7 +62,7 @@ goto end
 
 @echo Installing 7-Zip...
 
-"%DOWNLOADS_PATH%\7z2201-x64.exe" /S || goto end
+"%DOWNLOADS_PATH%\7z%7ZIP_VERSION%-x64.exe" /S || goto end
 
 @goto install
 
@@ -70,7 +72,7 @@ goto end
 
 @echo Installing Perl...
 
-"%DOWNLOADS_PATH%\strawberry-perl-5.32.1.1-64bit.msi" /quiet /norestart || goto end
+"%DOWNLOADS_PATH%\strawberry-perl-%PERL_VERSION%-64bit.msi" /quiet /norestart || goto end
 
 @goto install
 
@@ -79,7 +81,7 @@ goto end
 
 @echo Installing Python...
 
-"%DOWNLOADS_PATH%\python-3.11.2-amd64.exe" /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 || goto end
+"%DOWNLOADS_PATH%\python-%PYTHON_VERSION%-amd64.exe" /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 || goto end
 
 @goto install
 
@@ -91,7 +93,7 @@ cd \ || goto end
 if not exist "win_flex_bison" mkdir "win_flex_bison" || goto end
 cd "win_flex_bison" || goto end
 @7z --version >NUL 2>&1 || set PATH=%PATH%;C:\Program Files\7-Zip
-"c:\Program Files\7-zip\7z.exe" x -aoa "%DOWNLOADS_PATH%\win_flex_bison-2.5.25.zip" || goto end
+"c:\Program Files\7-zip\7z.exe" x -aoa "%DOWNLOADS_PATH%\win_flex_bison-%WINFLEXBISON_VERSION%.zip" || goto end
 
 
 @goto end

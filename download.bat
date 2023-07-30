@@ -4,6 +4,8 @@
 
 @set DOWNLOADS_PATH="c:\data\projects\strawberry\msvc_\downloads"
 
+@call versions.bat
+
 :setup
 
 @c: || goto end
@@ -31,8 +33,8 @@
 @echo Installing git...
 
 cd "%DOWNLOADS_PATH%" || goto end
-curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.40.0.windows.1/Git-2.40.0-64-bit.exe || goto end
-"%DOWNLOADS_PATH%\Git-2.40.0-64-bit.exe" /silent /norestart || goto end
+curl -O -L -k https://github.com/git-for-windows/git/releases/download/v%GITL_VERSION%.windows.1/Git-%GITL_VERSION%-64-bit.exe || goto end
+"%DOWNLOADS_PATH%\Git-%GITL_VERSION%-64-bit.exe" /silent /norestart || goto end
 
 @goto install
 
@@ -51,74 +53,72 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v2.40.0.w
 
 
 @for %%x in (
-https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz
-https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.9.5.tar.gz
-https://github.com/microsoft/mimalloc/archive/refs/tags/v2.1.2.tar.gz
-https://zlib.net/zlib-1.2.13.tar.gz
-https://www.openssl.org/source/openssl-3.1.1.tar.gz
-https://github.com/ShiftMediaProject/gnutls/releases/download/3.8.0/libgnutls_3.8.0_msvc17.zip
-https://downloads.sourceforge.net/project/libpng/libpng16/1.6.40/libpng-1.6.40.tar.gz
-https://downloads.sourceforge.net/project/libjpeg-turbo/3.0.0/libjpeg-turbo-3.0.0.tar.gz
-https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.41/pcre2-10.41.tar.bz2
-https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-https://tukaani.org/xz/xz-5.4.3.tar.bz2
-https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
-https://www.cairographics.org/releases/pixman-0.42.2.tar.gz
-https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.11.4/libxml2-v2.11.4.tar.bz2
-https://github.com/nghttp2/nghttp2/releases/download/v1.55.1/nghttp2-1.55.1.tar.bz2
-https://sqlite.org/2023/sqlite-autoconf-3420000.tar.gz
-https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz
-https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz
-https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.4.3.tar.xz
-https://www.wavpack.com/wavpack-5.6.0.tar.bz2
-https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz
-https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-0.12.tar.gz
-https://gitlab.xiph.org/xiph/speex/-/archive/Speex-1.2.1/speex-Speex-1.2.1.tar.gz
-https://downloads.sourceforge.net/project/mpg123/mpg123/1.31.3/mpg123-1.31.3.tar.bz2
-https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz
-https://taglib.org/releases/taglib-1.13.1.tar.gz
-https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.4.1.tar.gz
-https://files.strawberrymusicplayer.org/fftw-3.3.10-x64-debug.zip
-https://files.strawberrymusicplayer.org/fftw-3.3.10-x64-release.zip
-https://github.com/acoustid/chromaprint/releases/download/v1.5.1/chromaprint-1.5.1.tar.gz
-https://download.gnome.org/sources/glib/2.77/glib-2.77.0.tar.xz
-https://download.gnome.org/sources/glib-networking/2.76/glib-networking-2.76.1.tar.xz
-https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz
-https://github.com/libproxy/libproxy/releases/download/0.4.18/libproxy-0.4.18.tar.xz
-https://download.gnome.org/sources/libsoup/3.4/libsoup-3.4.2.tar.xz
-https://gstreamer.freedesktop.org/src/orc/orc-0.4.34.tar.xz
-https://files.musepack.net/source/musepack_src_r475.tar.gz
-https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.7.2+release.msvc.zip
-https://github.com/knik0/faad2/tarball/2.10.1/faad2-2.10.1.tar.gz
-https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-2.0.2.tar.gz
-https://downloads.sourceforge.net/project/bs2b/libbs2b/3.1.0/libbs2b-3.1.0.tar.bz2
-https://github.com/jiixyj/libebur128/archive/refs/tags/v1.2.6.tar.gz
-https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.22.5.tar.xz
-https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.22.5.tar.xz
-https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.5.tar.xz
-https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.5.tar.xz
-https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.22.5.tar.xz
-https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.22.5.tar.xz
-https://github.com/protocolbuffers/protobuf/releases/download/v23.4/protobuf-23.4.tar.gz
-https://downloads.sourceforge.net/project/expat/expat/2.5.0/expat-2.5.0.tar.bz2
-https://downloads.sourceforge.net/project/freetype/freetype2/2.13.1/freetype-2.13.1.tar.gz
-https://github.com/unicode-org/icu/archive/release-73-1.tar.gz
-https://cairographics.org/releases/cairo-1.16.0.tar.xz
-https://github.com/harfbuzz/harfbuzz/releases/download/8.0.1/harfbuzz-8.0.1.tar.xz
-https://download.qt.io/official_releases/qt/6.5/6.5.2/submodules/qtbase-everywhere-src-6.5.2.tar.xz
-https://download.qt.io/official_releases/qt/6.5/6.5.2/submodules/qttools-everywhere-src-6.5.2.tar.xz
-https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-0.6.3.tar.gz
-https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.zip
-https://downloads.sourceforge.net/twolame/twolame-0.4.0.tar.gz
-https://github.com/abseil/abseil-cpp/archive/refs/tags/20230125.3.tar.gz
-https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
-https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-windows-x86_64.msi
-https://github.com/mesonbuild/meson/releases/download/1.0.1/meson-1.0.1-64.msi
-https://www.nasm.us/pub/nasm/releasebuilds/2.16.01/win64/nasm-2.16.01-installer-x64.exe
-http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
-https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip
-https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit.msi
-https://www.python.org/ftp/python/3.11.2/python-3.11.2-amd64.exe
+https://boostorg.jfrog.io/artifactory/main/release/%BOOST_VERSION%/source/boost_%BOOST_VERSION_UNDERSCORE%.tar.gz
+https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-%PKGCONF_VERSION%.tar.gz
+https://github.com/microsoft/mimalloc/archive/refs/tags/v%MIMALLOC_VERSION%.tar.gz
+https://zlib.net/zlib-%ZLIB_VERSION%.tar.gz
+https://www.openssl.org/source/openssl-%OPENSSL_VERSION%.tar.gz
+https://github.com/ShiftMediaProject/gnutls/releases/download/%GNUTLS_VERSION%/libgnutls_%GNUTLS_VERSION%_msvc17.zip
+https://downloads.sourceforge.net/project/libpng/libpng16/%LIBPNG_VERSION%/libpng-%LIBPNG_VERSION%.tar.gz
+https://downloads.sourceforge.net/project/libjpeg-turbo/%LIBJPEG_VERSION%/libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz
+https://github.com/PhilipHazel/pcre2/releases/download/pcre2-%PCRE2_VERSION%/pcre2-%PCRE2_VERSION%.tar.bz2
+https://sourceware.org/pub/bzip2/bzip2-%BZIP2_VERSION%.tar.gz
+https://tukaani.org/xz/xz-%XZ_VERSION%.tar.bz2
+https://github.com/google/brotli/archive/refs/tags/v%BROTLI_VERSION%.tar.gz
+https://www.cairographics.org/releases/pixman-%PIXMAN_VERSION%.tar.gz
+https://gitlab.gnome.org/GNOME/libxml2/-/archive/v%LIBXML2_VERSION%/libxml2-v%LIBXML2_VERSION%.tar.bz2
+https://github.com/nghttp2/nghttp2/releases/download/v%NGHTTP2_VERSION%/nghttp2-%NGHTTP2_VERSION%.tar.bz2
+https://sqlite.org/2023/sqlite-autoconf-%SQLITE_VERSION%.tar.gz
+https://downloads.xiph.org/releases/ogg/libogg-%LIBOGG_VERSION%.tar.gz
+https://downloads.xiph.org/releases/vorbis/libvorbis-%LIBVORBIS_VERSION%.tar.gz
+https://ftp.osuosl.org/pub/xiph/releases/flac/flac-%FLAC_VERSION%.tar.xz
+https://www.wavpack.com/wavpack-%WAVPACK_VERSION%.tar.bz2
+https://archive.mozilla.org/pub/opus/opus-%OPUS_VERSION%.tar.gz
+https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-%OPUSFILE_VERSION%.tar.gz
+https://gitlab.xiph.org/xiph/speex/-/archive/Speex-%SPEEX_VERSION%/speex-Speex-%SPEEX_VERSION%.tar.gz
+https://downloads.sourceforge.net/project/mpg123/mpg123/%MPG123_VERSION%/mpg123-%MPG123_VERSION%.tar.bz2
+https://downloads.sourceforge.net/project/lame/lame/%LAME_VERSION%/lame-%LAME_VERSION%.tar.gz
+https://taglib.org/releases/taglib-%TAGLIB_VERSION%.tar.gz
+https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%.tar.gz
+https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
+https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
+https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
+https://download.gnome.org/sources/glib/2.77/glib-%GLIB_VERSION%.tar.xz
+https://download.gnome.org/sources/glib-networking/2.76/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
+https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
+https://github.com/libproxy/libproxy/releases/download/%LIBPROXY_VERSION%/libproxy-%LIBPROXY_VERSION%.tar.xz
+https://download.gnome.org/sources/libsoup/3.4/libsoup-%LIBSOUP_VERSION%.tar.xz
+https://gstreamer.freedesktop.org/src/orc/orc-%ORC_VERSION%.tar.xz
+https://files.musepack.net/source/musepack_src_r%MUSEPACK_VERSION%.tar.gz
+https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-%LIBOPENMPT_VERSION%+release.msvc.zip
+https://github.com/knik0/faad2/tarball/%FAAD2_VERSION%/faad2-%FAAD2_VERSION%.tar.gz
+https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-%FDK_AAC_VERSION%.tar.gz
+https://downloads.sourceforge.net/project/bs2b/libbs2b/%LIBBS2B_VERSION%/libbs2b-%LIBBS2B_VERSION%.tar.bz2
+https://github.com/jiixyj/libebur128/archive/refs/tags/v%LIBEBUR128_VERSION%.tar.gz
+https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-%GSTREAMER_VERSION%.tar.xz
+https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-%GSTREAMER_VERSION%.tar.xz
+https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-%GSTREAMER_VERSION%.tar.xz
+https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-%GSTREAMER_VERSION%.tar.xz
+https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-%GSTREAMER_VERSION%.tar.xz
+https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-%GSTREAMER_VERSION%.tar.xz
+https://github.com/protocolbuffers/protobuf/releases/download/v%PROTOBUF_VERSION%/protobuf-%PROTOBUF_VERSION%.tar.gz
+https://downloads.sourceforge.net/project/expat/expat/%EXPAT_VERSION%/expat-%EXPAT_VERSION%.tar.bz2
+https://downloads.sourceforge.net/project/freetype/freetype2/%FREETYPE_VERSION%/freetype-%FREETYPE_VERSION%.tar.gz
+https://github.com/unicode-org/icu/releases/download/release-%ICU4C_VERSION_DASH%/icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip
+https://github.com/harfbuzz/harfbuzz/releases/download/%HARFBUZZ_VERSION%/harfbuzz-%HARFBUZZ_VERSION%.tar.xz
+https://download.qt.io/official_releases/qt/6.5/%QT_VERSION%/submodules/qtbase-everywhere-src-%QT_VERSION%.tar.xz
+https://download.qt.io/official_releases/qt/6.5/%QT_VERSION%/submodules/qttools-everywhere-src-%QT_VERSION%.tar.xz
+https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-%LIBGME_VERSION%.tar.gz
+https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
+https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%.tar.gz
+https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/Git-%GIT_VERSION%-64-bit.exe
+https://github.com/Kitware/CMake/releases/download/v%CMAKE_VERSION%/cmake-%CMAKE_VERSION%-windows-x86_64.msi
+https://github.com/mesonbuild/meson/releases/download/%MESON_VERSION%/meson-%MESON_VERSION%-64.msi
+https://www.nasm.us/pub/nasm/releasebuilds/%NASM_VERSION%/win64/nasm-%NASM_VERSION%-installer-x64.exe
+http://www.tortall.net/projects/yasm/releases/yasm-%YASM_VERSION%.tar.gz
+https://github.com/lexxmark/winflexbison/releases/download/v%WINFLEXBISON_VERSION%/win_flex_bison-2.5.25.zip
+https://strawberryperl.com/download/%PERL_VERSION%/strawberry-perl-%PERL_VERSION%-64bit.msi
+https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%-amd64.exe
 https://7-zip.org/a/7z2201-x64.exe
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-pkgconf.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch
@@ -135,11 +135,10 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/icu-uwp.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpsl-time.patch
-https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtbase-tabbar.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx
-    curl -O -L -k %%x
+    curl -f -O -L -k %%x
   )
 )
 

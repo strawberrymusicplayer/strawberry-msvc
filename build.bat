@@ -12,64 +12,10 @@
 @set PREFIX_PATH=c:\strawberry_msvc_x86_64_%BUILD_TYPE%
 @set PREFIX_PATH_FORWARD=%PREFIX_PATH:\=/%
 @set PREFIX_PATH_ESCAPE=%PREFIX_PATH:\=\\%
-
-
-@set BOOST_VERSION=1_82_0
-@set PKGCONF_VERSION=1.9.5
-@set MIMALLOC_VERSION=2.1.2
-@set YASM_VERSION=1.3.0
-@set ZLIB_VERSION=1.2.13
-@set OPENSSL_VERSION=3.1.1
-@set GNUTLS_VERSION=3.8.0
-@set LIBPNG_VERSION=1.6.40
-@set LIBJPEG_VERSION=3.0.0
-@set BZIP2_VERSION=1.0.8
-@set XZ_VERSION=5.4.3
-@set BROTLI_VERSION=1.0.9
-@set PCRE2_VERSION=10.41
-@set PIXMAN_VERSION=0.42.2
-@set LIBXML2_VERSION=2.11.4
-@set NGHTTP2_VERSION=1.55.1
-@set SQLITE_VERSION=3420000
-@set LIBOGG_VERSION=1.3.5
-@set LIBVORBIS_VERSION=1.3.7
-@set FLAC_VERSION=1.4.3
-@set WAVPACK_VERSION=5.6.0
-@set OPUS_VERSION=1.3.1
-@set OPUSFILE_VERSION=0.12
-@set SPEEX_VERSION=1.2.1
-@set MPG123_VERSION=1.31.3
-@set LAME_VERSION=3.100
-@set TWOLAME_VERSION=0.4.0
-@set TAGLIB_VERSION=1.13.1
-@set DLFCN_VERSION=1.4.1
-@set FFTW_VERSION=3.3.10
-@set LIBPROXY_VERSION=0.4.18
-@set GLIB_VERSION=2.77.0
-@set GLIB_NETWORKING_VERSION=2.76.1
-@set LIBPSL_VERSION=0.21.2
-@set LIBSOUP_VERSION=3.4.2
-@set ORC_VERSION=0.4.34
-@set MUSEPACK_VERSION=475
-@set LIBOPENMPT_VERSION=0.7.2
-@set LIBGME_VERSION=0.6.3
-@set FDK_AAC_VERSION=2.0.2
-@set FAAD2_VERSION=2.10.1
-@set LIBBS2B_VERSION=3.1.0
-@set LIBEBUR128_VERSION=1.2.6
-@set CHROMEPRINT_VERSION=1.5.1
-@set GSTREAMER_VERSION=1.22.5
-@set ABSEIL_CPP_VERSION=20230125.3
-@set PROTOBUF_VERSION=23.4
-@set ICU4C_VERSION=73_1
-@set EXPAT_VERSION=2.5.0
-@set FREETYPE_VERSION=2.13.1
-@set HARFBUZZ_VERSION=8.0.1
-@set QT_VERSION=6.5.2
-
 @set QT_DEV=OFF
 @set GST_DEV=OFF
 
+@call versions.bat
 
 
 @echo Build type: %BUILD_TYPE%
@@ -91,13 +37,13 @@
 
 :install
 
-@if not exist "%PREFIX_PATH%\bin\sed.exe" goto sed
+@rem @if not exist "%PREFIX_PATH%\bin\sed.exe" goto sed
 
 goto setup
 
 :sed
 
-copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
+@rem copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
 
 @goto install
 
@@ -286,9 +232,9 @@ goto continue
 @echo Installing boost
 
 cd "%BUILD_PATH%"
-if not exist "boost_%BOOST_VERSION%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION%.tar.gz" || goto end
+if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.gz" || goto end
 if not exist "%PREFIX_PATH%\include\boost" mkdir "%PREFIX_PATH%\include\boost"
-xcopy /s /y /h "boost_%BOOST_VERSION%\boost" "%PREFIX_PATH%\include\boost\" || goto end
+xcopy /s /y /h "boost_%BOOST_VERSION_UNDERSCORE%\boost" "%PREFIX_PATH%\include\boost\" || goto end
 
 @goto continue
 
@@ -1203,8 +1149,8 @@ ninja install || goto end
 @echo Building chromaprint
 
 cd "%BUILD_PATH%"
-if not exist "chromaprint-%CHROMEPRINT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\chromaprint-%CHROMEPRINT_VERSION%.tar.gz"
-cd "chromaprint-%CHROMEPRINT_VERSION%" || goto end
+if not exist "chromaprint-%CHROMAPRINT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\chromaprint-%CHROMAPRINT_VERSION%.tar.gz"
+cd "chromaprint-%CHROMAPRINT_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="%PREFIX_PATH%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
@@ -1374,8 +1320,8 @@ ninja install || goto end
 @echo Building abseil-cpp
 
 cd "%BUILD_PATH%"
-if not exist "abseil-cpp-%ABSEIL_CPP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
-cd "abseil-cpp-%ABSEIL_CPP_VERSION%" || goto end
+if not exist "abseil-cpp-%ABSEIL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_VERSION%.tar.gz" || goto end
+cd "abseil-cpp-%ABSEIL_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
@@ -1395,8 +1341,8 @@ cd "protobuf-%PROTOBUF_VERSION%" || goto end
 if not exist "third_party\abseil-cpp\CMakeLists.txt" @(
   cd "third_party" || goto end
   rmdir "abseil-cpp" || goto end
-  tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_CPP_VERSION%.tar.gz" || goto end
-  move "abseil-cpp-%ABSEIL_CPP_VERSION%" "abseil-cpp" || goto end
+  tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_VERSION%.tar.gz" || goto end
+  move "abseil-cpp-%ABSEIL_VERSION%" "abseil-cpp" || goto end
   cd .. || goto end
 ) || goto end
 if not exist build mkdir build || goto end
