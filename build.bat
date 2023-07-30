@@ -1360,7 +1360,7 @@ copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 @echo Building icu4c
 
 cd "%BUILD_PATH%"
-if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-%ICU4C_VERSION%-src.zip" || goto end
+if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip" || goto end
 cd "icu" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/icu-uwp.patch"
 cd "source\allinone" || goto end
