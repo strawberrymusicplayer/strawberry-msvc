@@ -57,8 +57,6 @@ copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
 
 @set CL=/MP
 
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include -I%PREFIX_PATH_FORWARD%/include/opus
-
 @set PATH=%PREFIX_PATH%\bin;%PATH%
 
 @set YASMPATH=%PREFIX_PATH%\bin\
@@ -869,6 +867,7 @@ move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || got
 
 @echo Building glib
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
 @set LDFLAGS="-L%PREFIX_PATH%\lib"
 
 cd "%BUILD_PATH%" || goto end
@@ -880,6 +879,7 @@ cd build || goto end
 ninja || goto end
 ninja install || goto end
 
+@set CFLAGS=
 @set LDFLAGS=
 
 @goto continue
@@ -1149,6 +1149,8 @@ cmake --install . || goto end
 
 @echo Building GStreamer
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
+
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
@@ -1167,12 +1169,16 @@ cd build || goto end
 ninja || goto end
 ninja install || goto end
 
+@set CFLAGS=
+
 goto continue
 
 
 :gst-plugins-base
 
 @echo Building gst-plugins-base
+
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include -I%PREFIX_PATH_FORWARD%/include/opus
 
 cd "%BUILD_PATH%" || goto end
 
@@ -1191,6 +1197,8 @@ if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@set CFLAGS=
 
 @goto continue
 
@@ -1224,6 +1232,8 @@ ninja install || goto end
 
 @echo Building gst-plugins-bad
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include -I%PREFIX_PATH_FORWARD%/include/opus
+
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
@@ -1246,6 +1256,8 @@ if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@set CFLAGS=
 
 @goto continue
 
@@ -1279,6 +1291,8 @@ ninja install || goto end
 
 @echo Building gst-libav
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
+
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
@@ -1296,6 +1310,8 @@ if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --prefix
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@set CFLAGS=
 
 @goto continue
 
