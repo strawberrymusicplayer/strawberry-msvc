@@ -1604,6 +1604,7 @@ copy /y "%prefix_path%\bin\gnutls.dll" || goto end
 copy /y "%prefix_path%\bin\gobject-2.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gst-discoverer-1.0.exe" || goto end
 copy /y "%prefix_path%\bin\gst-launch-1.0.exe" || goto end
+copy /y "%prefix_path%\bin\gst-play-1.0.exe" || goto end
 copy /y "%prefix_path%\bin\gstadaptivedemux-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstapp-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstaudio-1.0-0.dll" || goto end
