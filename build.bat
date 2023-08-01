@@ -995,8 +995,6 @@ goto continue
 
 @echo Building libgme
 
-@set LDFLAGS="-L%PREFIX_PATH%\lib"
-
 cd "%BUILD_PATH%" || goto end
 if not exist "game-music-emu-%LIBGME_VERSION%" tar -xf "%DOWNLOADS_PATH%/game-music-emu-%LIBGME_VERSION%.tar.gz" || goto end
 cd game-music-emu-%LIBGME_VERSION% || goto end
@@ -1005,8 +1003,6 @@ cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMA
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-
-@set LDFLAGS=
 
 goto continue
 
@@ -1413,8 +1409,6 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 @echo Building harfbuzz
 
-@set LDFLAGS="-L%PREFIX_PATH%\lib"
-
 cd "%BUILD_PATH%" || goto end
 if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar" || goto end
 cd "harfbuzz-%HARFBUZZ_VERSION%" || goto end
@@ -1443,8 +1437,6 @@ cmake --install . || goto end
 copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 @goto continue
-
-@set LDFLAGS=
 
 
 :boost
