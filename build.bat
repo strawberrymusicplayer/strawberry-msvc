@@ -321,17 +321,17 @@ xcopy /s /y "lib\x64\*.*" "%PREFIX_PATH%\lib\" || goto end
 if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
 xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 
-@echo prefix=%PREFIX_PATH_FORWARD% > "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo exec_prefix=%PREFIX_PATH_FORWARD% >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo libdir=%PREFIX_PATH_FORWARD%/lib >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo includedir=%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo. >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Name: gnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Description: gnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo URL: https://www.gnutls.org/ >> %PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Version: %GNUTLS_VERSION% >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lgnutls >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Name: gnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Description: gnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo URL: https://www.gnutls.org/>> %PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Version: %GNUTLS_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lgnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 
 @goto continue
 
@@ -523,18 +523,18 @@ copy /y "*.lib" "%PREFIX_PATH%\lib\" || goto end
 copy /y "*.dll" "%PREFIX_PATH%\bin\" || goto end
 copy /y "*.exe" "%PREFIX_PATH%\bin\" || goto end
 
-echo prefix=%PREFIX_PATH_FORWARD% > "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo exec_prefix=%PREFIX_PATH_FORWARD% >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo libdir=%PREFIX_PATH_FORWARD%/lib >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo includedir=%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo Name: SQLite >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo Description: SQL database engine >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo URL: https://www.sqlite.org/ >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo Version: 3.38.1 >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lsqlite3 >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo Libs.private: -lz -ldl >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo.>>"%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo Name: SQLite>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo Description: SQL database engine>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo URL: https://www.sqlite.org/>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo Version: 3.38.1>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lsqlite3>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo Libs.private: -lz -ldl>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 
 @goto continue
 
@@ -697,17 +697,17 @@ copy output\libmp3lame*.dll "%PREFIX_PATH%\bin\" || goto end
 
 @echo "Create lame pc file"
 
-@echo prefix=%PREFIX_PATH_FORWARD% > "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo exec_prefix=%PREFIX_PATH_FORWARD% >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo libdir=%PREFIX_PATH_FORWARD%/lib >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo includedir=%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo. >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo Name: lame >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo Description: encoder that converts audio to the MP3 file format. >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo URL: https://lame.sourceforge.io/ >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo Version: %LAME_VERSION% >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lmp3lame >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo.>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo Name: lame>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo Description: encoder that converts audio to the MP3 file format.>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo URL: https://lame.sourceforge.io/>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo Version: %LAME_VERSION%>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lmp3lame>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 
 
 @goto continue
@@ -732,17 +732,17 @@ copy /y lib\*.dll "%PREFIX_PATH%\bin\" || goto end
 
 @echo "Create twolame pc file"
 
-@echo prefix=%PREFIX_PATH_FORWARD% > "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo exec_prefix=%PREFIX_PATH_FORWARD% >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo libdir=%PREFIX_PATH_FORWARD%/lib >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo includedir=%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo. >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo Name: lame >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo Description: optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo URL: https://www.twolame.org/ >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo Version: %TWOLAME_VERSION% >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -ltwolame_dll >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo.>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Name: lame>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Description: optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo URL: https://www.twolame.org/>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Version: %TWOLAME_VERSION%>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -ltwolame_dll>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 
 @goto continue
 
@@ -1532,16 +1532,16 @@ cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
-@echo prefix=%PREFIX_PATH_FORWARD% >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo exec_prefix=%PREFIX_PATH_FORWARD% >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo libdir=%PREFIX_PATH_FORWARD%/lib >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo includedir=%PREFIX_PATH_FORWARD%/include >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo. >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Name: qtsparkle-qt6 >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Version: >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Description: Qt auto-updater lib >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD% -lqtsparkle-qt6 >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD% >> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo.>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo Name: qtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo Version:>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo Description: Qt auto-updater lib>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo Libs: -L%PREFIX_PATH_FORWARD% -lqtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo Cflags: -I%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 
 
 @goto continue
