@@ -1123,15 +1123,6 @@ cd build || goto end
 ninja || goto end
 ninja install || goto end
 cd .. || goto end
-copy "libavutil\version.h" "%PREFIX_PATH%\include\libavutil\" || goto end
-copy "libavcodec\version.h" "%PREFIX_PATH%\include\libavcodec\" || goto end
-copy "libavcodec\version_major.h" "%PREFIX_PATH%\include\libavcodec\" || goto end
-copy "libavcodec\defs.h" "%PREFIX_PATH%\include\libavcodec\" || goto end
-copy "libavformat\version.h" "%PREFIX_PATH%\include\libavformat\" || goto end
-copy "libavformat\version_major.h" "%PREFIX_PATH%\include\libavformat\" || goto end
-copy "libavfilter\version.h" "%PREFIX_PATH%\include\libavfilter\" || goto end
-copy "libavfilter\version_major.h" "%PREFIX_PATH%\include\libavfilter\" || goto end
-
 
 @goto continue
 
