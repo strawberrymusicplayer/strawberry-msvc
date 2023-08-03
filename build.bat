@@ -1111,15 +1111,26 @@ if not exist "ffmpeg" @(
   mkdir "ffmpeg" || goto end
   cd "ffmpeg" || goto end
   xcopy /s /y /h "%DOWNLOADS_PATH%\ffmpeg" . || goto end
+  git checkout meson-%FFMPEG_VERSION% || goto end
+  git checkout . || goto end
+  git pull --rebase || goto end
+  patch -p1 -N < "%DOWNLOADS_PATH%\99.patch"
   cd ..
  ) || goto end
 cd ffmpeg || goto end
-git checkout meson-%FFMPEG_VERSION% || goto end
-@rem --buildtype="%BUILD_TYPE%"
 if not exist "build\build.ninja" meson setup --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Dgpl=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+cd .. || goto end
+copy "libavutil\version.h" "%PREFIX_PATH%\include\libavutil\" || goto end
+copy "libavcodec\version.h" "%PREFIX_PATH%\include\libavcodec\" || goto end
+copy "libavcodec\version_major.h" "%PREFIX_PATH%\include\libavcodec\" || goto end
+copy "libavcodec\defs.h" "%PREFIX_PATH%\include\libavcodec\" || goto end
+copy "libavformat\version.h" "%PREFIX_PATH%\include\libavformat\" || goto end
+copy "libavformat\version_major.h" "%PREFIX_PATH%\include\libavformat\" || goto end
+copy "libavfilter\version.h" "%PREFIX_PATH%\include\libavfilter\" || goto end
+copy "libavfilter\version_major.h" "%PREFIX_PATH%\include\libavfilter\" || goto end
 
 
 @goto continue
@@ -1577,7 +1588,6 @@ copy /y "%prefix_path%\bin\abseil_dll.dll" || goto end
 copy /y "%prefix_path%\bin\avcodec*.dll" || goto end
 copy /y "%prefix_path%\bin\avfilter*.dll" || goto end
 copy /y "%prefix_path%\bin\avformat*.dll" || goto end
-copy /y "%prefix_path%\bin\avresample*.dll" || goto end
 copy /y "%prefix_path%\bin\avutil*.dll" || goto end
 copy /y "%prefix_path%\bin\brotlicommon.dll" || goto end
 copy /y "%prefix_path%\bin\brotlidec.dll" || goto end
