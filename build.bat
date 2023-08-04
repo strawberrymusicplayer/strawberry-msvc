@@ -1118,7 +1118,7 @@ if not exist "ffmpeg" @(
   cd ..
  ) || goto end
 cd ffmpeg || goto end
-if not exist "build\build.ninja" meson setup --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Dgpl=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Dgpl=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
