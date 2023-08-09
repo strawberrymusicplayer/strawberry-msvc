@@ -1115,7 +1115,6 @@ if not exist "ffmpeg" @(
   git checkout meson-%FFMPEG_VERSION% || goto end
   git checkout . || goto end
   git pull --rebase || goto end
-  patch -p1 -N < "%DOWNLOADS_PATH%\99.patch"
   cd ..
  ) || goto end
 cd ffmpeg || goto end
