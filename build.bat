@@ -1338,7 +1338,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "protobuf-%PROTOBUF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
 cd "protobuf-%PROTOBUF_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_EXAMPLES=OFF -Dprotobuf_ABSL_PROVIDER="package" -Dprotobuf_BUILD_LIBPROTOC=OFF -Dprotobuf_BUILD_PROTOC_BINARIES=ON -Dprotobuf_WITH_ZLIB=ON || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_EXAMPLES=OFF -Dprotobuf_ABSL_PROVIDER="package" -Dprotobuf_BUILD_LIBPROTOC=OFF -Dprotobuf_BUILD_PROTOC_BINARIES=ON -Dprotobuf_WITH_ZLIB=ON || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
