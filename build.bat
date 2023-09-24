@@ -1566,7 +1566,7 @@ if not exist "strawberry" @(
  ) || goto end
 cd "strawberry" || goto end
 if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DARCH=x86_64 -DENABLE_TRANSLATIONS=OFF -DENABLE_WIN32_CONSOLE=OFF -DICU_ROOT="%PREFIX_PATH%" || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DARCH=x86_64 -DENABLE_TRANSLATIONS=ON -DENABLE_WIN32_CONSOLE=OFF -DICU_ROOT="%PREFIX_PATH%" || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
