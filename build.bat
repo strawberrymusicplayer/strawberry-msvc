@@ -1636,7 +1636,7 @@ copy /y "%prefix_path%\bin\libmp3lame.dll" || goto end
 copy /y "%prefix_path%\bin\libopenmpt.dll" || goto end
 copy /y "%prefix_path%\bin\libpng16*.dll" || goto end
 copy /y "%prefix_path%\bin\libprotobuf*.dll" || goto end
-copy /y "%prefix_path%\bin\libspeex.dll" || goto end
+copy /y "%prefix_path%\bin\libspeex*.dll" || goto end
 copy /y "%prefix_path%\bin\libssl-3-x64.dll" || goto end
 copy /y "%prefix_path%\bin\libxml2*.dll" || goto end
 copy /y "%prefix_path%\bin\mpcdec.dll" || goto end
