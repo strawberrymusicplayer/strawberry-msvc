@@ -163,23 +163,38 @@ goto continue
 :continue
 
 
+@if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
-@if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\lib\zlib*.lib" goto zlib
 @if not exist "%PREFIX_PATH%\bin\libssl-3-x64.dll" goto openssl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc" goto gnutls
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpng.pc" goto libpng
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libjpeg.pc" goto libjpeg
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\bzip2.pc" goto bzip2
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpcre2-16.pc" goto pcre2
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\bzip2.pc" goto bzip2
 @if not exist "%PREFIX_PATH%\lib\liblzma.lib" goto xz
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libbrotlicommon.pc" goto brotli
 @if not exist "%PREFIX_PATH%\lib\libiconv*.lib" goto libiconv
+@if not exist "%PREFIX_PATH%\lib\icuio*.lib" goto icu4c
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\pixman-1.pc" goto pixman
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\expat.pc" goto expat
+@if not exist "%PREFIX_PATH%\include\boost\config.hpp" goto boost
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libxml-2.0.pc" goto libxml2
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libnghttp2.pc" goto nghttp2
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libffi.pc" goto libffi
+@rem @if not exist "%PREFIX_PATH%\lib\intl.lib" goto libintl
+@if not exist "%PREFIX_PATH%\lib\libproxy.lib" goto libproxy
+@if not exist "%PREFIX_PATH%\include\dlfcn.h" goto dlfcn-win32
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libpsl.pc" goto libpsl
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\orc-0.4.pc" goto orc
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\sqlite3.pc" goto sqlite
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\glib-2.0.pc" goto glib
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libsoup-3.0.pc" goto libsoup
+@if not exist "%PREFIX_PATH%\lib\gio\modules\gioopenssl.lib" goto glib-networking
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\freetype2.pc" goto freetype
+@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\cairo.pc" goto cairo
+@if not exist "%PREFIX_PATH%\lib\harfbuzz*.lib" goto harfbuzz
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\ogg.pc" goto libogg
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\vorbis.pc" goto libvorbis
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\flac.pc" goto flac
@@ -190,23 +205,14 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libmpg123.pc" goto mpg123
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mp3lame.pc" goto lame
 @if not exist "%PREFIX_PATH%\lib\libtwolame_dll.lib" goto twolame
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\taglib.pc" goto taglib
-@if not exist "%PREFIX_PATH%\include\dlfcn.h" goto dlfcn-win32
 @if not exist "%PREFIX_PATH%\lib\libfftw3-3.lib" goto fftw3
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\libffi.pc" goto libffi
-@rem @if not exist "%PREFIX_PATH%\lib\intl.lib" goto libintl
-@if not exist "%PREFIX_PATH%\lib\libproxy.lib" goto libproxy
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\glib-2.0.pc" goto glib
-@if not exist "%PREFIX_PATH%\lib\gio\modules\gioopenssl.lib" goto glib-networking
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\libpsl.pc" goto libpsl
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\libsoup-3.0.pc" goto libsoup
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\orc-0.4.pc" goto orc
 @if not exist "%PREFIX_PATH%\lib\mpcdec.lib" goto musepack
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libopenmpt.pc" goto libopenmpt
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libgme.pc" goto libgme
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\fdk-aac.pc" goto fdk-aac
 @if not exist "%PREFIX_PATH%\lib\faad.lib" goto faad2
 @if not exist "%PREFIX_PATH%\lib\libfaac.lib" goto faac
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\taglib.pc" goto taglib
 @if not exist "%PREFIX_PATH%\lib\libbs2b.lib" goto libbs2b
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libebur128.pc" goto libebur128
 @if not exist "%PREFIX_PATH%\lib\avutil.lib" goto ffmpeg
@@ -217,16 +223,11 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc" goto gst-plugins-bad
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
-@if not exist "%PREFIX_PATH%\lib\icuio*.lib" goto icu4c
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\expat.pc" goto expat
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\freetype2.pc" goto freetype
-@if not exist "%PREFIX_PATH%\lib\harfbuzz*.lib" goto harfbuzz
-@if not exist "%PREFIX_PATH%\include\boost\config.hpp" goto boost
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%BUILD_PATH%\strawberry\build\strawberrysetup*.exe" goto strawberry
 
 
@@ -381,6 +382,24 @@ cmake --install . || goto end
 @goto continue
 
 
+:pcre2
+
+@echo Building pcre2
+
+cd "%BUILD_PATH%" || goto end
+if not exist "pcre2-%PCRE2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pcre2-%PCRE2_VERSION%.tar.bz2" || goto end
+cd "pcre2-%PCRE2_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\pcre2-8d.lib" "%PREFIX_PATH%\lib\pcre2-8.lib" || goto end
+
+@goto continue
+
+
 :bzip2
 
 @echo Building bzip2
@@ -433,24 +452,6 @@ cmake --install . || goto end
 @goto continue
 
 
-:pcre2
-
-@echo Building pcre2
-
-cd "%BUILD_PATH%" || goto end
-if not exist "pcre2-%PCRE2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pcre2-%PCRE2_VERSION%.tar.bz2" || goto end
-cd "pcre2-%PCRE2_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-
-@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\pcre2-8d.lib" "%PREFIX_PATH%\lib\pcre2-8.lib" || goto end
-
-@goto continue
-
-
 :libiconv
 
 @echo Building libiconv
@@ -472,6 +473,26 @@ copy /y "include\*.h" "%PREFIX_PATH%\include\" || goto end
 @goto continue
 
 
+:icu4c
+
+@echo Building icu4c
+
+cd "%BUILD_PATH%" || goto end
+if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip" || goto end
+cd "icu" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/icu-uwp.patch"
+cd "source\allinone" || goto end
+@rem start /w devenv.exe allinone.sln /upgrade
+msbuild allinone.sln /property:Configuration="%BUILD_TYPE%" /p:Platform="x64" || goto end
+cd ..\..\ || goto end
+if not exist "%PREFIX_PATH%\include\unicode" mkdir "%PREFIX_PATH%\include\unicode" || goto end
+copy /y "include\unicode\*.h" "%PREFIX_PATH%\include\unicode\" || goto end
+copy /y "lib64\*.*" "%PREFIX_PATH%\lib\" || goto end
+copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
+
+@goto continue
+
+
 :pixman
 
 @echo Building pixman
@@ -484,6 +505,39 @@ if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@goto continue
+
+
+:expat
+
+@echo Building expat
+
+cd "%BUILD_PATH%" || goto end
+if not exist "expat-%EXPAT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\expat-%EXPAT_VERSION%.tar.bz2" || goto end
+cd "expat-%EXPAT_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DEXPAT_SHARED_LIBS=ON -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_FUZZERS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_PKGCONFIG=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:boost
+
+@echo Building boost
+
+cd "%BUILD_PATH%" || goto end
+
+if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.gz" || goto end
+cd "%BUILD_PATH%\boost_%BOOST_VERSION_UNDERSCORE%" || goto end
+if exist b2.exe del b2.exe
+if exist bjam.exe del bjam.exe
+if exist stage rmdir /s /q stage
+call .\bootstrap.bat || goto end
+.\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --without-mpi --without-python --prefix="%PREFIX_PATH%" --exec-prefix="%PREFIX_PATH%\bin" --libdir="%PREFIX_PATH%\lib" --includedir="%PREFIX_PATH%\include" toolset=msvc architecture=x86 address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi variant=%BUILD_TYPE% install || goto end
 
 @goto continue
 
@@ -521,6 +575,111 @@ cmake --install . || goto end
 @goto continue
 
 
+:libffi
+
+@echo Building libffi
+
+cd "%BUILD_PATH%" || goto end
+if not exist "libffi" @(
+  mkdir "libffi" || goto end
+  cd "libffi" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\libffi" . || goto end
+  cd ..
+ ) || goto end
+cd libffi || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
+:libintl
+
+@echo Building libintl
+
+cd "%BUILD_PATH%" || goto end
+if not exist "proxy-libintl" @(
+  mkdir "proxy-libintl" || goto end
+  cd "proxy-libintl" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\proxy-libintl" . || goto end
+  cd ..
+ ) || goto end
+cd proxy-libintl || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
+:libproxy
+
+@echo Building libproxy
+
+cd "%BUILD_PATH%" || goto end
+if not exist "libproxy-%LIBPROXY_VERSION%" 7z x "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.xz" -so | 7z x -aoa -si"libproxy-%LIBPROXY_VERSION%.tar"
+cd "libproxy-%LIBPROXY_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DLIB_INSTALL_DIR="%PREFIX_PATH%\lib" -DBIN_INSTALL_DIR="%PREFIX_PATH%\bin" -DLIBEXEC_INSTALL_DIR="%PREFIX_PATH%\bin" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWITH_DBUS=OFF -DWITH_DOTNET=OFF -DWITH_DUKTAPE=OFF -DWITH_GNOME2=OFF -DWITH_GNOME3=OFF -DWITH_KDE=OFF -DWITH_MOZJS=OFF -DWITH_NATUS=OFF -DWITH_NM=OFF -DWITH_NMold=OFF -DWITH_PERL=OFF -DWITH_PYTHON2=OFF -DWITH_PYTHON3=OFF -DWITH_SYSCONFIG=OFF -DWITH_VALA=OFF -DWITH_WEBKIT=OFF -DWITH_WEBKIT3=OFF || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || goto end
+
+@goto continue
+
+
+:dlfcn-win32
+
+@echo Building dlfcn-win32
+
+cd "%BUILD_PATH%" || goto end
+if not exist "dlfcn-win32-%DLFCN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%DLFCN_VERSION%.tar.gz" || goto end
+cd "dlfcn-win32-%DLFCN_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:libpsl
+
+@echo Building libpsl
+
+cd "%BUILD_PATH%" || goto end
+if not exist "libpsl-%LIBPSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpsl-%LIBPSL_VERSION%.tar.gz" || goto end
+cd "libpsl-%LIBPSL_VERSION%" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%\libpsl-time.patch"
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
+:orc
+
+@echo Building orc
+
+cd "%BUILD_PATH%" || goto end
+if not exist "orc-%ORC_VERSION%" 7z x "%DOWNLOADS_PATH%\orc-%ORC_VERSION%.tar.xz" -so | 7z x -aoa -si"orc-%ORC_VERSION%.tar" || goto end
+cd "orc-%ORC_VERSION%" || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+
+@goto continue
+
+
 :sqlite
 
 @echo Building sqlite
@@ -547,6 +706,125 @@ echo Version: 3.38.1>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lsqlite3>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 echo Libs.private: -lz -ldl>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+
+@goto continue
+
+
+:glib
+
+@echo Building glib
+
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
+@set LDFLAGS="-L%PREFIX_PATH%\lib"
+
+cd "%BUILD_PATH%" || goto end
+if not exist "glib-%GLIB_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-%GLIB_VERSION%.tar"
+cd "glib-%GLIB_VERSION%" || goto end
+@rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@set CFLAGS=
+@set LDFLAGS=
+
+@goto continue
+
+
+:libsoup
+
+@echo Building libsoup
+
+cd "%BUILD_PATH%" || goto end
+if not exist "libsoup-%LIBSOUP_VERSION%" 7z x "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" -so | 7z x -aoa -si"libsoup-%LIBSOUP_VERSION%.tar" || goto end
+cd "libsoup-%LIBSOUP_VERSION%" || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
+:glib-networking
+
+@echo Building glib-networking
+
+cd "%BUILD_PATH%" || goto end
+if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-networking-%GLIB_NETWORKING_VERSION%.tar" || goto end
+cd "glib-networking-%GLIB_NETWORKING_VERSION%" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/glib-networking-tests.patch"
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled -Dgnome_proxy=disabled -Dlibproxy=disabled build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
+:freetype
+
+@echo Building freetype without harfbuzz
+
+cd "%BUILD_PATH%" || goto end
+if not exist "freetype-%FREETYPE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\freetype-%FREETYPE_VERSION%.tar.gz" || goto end
+cd "freetype-%FREETYPE_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
+
+@goto continue
+
+
+:cairo
+
+@echo Building cairo
+
+cd "%BUILD_PATH%" || goto end
+if not exist "cairo-%CAIRO_VERSION%" 7z x "%DOWNLOADS_PATH%\cairo-%CAIRO_VERSION%.tar.xz" -so | 7z x -aoa -si"cairo-%CAIRO_VERSION%.tar" || goto end
+cd "cairo-%CAIRO_VERSION%" || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dfontconfig=disabled -Dfreetype=enabled -Dzlib=enabled -Dpng=enabled -Dtests=disabled -Dgtk_doc=false build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
+:harfbuzz
+
+@echo Building harfbuzz
+
+cd "%BUILD_PATH%" || goto end
+if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar" || goto end
+cd "harfbuzz-%HARFBUZZ_VERSION%" || goto end
+
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dicu=enabled -Dfreetype=enabled -Dcairo=disabled build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+
+@rem if not exist build mkdir build || goto end
+@rem cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
+@rem cd build || goto end
+@rem cmake --build . || goto end
+@rem cmake --install . || goto end
+
+@echo Building freetype with harfbuzz
+
+cd "%BUILD_PATH%" || goto end
+if not exist "freetype-%FREETYPE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\freetype-%FREETYPE_VERSION%.tar.gz" || goto end
+cd "freetype-%FREETYPE_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 @goto continue
 
@@ -759,39 +1037,6 @@ copy /y lib\*.dll "%PREFIX_PATH%\bin\" || goto end
 @goto continue
 
 
-:taglib
-
-@echo Building taglib
-
-cd "%BUILD_PATH%" || goto end
-if not exist "taglib-%TAGLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\taglib-%TAGLIB_VERSION%.tar.gz" || goto end
-cd "taglib-%TAGLIB_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-
-
-@goto continue
-
-
-:dlfcn-win32
-
-@echo Building dlfcn-win32
-
-cd "%BUILD_PATH%" || goto end
-if not exist "dlfcn-win32-%DLFCN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%DLFCN_VERSION%.tar.gz" || goto end
-cd "dlfcn-win32-%DLFCN_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-
-@goto continue
-
-
 :fftw3
 
 @rem Use FFTW compiled with mingw as it's recommended by FFTW.
@@ -814,149 +1059,6 @@ lib /machine:x64 /def:libfftw3-3.def || goto end
 xcopy /s /y libfftw3-3.dll "%PREFIX_PATH%\bin\" || goto end
 xcopy /s /y libfftw3-3.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y fftw3.h "%PREFIX_PATH%\include\" || goto end
-
-@goto continue
-
-
-:libffi
-
-@echo Building libffi
-
-cd "%BUILD_PATH%" || goto end
-if not exist "libffi" @(
-  mkdir "libffi" || goto end
-  cd "libffi" || goto end
-  xcopy /s /y /h "%DOWNLOADS_PATH%\libffi" . || goto end
-  cd ..
- ) || goto end
-cd libffi || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
-@goto continue
-
-
-:libintl
-
-@echo Building libintl
-
-cd "%BUILD_PATH%" || goto end
-if not exist "proxy-libintl" @(
-  mkdir "proxy-libintl" || goto end
-  cd "proxy-libintl" || goto end
-  xcopy /s /y /h "%DOWNLOADS_PATH%\proxy-libintl" . || goto end
-  cd ..
- ) || goto end
-cd proxy-libintl || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
-@goto continue
-
-
-:libproxy
-
-@echo Building libproxy
-
-cd "%BUILD_PATH%" || goto end
-if not exist "libproxy-%LIBPROXY_VERSION%" 7z x "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.xz" -so | 7z x -aoa -si"libproxy-%LIBPROXY_VERSION%.tar"
-cd "libproxy-%LIBPROXY_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DLIB_INSTALL_DIR="%PREFIX_PATH%\lib" -DBIN_INSTALL_DIR="%PREFIX_PATH%\bin" -DLIBEXEC_INSTALL_DIR="%PREFIX_PATH%\bin" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWITH_DBUS=OFF -DWITH_DOTNET=OFF -DWITH_DUKTAPE=OFF -DWITH_GNOME2=OFF -DWITH_GNOME3=OFF -DWITH_KDE=OFF -DWITH_MOZJS=OFF -DWITH_NATUS=OFF -DWITH_NM=OFF -DWITH_NMold=OFF -DWITH_PERL=OFF -DWITH_PYTHON2=OFF -DWITH_PYTHON3=OFF -DWITH_SYSCONFIG=OFF -DWITH_VALA=OFF -DWITH_WEBKIT=OFF -DWITH_WEBKIT3=OFF || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || goto end
-
-@goto continue
-
-
-:glib
-
-@echo Building glib
-
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-@set LDFLAGS="-L%PREFIX_PATH%\lib"
-
-cd "%BUILD_PATH%" || goto end
-if not exist "glib-%GLIB_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-%GLIB_VERSION%.tar"
-cd "glib-%GLIB_VERSION%" || goto end
-@rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
-@set CFLAGS=
-@set LDFLAGS=
-
-@goto continue
-
-
-:glib-networking
-
-@echo Building glib-networking
-
-cd "%BUILD_PATH%" || goto end
-if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-networking-%GLIB_NETWORKING_VERSION%.tar" || goto end
-cd "glib-networking-%GLIB_NETWORKING_VERSION%" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/glib-networking-tests.patch"
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled -Dgnome_proxy=disabled -Dlibproxy=disabled build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
-@goto continue
-
-
-:libpsl
-
-@echo Building libpsl
-
-cd "%BUILD_PATH%" || goto end
-if not exist "libpsl-%LIBPSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpsl-%LIBPSL_VERSION%.tar.gz" || goto end
-cd "libpsl-%LIBPSL_VERSION%" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%\libpsl-time.patch"
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
-@goto continue
-
-
-:libsoup
-
-@echo Building libsoup
-
-cd "%BUILD_PATH%" || goto end
-if not exist "libsoup-%LIBSOUP_VERSION%" 7z x "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" -so | 7z x -aoa -si"libsoup-%LIBSOUP_VERSION%.tar" || goto end
-cd "libsoup-%LIBSOUP_VERSION%" || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
-
-@goto continue
-
-
-:orc
-
-@echo Building orc
-
-cd "%BUILD_PATH%" || goto end
-if not exist "orc-%ORC_VERSION%" 7z x "%DOWNLOADS_PATH%\orc-%ORC_VERSION%.tar.xz" -so | 7z x -aoa -si"orc-%ORC_VERSION%.tar" || goto end
-cd "orc-%ORC_VERSION%" || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
 
 @goto continue
 
@@ -1074,6 +1176,23 @@ msbuild faac.sln /property:Configuration=%BUILD_TYPE% || goto end
 copy /y "..\..\include\*.h" "%PREFIX_PATH%\include\" || goto end
 copy /y "bin\%BUILD_TYPE%\libfaac_dll.lib" "%PREFIX_PATH%\lib\libfaac.lib" || goto end
 copy /y "bin\%BUILD_TYPE%\*.dll" "%PREFIX_PATH%\bin\" || goto end
+
+
+@goto continue
+
+
+:taglib
+
+@echo Building taglib
+
+cd "%BUILD_PATH%" || goto end
+if not exist "taglib-%TAGLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\taglib-%TAGLIB_VERSION%.tar.gz" || goto end
+cd "taglib-%TAGLIB_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
 
 
 @goto continue
@@ -1325,143 +1444,6 @@ ninja install || goto end
 @goto continue
 
 
-:abseil-cpp
-
-@echo Building abseil-cpp
-
-cd "%BUILD_PATH%" || goto end
-if not exist "abseil-cpp-%ABSEIL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_VERSION%.tar.gz" || goto end
-cd "abseil-cpp-%ABSEIL_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-
-@goto continue
-
-
-:protobuf
-
-@echo Building protobuf
-
-cd "%BUILD_PATH%" || goto end
-if not exist "protobuf-%PROTOBUF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
-cd "protobuf-%PROTOBUF_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_EXAMPLES=OFF -Dprotobuf_ABSL_PROVIDER="package" -Dprotobuf_BUILD_LIBPROTOC=OFF -Dprotobuf_BUILD_PROTOC_BINARIES=ON -Dprotobuf_WITH_ZLIB=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
-
-@goto continue
-
-
-:icu4c
-
-@echo Building icu4c
-
-cd "%BUILD_PATH%" || goto end
-if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip" || goto end
-cd "icu" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/icu-uwp.patch"
-cd "source\allinone" || goto end
-@rem start /w devenv.exe allinone.sln /upgrade
-msbuild allinone.sln /property:Configuration="%BUILD_TYPE%" /p:Platform="x64" || goto end
-cd ..\..\ || goto end
-if not exist "%PREFIX_PATH%\include\unicode" mkdir "%PREFIX_PATH%\include\unicode" || goto end
-copy /y "include\unicode\*.h" "%PREFIX_PATH%\include\unicode\" || goto end
-copy /y "lib64\*.*" "%PREFIX_PATH%\lib\" || goto end
-copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
-
-@goto continue
-
-
-:expat
-
-@echo Building expat
-
-cd "%BUILD_PATH%" || goto end
-if not exist "expat-%EXPAT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\expat-%EXPAT_VERSION%.tar.bz2" || goto end
-cd "expat-%EXPAT_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DEXPAT_SHARED_LIBS=ON -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_FUZZERS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_PKGCONFIG=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-
-@goto continue
-
-
-:freetype
-
-@echo Building freetype without harfbuzz
-
-cd "%BUILD_PATH%" || goto end
-if not exist "freetype-%FREETYPE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\freetype-%FREETYPE_VERSION%.tar.gz" || goto end
-cd "freetype-%FREETYPE_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
-
-@goto continue
-
-
-:harfbuzz
-
-@echo Building harfbuzz
-
-cd "%BUILD_PATH%" || goto end
-if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar" || goto end
-cd "harfbuzz-%HARFBUZZ_VERSION%" || goto end
-
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dfreetype=enabled build || goto end
-cd build || goto end
-ninja || goto end
-ninja install || goto end
-
-@rem if not exist build mkdir build || goto end
-@rem cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_ICU=ON -DHB_HAVE_FREETYPE=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
-@rem cd build || goto end
-@rem cmake --build . || goto end
-@rem cmake --install . || goto end
-
-@echo Building freetype with harfbuzz
-
-cd "%BUILD_PATH%" || goto end
-if not exist "freetype-%FREETYPE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\freetype-%FREETYPE_VERSION%.tar.gz" || goto end
-cd "freetype-%FREETYPE_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DFT_DISABLE_HARFBUZZ=OFF || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
-
-@goto continue
-
-
-:boost
-
-@echo Building boost
-
-cd "%BUILD_PATH%" || goto end
-
-if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.gz" || goto end
-cd "%BUILD_PATH%\boost_%BOOST_VERSION_UNDERSCORE%" || goto end
-if exist b2.exe del b2.exe
-if exist bjam.exe del bjam.exe
-if exist stage rmdir /s /q stage
-call .\bootstrap.bat || goto end
-.\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --without-mpi --without-python --prefix="%PREFIX_PATH%" --exec-prefix="%PREFIX_PATH%\bin" --libdir="%PREFIX_PATH%\lib" --includedir="%PREFIX_PATH%\include" toolset=msvc architecture=x86 address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi variant=%BUILD_TYPE% install || goto end
-
-@goto continue
-
-
 :qtbase
 
 @echo Building qtbase
@@ -1549,6 +1531,39 @@ cmake --install . || goto end
 @echo Libs: -L%PREFIX_PATH_FORWARD% -lqtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 @echo Cflags: -I%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 
+
+@goto continue
+
+
+:abseil-cpp
+
+@echo Building abseil-cpp
+
+cd "%BUILD_PATH%" || goto end
+if not exist "abseil-cpp-%ABSEIL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_VERSION%.tar.gz" || goto end
+cd "abseil-cpp-%ABSEIL_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:protobuf
+
+@echo Building protobuf
+
+cd "%BUILD_PATH%" || goto end
+if not exist "protobuf-%PROTOBUF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
+cd "protobuf-%PROTOBUF_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_EXAMPLES=OFF -Dprotobuf_ABSL_PROVIDER="package" -Dprotobuf_BUILD_LIBPROTOC=OFF -Dprotobuf_BUILD_PROTOC_BINARIES=ON -Dprotobuf_WITH_ZLIB=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 
 @goto continue
 
