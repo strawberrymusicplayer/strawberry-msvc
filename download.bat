@@ -112,6 +112,7 @@ https://download.qt.io/official_releases/qt/6.5/%QT_VERSION%/submodules/qttools-
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-%LIBGME_VERSION%.tar.gz
 https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
 https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%.tar.gz
+https://github.com/KDAB/KDSingleApplication/releases/download/v%KDSINGLEAPPLICATION_VERSION%/kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz
 https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/Git-%GIT_VERSION%-64-bit.exe
 https://github.com/Kitware/CMake/releases/download/v%CMAKE_VERSION%/cmake-%CMAKE_VERSION%-windows-x86_64.msi
 https://github.com/mesonbuild/meson/releases/download/%MESON_VERSION%/meson-%MESON_VERSION%-64.msi

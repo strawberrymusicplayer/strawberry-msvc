@@ -226,6 +226,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
+@if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%BUILD_PATH%\strawberry\build\strawberrysetup*.exe" goto strawberry
@@ -1534,6 +1535,22 @@ cmake --install . || goto end
 
 @goto continue
 
+
+:kdsingleapplication
+
+@echo Building KDSingleApplication
+
+cd "%BUILD_PATH%" || goto end
+if not exist "kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%" tar -xvf "%DOWNLOADS_PATH%\kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz" || goto end
+cd "kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DKDSingleApplication_QT6=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+
+@goto continue
 
 :abseil-cpp
 
