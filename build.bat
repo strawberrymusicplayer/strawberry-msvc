@@ -1697,6 +1697,7 @@ copy /y "%prefix_path%\bin\vorbis.dll" || goto end
 copy /y "%prefix_path%\bin\vorbisfile.dll" || goto end
 copy /y "%prefix_path%\bin\wavpackdll.dll" || goto end
 copy /y "%prefix_path%\bin\zlib*.dll" || goto end
+copy /y "%prefix_path%\bin\kdsingleapplication*.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end
