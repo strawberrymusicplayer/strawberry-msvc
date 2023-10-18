@@ -190,6 +190,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\orc-0.4.pc" goto orc
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\sqlite3.pc" goto sqlite
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\glib-2.0.pc" goto glib
+@rem @if not exist "%PREFIX_PATH%\bin\pkg-config.exe" goto pkg_config
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libsoup-3.0.pc" goto libsoup
 @if not exist "%PREFIX_PATH%\lib\gio\modules\gioopenssl.lib" goto glib-networking
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\freetype2.pc" goto freetype
@@ -729,6 +730,21 @@ ninja install || goto end
 
 @set CFLAGS=
 @set LDFLAGS=
+
+@goto continue
+
+
+:pkg_config
+
+@echo Building pkg-config
+
+cd "%BUILD_PATH%" || goto end
+
+if not exist "pkg-config-%PKG_CONFIG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pkg-config-%PKG_CONFIG_VERSION%.tar.gz" || goto end
+cd "pkg-config-%PKG_CONFIG_VERSION%" || goto end
+if not exist "debug\x64" mkdir debug\x64 || goto end
+nmake /f Makefile.vc CFG=%BUILD_TYPE% || goto end
+copy /y "debug\x64\pkg-config.exe" "%PREFIX_PATH%\bin\" || goto end
 
 @goto continue
 
@@ -1449,7 +1465,7 @@ ninja install || goto end
 
 @echo Building qtbase
 
-@rem "Workaround Qt issue with harfbuzz pc file."
+@rem "Workaround pkgconf bug."
 del "%PREFIX_PATH%\lib\pkgconfig\harfbuzz.pc"
 
 cd "%BUILD_PATH%" || goto end
