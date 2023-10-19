@@ -1465,9 +1465,6 @@ ninja install || goto end
 
 @echo Building qtbase
 
-@rem "Workaround pkgconf bug."
-del "%PREFIX_PATH%\lib\pkgconfig\harfbuzz.pc"
-
 cd "%BUILD_PATH%" || goto end
 
 if "%QT_DEV%" == "ON" @(
