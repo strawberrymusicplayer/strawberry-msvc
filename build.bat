@@ -391,13 +391,12 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "pcre2-%PCRE2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pcre2-%PCRE2_VERSION%.tar.bz2" || goto end
 cd "pcre2-%PCRE2_VERSION%" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/pcre2-cmake.patch"
 if not exist build mkdir build || goto end
 cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-
-@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\pcre2-8d.lib" "%PREFIX_PATH%\lib\pcre2-8.lib" || goto end
 
 @goto continue
 
@@ -1554,6 +1553,7 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%" tar -xvf "%DOWNLOADS_PATH%\kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz" || goto end
 cd "kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/kdsingleapplication.patch"
 if not exist build mkdir build || goto end
 cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DKDSingleApplication_QT6=ON || goto end
 cd build || goto end
