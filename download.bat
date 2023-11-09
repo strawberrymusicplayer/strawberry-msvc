@@ -140,6 +140,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpsl-time.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/kdsingleapplication.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/pcre2-cmake.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/faad2-cmake.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx
