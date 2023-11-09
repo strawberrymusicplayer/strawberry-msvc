@@ -1161,12 +1161,13 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "knik0-faad2-*" tar -xvf "%DOWNLOADS_PATH%\faad2-%FAAD2_VERSION%.tar.gz" || goto end
 cd "knik0-faad2-*" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%\faad2-cmake.patch"
 if not exist build mkdir build || goto end
 cmake -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
+copy /y "faad.lib" "%PREFIX_PATH%\lib\" || goto end
+copy /y "faad.dll" "%PREFIX_PATH%\bin\" || goto end
 copy /y "..\include\*.h" "%PREFIX_PATH%\include\" || goto end
 
 
