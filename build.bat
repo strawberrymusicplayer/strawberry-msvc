@@ -314,6 +314,7 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "openssl-%OPENSSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\openssl-%OPENSSL_VERSION%.tar.gz" || goto end
 cd openssl-%OPENSSL_VERSION% || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/openssl.patch"
 if "%BUILD_TYPE%" == "debug" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH_FORWARD%" --libdir=lib --openssldir=%PREFIX_PATH%\ssl --debug --with-zlib-include=%PREFIX_PATH%\include --with-zlib-lib=%PREFIX_PATH%\lib\zlibd.lib || goto end
 if "%BUILD_TYPE%" == "release" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH%" --libdir=lib --openssldir="%PREFIX_PATH%\ssl" --release --with-zlib-include="%PREFIX_PATH%\include" --with-zlib-lib="%PREFIX_PATH%\lib\zlib.lib" || goto end
 nmake || goto end
@@ -1630,7 +1631,7 @@ copy /y "%prefix_path%\bin\brotlicommon.dll" || goto end
 copy /y "%prefix_path%\bin\brotlidec.dll" || goto end
 copy /y "%prefix_path%\bin\chromaprint.dll" || goto end
 copy /y "%prefix_path%\bin\ebur128.dll" || goto end
-copy /y "%prefix_path%\bin\faad.dll" || goto end
+copy /y "%prefix_path%\bin\faad-2.dll" || goto end
 copy /y "%prefix_path%\bin\fdk-aac.dll" || goto end
 copy /y "%prefix_path%\bin\ffi-7.dll" || goto end
 copy /y "%prefix_path%\bin\flac.dll" || goto end
