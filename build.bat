@@ -1553,7 +1553,6 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%" tar -xvf "%DOWNLOADS_PATH%\kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz" || goto end
 cd "kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/kdsingleapplication.patch"
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DKDSingleApplication_QT6=ON || goto end
 cd build || goto end
