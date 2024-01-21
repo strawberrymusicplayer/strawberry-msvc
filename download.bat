@@ -53,7 +53,7 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v%GITL_VE
 
 
 @for %%x in (
-https://boostorg.jfrog.io/artifactory/main/release/%BOOST_VERSION%/source/boost_%BOOST_VERSION_UNDERSCORE%.tar.gz
+https://downloads.sourceforge.net/project/boost/boost/%BOOST_VERSION%/boost_%BOOST_VERSION_UNDERSCORE%.tar.bz2
 https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-%PKGCONF_VERSION%.tar.gz
 https://github.com/microsoft/mimalloc/archive/refs/tags/v%MIMALLOC_VERSION%.tar.gz
@@ -84,7 +84,7 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%.ta
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
-https://download.gnome.org/sources/glib/2.78/glib-%GLIB_VERSION%.tar.xz
+https://download.gnome.org/sources/glib/2.79/glib-%GLIB_VERSION%.tar.xz
 https://download.gnome.org/sources/glib-networking/2.78/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
 https://github.com/libproxy/libproxy/releases/download/%LIBPROXY_VERSION%/libproxy-%LIBPROXY_VERSION%.tar.xz
