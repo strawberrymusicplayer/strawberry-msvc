@@ -69,7 +69,7 @@ https://github.com/google/brotli/archive/refs/tags/v%BROTLI_VERSION%.tar.gz
 https://www.cairographics.org/releases/pixman-%PIXMAN_VERSION%.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v%LIBXML2_VERSION%/libxml2-v%LIBXML2_VERSION%.tar.bz2
 https://github.com/nghttp2/nghttp2/releases/download/v%NGHTTP2_VERSION%/nghttp2-%NGHTTP2_VERSION%.tar.bz2
-https://sqlite.org/2023/sqlite-autoconf-%SQLITE_VERSION%.tar.gz
+https://sqlite.org/2024/sqlite-autoconf-%SQLITE_VERSION%.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-%LIBOGG_VERSION%.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-%LIBVORBIS_VERSION%.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-%FLAC_VERSION%.tar.xz
@@ -137,8 +137,6 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtsparkle-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/icu-uwp.patch
-https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpsl-time.patch
-https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/kdsingleapplication.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/pcre2-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/faad2-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/openssl.patch
