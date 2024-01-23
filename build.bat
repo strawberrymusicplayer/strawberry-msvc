@@ -1649,8 +1649,10 @@ copy /y "%prefix_path%\bin\gstapp-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstaudio-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstbadaudio-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstbase-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstcodecparsers-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstfft-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstisoff-1.0-0.dll" || goto end
+copy /y "%prefix_path%\bin\gstmpegts-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstnet-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstpbutils-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstreamer-1.0-0.dll" || goto end
@@ -1718,6 +1720,7 @@ copy /y "%PREFIX_PATH%\plugins\tls\*.dll" ".\tls\" || goto end
 copy /y "%PREFIX_PATH%\plugins\sqldrivers\qsqlite*.dll" ".\sqldrivers\" || goto end
 copy /y "%PREFIX_PATH%\plugins\imageformats\*.dll" ".\imageformats\" || goto end
 
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstadaptivedemux2.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstaes.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstaiff.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstapetag.dll" ".\gstreamer-plugins\" || goto end
@@ -1750,6 +1753,10 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstid3tag.dll" ".\gstreamer-plugins\" |
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstisomp4.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstlame.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstmpegpsdemux.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstmpegpsmux.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstmpegtsdemux.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstmpegtsmux.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstmpg123.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstmusepack.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstogg.dll" ".\gstreamer-plugins\" || goto end
