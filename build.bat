@@ -213,6 +213,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\fdk-aac.pc" goto fdk-aac
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\faad2.pc" goto faad2
 @if not exist "%PREFIX_PATH%\lib\libfaac.lib" goto faac
+@if not exist "%PREFIX_PATH%\include\utf8cpp\utf8.h" goto utfcpp
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\taglib.pc" goto taglib
 @if not exist "%PREFIX_PATH%\lib\libbs2b.lib" goto libbs2b
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libebur128.pc" goto libebur128
@@ -1196,6 +1197,22 @@ copy /y "bin\%BUILD_TYPE%\*.dll" "%PREFIX_PATH%\bin\" || goto end
 
 @goto continue
 
+
+:utfcpp
+
+@echo Building utfcpp
+
+cd "%BUILD_PATH%" || goto end
+if not exist "utfcpp-%UTFCPP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%UTFCPP_VERSION%.tar.gz" || goto end
+cd "utfcpp-%UTFCPP_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+
+@goto continue
 
 :taglib
 

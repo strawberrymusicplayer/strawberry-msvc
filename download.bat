@@ -79,6 +79,7 @@ https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-%OPUSFILE_VERSION%.tar.gz
 https://gitlab.xiph.org/xiph/speex/-/archive/Speex-%SPEEX_VERSION%/speex-Speex-%SPEEX_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/mpg123/mpg123/%MPG123_VERSION%/mpg123-%MPG123_VERSION%.tar.bz2
 https://downloads.sourceforge.net/project/lame/lame/%LAME_VERSION%/lame-%LAME_VERSION%.tar.gz
+https://github.com/nemtrif/utfcpp/archive/refs/tags/v%UTF8CPP_VERSION%.tar.gz
 https://taglib.org/releases/taglib-%TAGLIB_VERSION%.tar.gz
 https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%.tar.gz
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
