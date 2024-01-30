@@ -64,7 +64,7 @@ https://downloads.sourceforge.net/project/libpng/libpng16/%LIBPNG_VERSION%/libpn
 https://downloads.sourceforge.net/project/libjpeg-turbo/%LIBJPEG_VERSION%/libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-%PCRE2_VERSION%/pcre2-%PCRE2_VERSION%.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-%BZIP2_VERSION%.tar.gz
-https://tukaani.org/xz/xz-%XZ_VERSION%.tar.bz2
+https://github.com/tukaani-project/xz/releases/download/v%XZ_VERSION%/xz-%XZ_VERSION%.tar.gz
 https://github.com/google/brotli/archive/refs/tags/v%BROTLI_VERSION%.tar.gz
 https://www.cairographics.org/releases/pixman-%PIXMAN_VERSION%.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v%LIBXML2_VERSION%/libxml2-v%LIBXML2_VERSION%.tar.bz2
@@ -79,7 +79,7 @@ https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-%OPUSFILE_VERSION%.tar.gz
 https://gitlab.xiph.org/xiph/speex/-/archive/Speex-%SPEEX_VERSION%/speex-Speex-%SPEEX_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/mpg123/mpg123/%MPG123_VERSION%/mpg123-%MPG123_VERSION%.tar.bz2
 https://downloads.sourceforge.net/project/lame/lame/%LAME_VERSION%/lame-%LAME_VERSION%.tar.gz
-https://github.com/nemtrif/utfcpp/archive/refs/tags/v%UTF8CPP_VERSION%.tar.gz
+https://github.com/nemtrif/utfcpp/archive/refs/tags/v%UTFCPP_VERSION%.tar.gz
 https://taglib.org/releases/taglib-%TAGLIB_VERSION%.tar.gz
 https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%.tar.gz
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip

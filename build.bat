@@ -425,7 +425,7 @@ cmake --install . || goto end
 @echo Building xz
 
 cd "%BUILD_PATH%" || goto end
-if not exist "xz-%XZ_VERSION%" tar -xvf "%DOWNLOADS_PATH%\xz-%XZ_VERSION%.tar.bz2" || goto end
+if not exist "xz-%XZ_VERSION%" tar -xvf "%DOWNLOADS_PATH%\xz-%XZ_VERSION%.tar.gz" || goto end
 cd "xz-%XZ_VERSION%" || goto end
 cd "windows\vs2019" || goto end
 start /w devenv.exe xz_win.sln /upgrade
