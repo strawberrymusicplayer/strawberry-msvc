@@ -315,7 +315,6 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "openssl-%OPENSSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\openssl-%OPENSSL_VERSION%.tar.gz" || goto end
 cd openssl-%OPENSSL_VERSION% || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/openssl.patch"
 if "%BUILD_TYPE%" == "debug" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH_FORWARD%" --libdir=lib --openssldir=%PREFIX_PATH%\ssl --debug --with-zlib-include=%PREFIX_PATH%\include --with-zlib-lib=%PREFIX_PATH%\lib\zlibd.lib || goto end
 if "%BUILD_TYPE%" == "release" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH%" --libdir=lib --openssldir="%PREFIX_PATH%\ssl" --release --with-zlib-include="%PREFIX_PATH%\include" --with-zlib-lib="%PREFIX_PATH%\lib\zlib.lib" || goto end
 nmake || goto end
