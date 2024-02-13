@@ -1213,7 +1213,7 @@ copy /y "bin\%BUILD_TYPE%\*.dll" "%PREFIX_PATH%\bin\" || goto end
 @echo Name: faac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
 @echo Description: faac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
 @echo URL: https://github.com/knik0/faac>> %PREFIX_PATH%\lib\pkgconfig\faac.pc"
-@echo Version: %GNUTLS_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo Version: 1.30>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
 @echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lfaac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
 @echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
 
