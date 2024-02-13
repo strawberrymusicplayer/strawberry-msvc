@@ -207,12 +207,12 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mp3lame.pc" goto lame
 @if not exist "%PREFIX_PATH%\lib\libtwolame_dll.lib" goto twolame
 @if not exist "%PREFIX_PATH%\lib\libfftw3-3.lib" goto fftw3
-@if not exist "%PREFIX_PATH%\lib\mpcdec.lib" goto musepack
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc" goto musepack
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libopenmpt.pc" goto libopenmpt
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libgme.pc" goto libgme
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\fdk-aac.pc" goto fdk-aac
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\faad2.pc" goto faad2
-@if not exist "%PREFIX_PATH%\lib\libfaac.lib" goto faac
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\faac.pc" goto faac
 @if not exist "%PREFIX_PATH%\include\utf8cpp\utf8.h" goto utfcpp
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\taglib.pc" goto taglib
 @if not exist "%PREFIX_PATH%\lib\libbs2b.lib" goto libbs2b
@@ -1096,6 +1096,17 @@ cmake --install . || goto end
 copy libmpcdec\*.lib %PREFIX_PATH%\lib\ || goto end
 copy libmpcdec\*.dll %PREFIX_PATH%\bin\ || goto end
 
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo Name: mpc>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo Description: mpc>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo URL: https://www.musepack.net/>> %PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo Version: %GNUTLS_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lmpcdec>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
 
 goto continue
 
@@ -1193,6 +1204,17 @@ copy /y "..\..\include\*.h" "%PREFIX_PATH%\include\" || goto end
 copy /y "bin\%BUILD_TYPE%\libfaac_dll.lib" "%PREFIX_PATH%\lib\libfaac.lib" || goto end
 copy /y "bin\%BUILD_TYPE%\*.dll" "%PREFIX_PATH%\bin\" || goto end
 
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo Name: faac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo Description: faac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo URL: https://github.com/knik0/faac>> %PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo Version: %GNUTLS_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lfaac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
 
 @goto continue
 
@@ -1351,6 +1373,7 @@ if "%GST_DEV%" == "ON" @(
 ) else @(
   if not exist "gst-plugins-base-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-%GSTREAMER_VERSION%.tar" || goto end
   cd "gst-plugins-base-%GSTREAMER_VERSION%" || goto end
+  patch -p3 -N < "%DOWNLOADS_PATH%\gst-plugins-base-discoverer.patch"
 )
 
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Ddoc=disabled -Dorc=enabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Dcompositor=disabled -Dencoding=disabled -Dgio=enabled -Dgio-typefinder=enabled -Doverlaycomposition=disabled -Dpbtypes=enabled -Dplayback=enabled -Drawparse=disabled -Dsubparse=disabled -Dtcp=enabled -Dtypefind=enabled -Dvideoconvertscale=disabled -Dvideorate=disabled -Dvideotestsrc=disabled -Dvolume=enabled -Dalsa=disabled -Dcdparanoia=disabled -Dlibvisual=disabled -Dogg=enabled -Dopus=enabled -Dpango=disabled -Dtheora=disabled -Dtremor=disabled -Dvorbis=enabled -Dx11=disabled -Dxshm=disabled -Dxvideo=disabled -Dxi=disabled -Dgl=disabled -Dgl-graphene=disabled -Dgl-jpeg=disabled -Dgl-png=disabled build || goto end
@@ -1405,13 +1428,9 @@ if "%GST_DEV%" == "ON" @(
 ) else @(
   if not exist "gst-plugins-bad-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-%GSTREAMER_VERSION%.tar" || goto end
   cd "gst-plugins-bad-%GSTREAMER_VERSION%" || goto end
+  patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-meson-dependency.patch"
 )
 
-patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-libpaths.patch"
-sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faad\meson.build || goto end
-sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\faac\meson.build || goto end
-sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\musepack\meson.build || goto end
-sed -i "s/c:\\msvc_x86_64\\lib/%PREFIX_PATH_ESCAPE%\\lib/g" ext\gme\meson.build || goto end
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dexamples=disabled -Dgpl=enabled -Dorc=enabled -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daiff=enabled -Dasfmux=enabled -Daudiobuffersplit=disabled -Daudiofxbad=disabled -Daudiolatency=disabled -Daudiomixmatrix=disabled -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled -Dcamerabin2=disabled -Dcodecalpha=disabled -Dcodectimestamper=disabled -Dcoloreffects=disabled -Ddebugutils=disabled -Ddvbsubenc=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled -Dfaceoverlay=disabled -Dfestival=disabled -Dfieldanalysis=disabled -Dfreeverb=disabled -Dfrei0r=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled -Did3tag=enabled -Dinter=disabled -Dinterlace=disabled -Divfparse=disabled -Divtc=disabled -Djp2kdecimator=disabled -Djpegformat=disabled -Dlibrfb=disabled -Dmidi=disabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dmxf=disabled -Dnetsim=disabled -Donvif=disabled -Dpcapparse=disabled -Dpnm=disabled -Dproxy=disabled -Drawparse=disabled -Dremovesilence=enabled -Drist=disabled -Drtmp2=disabled -Drtp=disabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled -Dspeed=disabled -Dsubenc=disabled -Dswitchbin=disabled -Dtimecode=disabled -Dvideofilters=disabled -Dvideoframe_audiolevel=disabled -Dvideoparsers=disabled -Dvideosignal=disabled -Dvmnc=disabled -Dy4m=disabled -Dopencv=disabled -Dwayland=disabled -Dx11=disabled -Daes=enabled -Daom=disabled -Davtp=disabled -Damfcodec=disabled -Dandroidmedia=disabled -Dapplemedia=disabled -Dasio=disabled -Dassrender=disabled -Dbluez=enabled -Dbs2b=enabled -Dbz2=disabled -Dchromaprint=enabled -Dclosedcaption=disabled -Dcolormanagement=disabled -Dcurl=disabled -Dcurl-ssh2=disabled -Dd3dvideosink=disabled -Dd3d11=disabled -Ddash=enabled -Ddc1394=disabled -Ddecklink=disabled -Ddirectfb=disabled -Ddirectsound=enabled -Ddirectshow=disabled -Ddtls=disabled -Ddts=disabled -Ddvb=disabled -Dfaac=enabled -Dfaad=enabled -Dfbdev=disabled -Dfdkaac=enabled -Dflite=disabled -Dfluidsynth=disabled -Dgl=disabled -Dgme=enabled -Dgs=disabled -Dgsm=disabled -Dgtk3=disabled -Dipcpipeline=disabled -Diqa=disabled -Dkate=disabled -Dkms=disabled -Dladspa=disabled -Dldac=disabled -Dlibde265=disabled -Dopenaptx=disabled -Dlv2=disabled -Dmediafoundation=disabled -Dmicrodns=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=enabled -Dneon=disabled -Dnvcodec=disabled -Donnx=disabled -Dopenal=disabled -Dopenexr=disabled -Dopenh264=disabled -Dopenjpeg=disabled -Dopenmpt=enabled -Dopenni2=disabled -Dopensles=disabled -Dopus=enabled -Dqroverlay=disabled -Dqsv=disabled -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsbc=disabled -Dsctp=disabled -Dshm=disabled -Dsmoothstreaming=disabled -Dsndfile=disabled -Dsoundtouch=disabled -Dspandsp=disabled -Dsrt=disabled -Dsrtp=disabled -Dsvthevcenc=disabled -Dteletext=disabled -Dtinyalsa=disabled -Dtranscode=disabled -Dttml=disabled -Duvch264=disabled -Dva=disabled -Dvoaacenc=disabled -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=enabled -Dwasapi2=enabled -Dwebp=disabled -Dwebrtc=disabled -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwic=disabled -Dwin32ipc=disabled -Dwinks=disabled -Dwinscreencap=disabled -Dx265=disabled -Dzbar=disabled -Dzxing=disabled -Dwpe=disabled -Dmagicleap=disabled -Dv4l2codecs=disabled -Disac=disabled -Dhls=enabled build || goto end
 cd build || goto end
 ninja || goto end
