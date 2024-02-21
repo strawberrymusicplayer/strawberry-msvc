@@ -167,7 +167,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
 @if not exist "%PREFIX_PATH%\lib\zlib*.lib" goto zlib
-@if not exist "%PREFIX_PATH%\bin\libssl-3-x64.dll" goto openssl
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\openssl.pc" goto openssl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc" goto gnutls
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpng.pc" goto libpng
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libjpeg.pc" goto libjpeg
@@ -320,6 +320,45 @@ if "%BUILD_TYPE%" == "debug" perl Configure VC-WIN64A shared zlib no-capieng no-
 if "%BUILD_TYPE%" == "release" perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="%PREFIX_PATH%" --libdir=lib --openssldir="%PREFIX_PATH%\ssl" --release --with-zlib-include="%PREFIX_PATH%\include" --with-zlib-lib="%PREFIX_PATH%\lib\zlib.lib" || goto end
 nmake || goto end
 nmake install_sw || goto end
+
+copy %PREFIX_PATH%\lib\libssl.lib %PREFIX_PATH%\lib\ssl.lib
+copy %PREFIX_PATH%\lib\libcrypto.lib %PREFIX_PATH%\lib\crypto.lib
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo Name: OpenSSL>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo Description: Secure Sockets Layer and cryptography libraries and tools>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo Requires: libssl libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Name: OpenSSL-libssl>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Description: Secure Sockets Layer and cryptography libraries>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Requires.private: libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Libs: -L${libdir} -lssl>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Cflags: -DOPENSSL_LOAD_CONF -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo enginesdir=${libdir}/engines-3>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo modulesdir=${libdir}/ossl-modules>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo Name: OpenSSL-libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo Description: OpenSSL cryptography library>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo Libs: -L${libdir} -lcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo Libs.private: -lz -ldl -pthread>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+@echo Cflags: -DOPENSSL_LOAD_CONF -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
 
 @goto continue
 
