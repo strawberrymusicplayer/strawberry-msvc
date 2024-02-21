@@ -1347,11 +1347,9 @@ cd "%BUILD_PATH%" || goto end
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
-  if not exist "gstreamer" @(
-    mkdir "gstreamer" || goto end
-    cd "gstreamer" || goto end
-    xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gstreamer" . || goto end
-  )
+  if not exist "gstreamer" mkdir "gstreamer" || goto end
+  cd "gstreamer" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gstreamer" . || goto end
 ) else @(
   if not exist "gstreamer-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gstreamer-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gstreamer-%GSTREAMER_VERSION%.tar" || goto end
   cd "gstreamer-%GSTREAMER_VERSION%" || goto end
@@ -1376,11 +1374,9 @@ goto continue
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
-  if not exist "gst-plugins-base" @(
-    mkdir "gst-plugins-base" || goto end
-    cd "gst-plugins-base" || goto end
-    xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-base" . || goto end
-  )
+  if not exist "gst-plugins-base" mkdir "gst-plugins-base" || goto end
+  cd "gst-plugins-base" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-base" . || goto end
 ) else @(
   if not exist "gst-plugins-base-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-%GSTREAMER_VERSION%.tar" || goto end
   cd "gst-plugins-base-%GSTREAMER_VERSION%" || goto end
@@ -1404,11 +1400,9 @@ ninja install || goto end
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
-  if not exist "gst-plugins-good" @(
-    mkdir "gst-plugins-good" || goto end
-    cd "gst-plugins-good" || goto end
-    xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-good" . || goto end
-  )
+  if not exist "gst-plugins-good" mkdir "gst-plugins-good" || goto end
+  cd "gst-plugins-good" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-good" . || goto end
 ) else @(
   if not exist "gst-plugins-good-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-%GSTREAMER_VERSION%.tar" || goto end
   cd "gst-plugins-good-%GSTREAMER_VERSION%" || goto end
@@ -1431,18 +1425,17 @@ ninja install || goto end
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
-  if not exist "gst-plugins-bad" @(
-    mkdir "gst-plugins-bad" || goto end
-    cd "gst-plugins-bad" || goto end
-    xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-bad" . || goto end
-  )
+  if not exist "gst-plugins-bad" mkdir "gst-plugins-bad" || goto end
+  cd "gst-plugins-bad" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-bad" . || goto end
+  patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-meson-dependency.patch"
 ) else @(
   if not exist "gst-plugins-bad-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-%GSTREAMER_VERSION%.tar" || goto end
   cd "gst-plugins-bad-%GSTREAMER_VERSION%" || goto end
   patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-meson-dependency.patch"
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dexamples=disabled -Dgpl=enabled -Dorc=enabled -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daiff=enabled -Dasfmux=enabled -Daudiobuffersplit=disabled -Daudiofxbad=disabled -Daudiolatency=disabled -Daudiomixmatrix=disabled -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled -Dcamerabin2=disabled -Dcodecalpha=disabled -Dcodectimestamper=disabled -Dcoloreffects=disabled -Ddebugutils=disabled -Ddvbsubenc=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled -Dfaceoverlay=disabled -Dfestival=disabled -Dfieldanalysis=disabled -Dfreeverb=disabled -Dfrei0r=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled -Did3tag=enabled -Dinter=disabled -Dinterlace=disabled -Divfparse=disabled -Divtc=disabled -Djp2kdecimator=disabled -Djpegformat=disabled -Dlibrfb=disabled -Dmidi=disabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dmxf=disabled -Dnetsim=disabled -Donvif=disabled -Dpcapparse=disabled -Dpnm=disabled -Dproxy=disabled -Drawparse=disabled -Dremovesilence=enabled -Drist=disabled -Drtmp2=disabled -Drtp=disabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled -Dspeed=disabled -Dsubenc=disabled -Dswitchbin=disabled -Dtimecode=disabled -Dvideofilters=disabled -Dvideoframe_audiolevel=disabled -Dvideoparsers=disabled -Dvideosignal=disabled -Dvmnc=disabled -Dy4m=disabled -Dopencv=disabled -Dwayland=disabled -Dx11=disabled -Daes=enabled -Daom=disabled -Davtp=disabled -Damfcodec=disabled -Dandroidmedia=disabled -Dapplemedia=disabled -Dasio=enabled -Dassrender=disabled -Dbluez=enabled -Dbs2b=enabled -Dbz2=disabled -Dchromaprint=enabled -Dclosedcaption=disabled -Dcolormanagement=disabled -Dcurl=disabled -Dcurl-ssh2=disabled -Dd3dvideosink=disabled -Dd3d11=disabled -Ddash=enabled -Ddc1394=disabled -Ddecklink=disabled -Ddirectfb=disabled -Ddirectsound=enabled -Ddirectshow=disabled -Ddtls=disabled -Ddts=disabled -Ddvb=disabled -Dfaac=enabled -Dfaad=enabled -Dfbdev=disabled -Dfdkaac=enabled -Dflite=disabled -Dfluidsynth=disabled -Dgl=disabled -Dgme=enabled -Dgs=disabled -Dgsm=disabled -Dgtk3=disabled -Dipcpipeline=disabled -Diqa=disabled -Dkate=disabled -Dkms=disabled -Dladspa=disabled -Dldac=disabled -Dlibde265=disabled -Dopenaptx=disabled -Dlv2=disabled -Dmediafoundation=disabled -Dmicrodns=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=enabled -Dneon=disabled -Dnvcodec=disabled -Donnx=disabled -Dopenal=disabled -Dopenexr=disabled -Dopenh264=disabled -Dopenjpeg=disabled -Dopenmpt=enabled -Dopenni2=disabled -Dopensles=disabled -Dopus=enabled -Dqroverlay=disabled -Dqsv=disabled -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsbc=disabled -Dsctp=disabled -Dshm=disabled -Dsmoothstreaming=disabled -Dsndfile=disabled -Dsoundtouch=disabled -Dspandsp=disabled -Dsrt=disabled -Dsrtp=disabled -Dsvthevcenc=disabled -Dteletext=disabled -Dtinyalsa=disabled -Dtranscode=disabled -Dttml=disabled -Duvch264=disabled -Dva=disabled -Dvoaacenc=disabled -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=enabled -Dwasapi2=enabled -Dwebp=disabled -Dwebrtc=disabled -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwic=disabled -Dwin32ipc=disabled -Dwinks=disabled -Dwinscreencap=disabled -Dx265=disabled -Dzbar=disabled -Dzxing=disabled -Dwpe=disabled -Dmagicleap=disabled -Dv4l2codecs=disabled -Disac=disabled -Dhls=enabled -Dasio-sdk-path="%PREFIX_PATH%\share\asiosdk_%ASIOSDK_VERSION%" build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dexamples=disabled -Dgpl=enabled -Dorc=enabled -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daiff=enabled -Dasfmux=enabled -Daudiobuffersplit=disabled -Daudiofxbad=disabled -Daudiolatency=disabled -Daudiomixmatrix=disabled -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled -Dcamerabin2=disabled -Dcodecalpha=disabled -Dcodectimestamper=disabled -Dcoloreffects=disabled -Ddebugutils=disabled -Ddvbsubenc=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled -Dfaceoverlay=disabled -Dfestival=disabled -Dfieldanalysis=disabled -Dfreeverb=disabled -Dfrei0r=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled -Did3tag=enabled -Dinter=disabled -Dinterlace=disabled -Divfparse=disabled -Divtc=disabled -Djp2kdecimator=disabled -Djpegformat=disabled -Dlibrfb=disabled -Dmidi=disabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dmxf=disabled -Dnetsim=disabled -Donvif=disabled -Dpcapparse=disabled -Dpnm=disabled -Dproxy=disabled -Drawparse=disabled -Dremovesilence=enabled -Drist=disabled -Drtmp2=disabled -Drtp=disabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled -Dspeed=disabled -Dsubenc=disabled -Dswitchbin=disabled -Dtimecode=disabled -Dvideofilters=disabled -Dvideoframe_audiolevel=disabled -Dvideoparsers=disabled -Dvideosignal=disabled -Dvmnc=disabled -Dy4m=disabled -Dopencv=disabled -Dwayland=disabled -Dx11=disabled -Daes=enabled -Daom=disabled -Davtp=disabled -Damfcodec=disabled -Dandroidmedia=disabled -Dapplemedia=disabled -Dasio=enabled -Dassrender=disabled -Dbluez=enabled -Dbs2b=enabled -Dbz2=disabled -Dchromaprint=enabled -Dclosedcaption=disabled -Dcolormanagement=disabled -Dcurl=disabled -Dcurl-ssh2=disabled -Dd3dvideosink=disabled -Dd3d11=disabled -Ddash=enabled -Ddc1394=disabled -Ddecklink=disabled -Ddirectfb=disabled -Ddirectsound=enabled -Ddirectshow=disabled -Ddtls=disabled -Ddts=disabled -Ddvb=disabled -Dfaac=enabled -Dfaad=enabled -Dfbdev=disabled -Dfdkaac=enabled -Dflite=disabled -Dfluidsynth=disabled -Dgl=disabled -Dgme=enabled -Dgs=disabled -Dgsm=disabled -Dgtk3=disabled -Dipcpipeline=disabled -Diqa=disabled -Dkms=disabled -Dladspa=disabled -Dldac=disabled -Dlibde265=disabled -Dopenaptx=disabled -Dlv2=disabled -Dmediafoundation=disabled -Dmicrodns=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=enabled -Dneon=disabled -Dnvcodec=disabled -Donnx=disabled -Dopenal=disabled -Dopenexr=disabled -Dopenh264=disabled -Dopenjpeg=disabled -Dopenmpt=enabled -Dopenni2=disabled -Dopensles=disabled -Dopus=enabled -Dqroverlay=disabled -Dqsv=disabled -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsbc=disabled -Dsctp=disabled -Dshm=disabled -Dsmoothstreaming=disabled -Dsndfile=disabled -Dsoundtouch=disabled -Dspandsp=disabled -Dsrt=disabled -Dsrtp=disabled -Dsvthevcenc=disabled -Dteletext=disabled -Dtinyalsa=disabled -Dtranscode=disabled -Dttml=disabled -Duvch264=disabled -Dva=disabled -Dvoaacenc=disabled -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=enabled -Dwasapi2=enabled -Dwebp=disabled -Dwebrtc=disabled -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwic=disabled -Dwin32ipc=disabled -Dwinks=disabled -Dwinscreencap=disabled -Dx265=disabled -Dzbar=disabled -Dzxing=disabled -Dwpe=disabled -Dmagicleap=disabled -Dv4l2codecs=disabled -Disac=disabled -Dhls=enabled -Dasio-sdk-path="%PREFIX_PATH%\share\asiosdk_%ASIOSDK_VERSION%" build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1459,11 +1452,9 @@ ninja install || goto end
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
-  if not exist "gst-plugins-ugly" @(
-    mkdir "gst-plugins-ugly" || goto end
-    cd "gst-plugins-ugly" || goto end
-    xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-ugly" . || goto end
-  )
+  if not exist "gst-plugins-ugly" mkdir "gst-plugins-ugly" || goto end
+  cd "gst-plugins-ugly" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-ugly" . || goto end
 ) else @(
   if not exist "gst-plugins-ugly-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-%GSTREAMER_VERSION%.tar" || goto end
   cd "gst-plugins-ugly-%GSTREAMER_VERSION%" || goto end
@@ -1486,11 +1477,9 @@ ninja install || goto end
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
-  if not exist "gst-libav" @(
-    mkdir "gst-libav" || goto end
-    cd "gst-libav" || goto end
-    xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-libav" . || goto end
-  )
+  if not exist "gst-libav" mkdir "gst-libav" || goto end
+  cd "gst-libav" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-libav" . || goto end
 ) else @(
   if not exist "gst-libav-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-libav-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-libav-%GSTREAMER_VERSION%.tar" || goto end
   cd "gst-libav-%GSTREAMER_VERSION%" || goto end
@@ -1513,11 +1502,9 @@ ninja install || goto end
 cd "%BUILD_PATH%" || goto end
 
 if "%QT_DEV%" == "ON" @(
-  if not exist "qtbase" @(
-    mkdir "qtbase" || goto end
-    cd "qtbase" || goto end
-    xcopy /s /y /h "%DOWNLOADS_PATH%\qtbase" . || goto end
-  )
+  if not exist "qtbase" mkdir "qtbase" || goto end
+  cd "qtbase" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\qtbase" . || goto end
 ) else @(
   if not exist "qtbase-everywhere-src-%QT_VERSION%" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-%QT_VERSION%.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-%QT_VERSION%.tar" || goto end
   cd "qtbase-everywhere-src-%QT_VERSION%" || goto end
