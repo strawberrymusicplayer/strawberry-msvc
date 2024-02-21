@@ -176,7 +176,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\liblzma.lib" goto xz
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libbrotlicommon.pc" goto brotli
 @if not exist "%PREFIX_PATH%\lib\libiconv*.lib" goto libiconv
-@if not exist "%PREFIX_PATH%\lib\icuio*.lib" goto icu4c
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc" goto icu4c
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\pixman-1.pc" goto pixman
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\expat.pc" goto expat
 @if not exist "%PREFIX_PATH%\include\boost\config.hpp" goto boost
@@ -530,6 +530,39 @@ if not exist "%PREFIX_PATH%\include\unicode" mkdir "%PREFIX_PATH%\include\unicod
 copy /y "include\unicode\*.h" "%PREFIX_PATH%\include\unicode\" || goto end
 copy /y "lib64\*.*" "%PREFIX_PATH%\lib\" || goto end
 copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo Name: icu-uc>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo Description: International Components for Unicode: Common and Data libraries>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo Libs: -L${libdir} -licuucd -licudt>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo Libs.private:>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo Name: icu-i18n>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo Description: International Components for Unicode: Stream and I/O Library>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo Libs: -licui18n>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo Requires: icu-uc>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo Name: icu-io>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo Description: International Components for Unicode: Stream and I/O Library>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo Libs: -licuio>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo Requires: icu-i18n>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 
 @goto continue
 
