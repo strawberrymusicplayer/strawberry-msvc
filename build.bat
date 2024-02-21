@@ -393,7 +393,6 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "pcre2-%PCRE2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pcre2-%PCRE2_VERSION%.tar.bz2" || goto end
 cd "pcre2-%PCRE2_VERSION%" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/pcre2-cmake.patch"
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
 cd build || goto end
