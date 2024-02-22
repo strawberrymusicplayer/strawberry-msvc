@@ -1848,6 +1848,7 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstapetag.dll" ".\gstreamer-plugins\" |
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstapp.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstasfmux.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstasio.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstaudioconvert.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstaudiofx.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstaudiomixer.dll" ".\gstreamer-plugins\" || goto end
@@ -1901,6 +1902,7 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstvolume.dll" ".\gstreamer-plugins\" |
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstvorbis.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwasapi.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwasapi2.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwaveform.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavenc.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavpack.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavparse.dll" ".\gstreamer-plugins\" || goto end
