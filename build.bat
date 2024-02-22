@@ -324,28 +324,6 @@ nmake install_sw || goto end
 copy %PREFIX_PATH%\lib\libssl.lib %PREFIX_PATH%\lib\ssl.lib
 copy %PREFIX_PATH%\lib\libcrypto.lib %PREFIX_PATH%\lib\crypto.lib
 
-@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo.>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo Name: OpenSSL>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo Description: Secure Sockets Layer and cryptography libraries and tools>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo Requires: libssl libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-
-@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo.>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Name: OpenSSL-libssl>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Description: Secure Sockets Layer and cryptography libraries>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Requires.private: libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Libs: -L${libdir} -lssl>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Cflags: -DOPENSSL_LOAD_CONF -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
 @echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
 @echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
@@ -359,6 +337,28 @@ copy %PREFIX_PATH%\lib\libcrypto.lib %PREFIX_PATH%\lib\crypto.lib
 @echo Libs: -L${libdir} -lcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
 @echo Libs.private: -lz -ldl -pthread>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
 @echo Cflags: -DOPENSSL_LOAD_CONF -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Name: OpenSSL-libssl>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Description: Secure Sockets Layer and cryptography libraries>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Requires.private: libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Libs: -L${libdir} -lssl>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+@echo Cflags: -DOPENSSL_LOAD_CONF -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo Name: OpenSSL>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo Description: Secure Sockets Layer and cryptography libraries and tools>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+@echo Requires: libssl libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
 
 @goto continue
 
@@ -539,8 +539,9 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 @echo Name: icu-uc>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
 @echo Description: International Components for Unicode: Common and Data libraries>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
 @echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
-@echo Libs: -L${libdir} -licuucd -licudt>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
-@echo Libs.private:>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@if "%BUILD_TYPE%" == "debug" @echo Libs: -L${libdir} -licuucd -licudt>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@if "%BUILD_TYPE%" == "release" @echo Libs: -L${libdir} -licuuc -licudt>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo Libs.private: -lpthread -lm>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
 
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 @echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
@@ -550,7 +551,8 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 @echo Name: icu-i18n>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 @echo Description: International Components for Unicode: Stream and I/O Library>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 @echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
-@echo Libs: -licui18n>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@if "%BUILD_TYPE%" == "debug" @echo Libs: -licuind>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@if "%BUILD_TYPE%" == "release" @echo Libs: -licuin>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 @echo Requires: icu-uc>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
@@ -561,7 +563,8 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 @echo Name: icu-io>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 @echo Description: International Components for Unicode: Stream and I/O Library>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 @echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
-@echo Libs: -licuio>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@if "%BUILD_TYPE%" == "debug" @echo Libs: -licuiod>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@if "%BUILD_TYPE%" == "release" @echo Libs: -licuio>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 @echo Requires: icu-i18n>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 
 @goto continue
@@ -726,6 +729,9 @@ cmake --install . || goto end
 
 @echo Building libpsl
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
+@set LDFLAGS="-L%PREFIX_PATH%\lib"
+
 cd "%BUILD_PATH%" || goto end
 if not exist "libpsl-%LIBPSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpsl-%LIBPSL_VERSION%.tar.gz" || goto end
 cd "libpsl-%LIBPSL_VERSION%" || goto end
@@ -734,6 +740,9 @@ if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@set CFLAGS=
+@set LDFLAGS=
 
 @goto continue
 
@@ -887,6 +896,10 @@ ninja install || goto end
 
 @echo Building harfbuzz
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
+@set CXXFLAGS=-I%PREFIX_PATH_FORWARD%/include
+@set LDFLAGS="-L%PREFIX_PATH%\lib"
+
 cd "%BUILD_PATH%" || goto end
 if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar" || goto end
 cd "harfbuzz-%HARFBUZZ_VERSION%" || goto end
@@ -913,6 +926,10 @@ cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
+
+@set CFLAGS=
+@set CXXFLAGS=
+@set LDFLAGS=
 
 @goto continue
 
