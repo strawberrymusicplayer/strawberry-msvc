@@ -465,14 +465,11 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "xz-%XZ_VERSION%" tar -xvf "%DOWNLOADS_PATH%\xz-%XZ_VERSION%.tar.gz" || goto end
 cd "xz-%XZ_VERSION%" || goto end
-cd "windows\vs2019" || goto end
-start /w devenv.exe xz_win.sln /upgrade
-msbuild xz_win.sln /property:Configuration=%BUILD_TYPE% || goto end
-copy /y "%BUILD_TYPE%\x64\liblzma_dll\*.lib" "%PREFIX_PATH%\lib\" || goto end
-copy /y "%BUILD_TYPE%\x64\liblzma_dll\*.dll" "%PREFIX_PATH%\bin\" || goto end
-copy /y "..\..\src\liblzma\api\*.h" "%PREFIX_PATH%\include\" || goto end
-if not exist "%PREFIX_PATH%\include\lzma" mkdir "%PREFIX_PATH%\include\lzma" || goto end
-copy /y "..\..\src\liblzma\api\lzma\*.*" "%PREFIX_PATH%\include\lzma\" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DBUILD_TESTING=OFF || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
 
 @goto continue
 
