@@ -641,7 +641,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "nghttp2-%NGHTTP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\nghttp2-%NGHTTP2_VERSION%.tar.bz2" || goto end
 cd "nghttp2-%NGHTTP2_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DENABLE_SHARED_LIB=ON || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=ON -DSTATIC_LIB_SUFFIX="static" || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
