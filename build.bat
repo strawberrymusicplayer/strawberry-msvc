@@ -1440,10 +1440,13 @@ if "%GST_DEV%" == "ON" @(
   cd "gstreamer-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dbenchmarks=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dextra-checks=enabled -Ddoc=disabled -Dgst_debug=true -Dgst_parse=true -Dregistry=true build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
+@rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
 @set CFLAGS=
 
@@ -1468,10 +1471,13 @@ if "%GST_DEV%" == "ON" @(
   patch -p3 -N < "%DOWNLOADS_PATH%\gst-plugins-base-discoverer.patch"
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Ddoc=disabled -Dorc=enabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Dcompositor=disabled -Dencoding=disabled -Dgio=enabled -Dgio-typefinder=enabled -Doverlaycomposition=disabled -Dpbtypes=enabled -Dplayback=enabled -Drawparse=disabled -Dsubparse=disabled -Dtcp=enabled -Dtypefind=enabled -Dvideoconvertscale=disabled -Dvideorate=disabled -Dvideotestsrc=disabled -Dvolume=enabled -Dalsa=disabled -Dcdparanoia=disabled -Dlibvisual=disabled -Dogg=enabled -Dopus=enabled -Dpango=disabled -Dtheora=disabled -Dtremor=disabled -Dvorbis=enabled -Dx11=disabled -Dxshm=disabled -Dxvideo=disabled -Dxi=disabled -Dgl=disabled -Dgl-graphene=disabled -Dgl-jpeg=disabled -Dgl-png=disabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=enabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Ddoc=disabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Ddsd=enabled -Dencoding=enabled -Dgio=enabled -Dgio-typefinder=enabled -Dpbtypes=enabled -Dplayback=enabled -Dtcp=enabled -Dtypefind=enabled -Dvolume=enabled -Dogg=enabled -Dopus=enabled -Dvorbis=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
+@rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
 @set CFLAGS=
 
@@ -1493,10 +1499,13 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-good-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Ddoc=disabled -Dorc=enabled -Dalpha=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dauparse=disabled -Dautodetect=enabled -Davi=disabled -Dcutter=disabled -Ddebugutils=disabled -Ddeinterlace=disabled -Ddtmf=disabled -Deffectv=disabled -Dequalizer=enabled -Dflv=disabled -Dflx=disabled -Dgoom=disabled -Dgoom2k1=disabled -Dicydemux=enabled -Did3demux=enabled -Dimagefreeze=disabled -Dinterleave=disabled -Disomp4=enabled -Dlaw=disabled -Dlevel=disabled -Dmatroska=disabled -Dmonoscope=disabled -Dmultifile=disabled -Dmultipart=disabled -Dreplaygain=enabled -Drtp=enabled -Drtpmanager=disabled -Drtsp=enabled -Dshapewipe=disabled -Dsmpte=disabled -Dspectrum=enabled -Dudp=enabled -Dvideobox=disabled -Dvideocrop=disabled -Dvideofilter=disabled -Dvideomixer=disabled -Dwavenc=enabled -Dwavparse=enabled -Dxingmux=enabled -Dy4m=disabled -Dadaptivedemux2=enabled -Daalib=disabled -Dbz2=disabled -Dcairo=disabled -Ddirectsound=enabled -Ddv=disabled -Ddv1394=disabled -Dflac=enabled -Dgdk-pixbuf=disabled -Dgtk3=disabled -Djack=disabled -Djpeg=disabled -Dlame=enabled -Dlibcaca=disabled -Dmpg123=enabled -Doss=disabled -Doss4=disabled -Dosxaudio=disabled -Dosxvideo=disabled -Dpng=disabled -Dpulse=disabled -Dshout2=disabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dvpx=disabled -Dwaveform=enabled -Dwavpack=enabled -Dsoup=enabled -Dqt5=disabled -Dximagesrc=disabled -Dv4l2=disabled -Dv4l2-libv4l2=disabled -Dv4l2-gudev=disabled -Dhls-crypto=openssl build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dnls=enabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dasm=enabled -Ddoc=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dautodetect=enabled -Dequalizer=enabled -Dicydemux=enabled -Did3demux=enabled -Disomp4=enabled -Dreplaygain=enabled -Drtp=enabled -Drtsp=enabled -Dspectrum=enabled -Dudp=enabled -Dwavenc=enabled -Dwavparse=enabled -Dxingmux=enabled -Dadaptivedemux2=enabled -Ddirectsound=enabled -Dflac=enabled -Dlame=enabled -Dmpg123=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dwaveform=enabled -Dwavpack=enabled -Dsoup=enabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
+@rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
 @goto continue
 
@@ -1520,10 +1529,13 @@ if "%GST_DEV%" == "ON" @(
   patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-meson-dependency.patch"
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dexamples=disabled -Dgpl=enabled -Dorc=enabled -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daiff=enabled -Dasfmux=enabled -Daudiobuffersplit=disabled -Daudiofxbad=disabled -Daudiolatency=disabled -Daudiomixmatrix=disabled -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled -Dcamerabin2=disabled -Dcodecalpha=disabled -Dcodectimestamper=disabled -Dcoloreffects=disabled -Ddebugutils=disabled -Ddvbsubenc=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled -Dfaceoverlay=disabled -Dfestival=disabled -Dfieldanalysis=disabled -Dfreeverb=disabled -Dfrei0r=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled -Did3tag=enabled -Dinter=disabled -Dinterlace=disabled -Divfparse=disabled -Divtc=disabled -Djp2kdecimator=disabled -Djpegformat=disabled -Dlibrfb=disabled -Dmidi=disabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dmxf=disabled -Dnetsim=disabled -Donvif=disabled -Dpcapparse=disabled -Dpnm=disabled -Dproxy=disabled -Drawparse=disabled -Dremovesilence=enabled -Drist=disabled -Drtmp2=disabled -Drtp=disabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled -Dspeed=disabled -Dsubenc=disabled -Dswitchbin=disabled -Dtimecode=disabled -Dvideofilters=disabled -Dvideoframe_audiolevel=disabled -Dvideoparsers=disabled -Dvideosignal=disabled -Dvmnc=disabled -Dy4m=disabled -Dopencv=disabled -Dwayland=disabled -Dx11=disabled -Daes=enabled -Daom=disabled -Davtp=disabled -Damfcodec=disabled -Dandroidmedia=disabled -Dapplemedia=disabled -Dasio=enabled -Dassrender=disabled -Dbluez=enabled -Dbs2b=enabled -Dbz2=disabled -Dchromaprint=enabled -Dclosedcaption=disabled -Dcolormanagement=disabled -Dcurl=disabled -Dcurl-ssh2=disabled -Dd3dvideosink=disabled -Dd3d11=disabled -Ddash=enabled -Ddc1394=disabled -Ddecklink=disabled -Ddirectfb=disabled -Ddirectsound=enabled -Ddirectshow=disabled -Ddtls=disabled -Ddts=disabled -Ddvb=disabled -Dfaac=enabled -Dfaad=enabled -Dfbdev=disabled -Dfdkaac=enabled -Dflite=disabled -Dfluidsynth=disabled -Dgl=disabled -Dgme=enabled -Dgs=disabled -Dgsm=disabled -Dgtk3=disabled -Dipcpipeline=disabled -Diqa=disabled -Dkms=disabled -Dladspa=disabled -Dldac=disabled -Dlibde265=disabled -Dopenaptx=disabled -Dlv2=disabled -Dmediafoundation=disabled -Dmicrodns=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=enabled -Dneon=disabled -Dnvcodec=disabled -Donnx=disabled -Dopenal=disabled -Dopenexr=disabled -Dopenh264=disabled -Dopenjpeg=disabled -Dopenmpt=enabled -Dopenni2=disabled -Dopensles=disabled -Dopus=enabled -Dqroverlay=disabled -Dqsv=disabled -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsbc=disabled -Dsctp=disabled -Dshm=disabled -Dsmoothstreaming=disabled -Dsndfile=disabled -Dsoundtouch=disabled -Dspandsp=disabled -Dsrt=disabled -Dsrtp=disabled -Dsvthevcenc=disabled -Dteletext=disabled -Dtinyalsa=disabled -Dtranscode=disabled -Dttml=disabled -Duvch264=disabled -Dva=disabled -Dvoaacenc=disabled -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=enabled -Dwasapi2=enabled -Dwebp=disabled -Dwebrtc=disabled -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwic=disabled -Dwin32ipc=disabled -Dwinks=disabled -Dwinscreencap=disabled -Dx265=disabled -Dzbar=disabled -Dzxing=disabled -Dwpe=disabled -Dmagicleap=disabled -Dv4l2codecs=disabled -Disac=disabled -Dhls=enabled -Dasio-sdk-path="%PREFIX_PATH%\share\asiosdk_%ASIOSDK_VERSION%" build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtools=enabled -Dtests=disabled -Dintrospection=disabled -Dnls=enabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dextra-checks=enabled -Dgpl=enabled -Daiff=enabled -Dasfmux=enabled -Did3tag=enabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dremovesilence=enabled -Daes=enabled -Dasio=enabled -Dbluez=enabled -Dbs2b=enabled -Dchromaprint=enabled -Ddash=enabled -Ddirectsound=enabled -Dfaac=enabled -Dfaad=enabled -Dfdkaac=enabled -Dgme=enabled -Dmusepack=enabled -Dopenmpt=enabled -Dopus=enabled -Dwasapi=enabled -Dwasapi2=enabled -Dhls=enabled -Dasio-sdk-path="%PREFIX_PATH%\share\asiosdk_%ASIOSDK_VERSION%" build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
+@rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
 @set CFLAGS=
 
@@ -1545,10 +1557,13 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-ugly-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dorc=enabled -Dasfdemux=enabled -Ddvdlpcmdec=disabled -Ddvdsub=disabled -Drealmedia=disabled -Da52dec=disabled -Dcdio=disabled -Ddvdread=disabled -Dmpeg2dec=disabled -Dsidplay=disabled -Dx264=disabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dnls=enabled -Dorc=enabled -Dtests=disabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Ddoc=disabled -Dgpl=enabled -Dasfdemux=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
+@rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
 @goto continue
 
@@ -1574,6 +1589,9 @@ if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
+@rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
 @set CFLAGS=
 
