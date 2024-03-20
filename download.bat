@@ -86,7 +86,7 @@ https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
 https://download.gnome.org/sources/glib/2.80/glib-%GLIB_VERSION%.tar.xz
-https://download.gnome.org/sources/glib-networking/2.78/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
+https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
 https://github.com/libproxy/libproxy/releases/download/%LIBPROXY_VERSION%/libproxy-%LIBPROXY_VERSION%.tar.xz
 https://download.gnome.org/sources/libsoup/3.4/libsoup-%LIBSOUP_VERSION%.tar.xz
@@ -104,7 +104,7 @@ https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-%GSTREAMER
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-%GSTREAMER_VERSION%.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-%GSTREAMER_VERSION%.tar.xz
 https://github.com/protocolbuffers/protobuf/releases/download/v%PROTOBUF_VERSION%/protobuf-%PROTOBUF_VERSION%.tar.gz
-https://github.com/libexpat/libexpat/releases/download/R_%EXPAT_VERSION_UNDERSCORE%/expat-%EXPAT_VERSION%.tar.xz
+https://github.com/libexpat/libexpat/releases/download/R_%EXPAT_VERSION_UNDERSCORE%/expat-%EXPAT_VERSION%.tar.bz2
 https://downloads.sourceforge.net/project/freetype/freetype2/%FREETYPE_VERSION%/freetype-%FREETYPE_VERSION%.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-%ICU4C_VERSION_DASH%/icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip
 https://cairographics.org/releases/cairo-%CAIRO_VERSION%.tar.xz
