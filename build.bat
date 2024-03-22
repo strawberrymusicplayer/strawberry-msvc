@@ -1468,7 +1468,6 @@ if "%GST_DEV%" == "ON" @(
 ) else @(
   if not exist "gst-plugins-base-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-%GSTREAMER_VERSION%.tar" || goto end
   cd "gst-plugins-base-%GSTREAMER_VERSION%" || goto end
-  patch -p3 -N < "%DOWNLOADS_PATH%\gst-plugins-base-discoverer.patch"
 )
 
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=enabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Ddoc=disabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Ddsd=enabled -Dencoding=enabled -Dgio=enabled -Dgio-typefinder=enabled -Dpbtypes=enabled -Dplayback=enabled -Dtcp=enabled -Dtypefind=enabled -Dvolume=enabled -Dogg=enabled -Dopus=enabled -Dvorbis=enabled build || goto end
