@@ -64,7 +64,7 @@ https://downloads.sourceforge.net/project/libpng/libpng16/%LIBPNG_VERSION%/libpn
 https://downloads.sourceforge.net/project/libjpeg-turbo/%LIBJPEG_VERSION%/libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-%PCRE2_VERSION%/pcre2-%PCRE2_VERSION%.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-%BZIP2_VERSION%.tar.gz
-https://github.com/tukaani-project/xz/releases/download/v%XZ_VERSION%/xz-%XZ_VERSION%.tar.gz
+https://downloads.sourceforge.net/project/lzmautils/xz-%XZ_VERSION%.tar.gz
 https://github.com/google/brotli/archive/refs/tags/v%BROTLI_VERSION%.tar.gz
 https://www.cairographics.org/releases/pixman-%PIXMAN_VERSION%.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v%LIBXML2_VERSION%/libxml2-v%LIBXML2_VERSION%.tar.bz2
