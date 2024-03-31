@@ -1443,7 +1443,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gstreamer-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dbenchmarks=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dextra-checks=enabled -Ddoc=disabled -Dgst_debug=true -Dgst_parse=true -Dregistry=true build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dbenchmarks=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=disabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dextra-checks=enabled -Ddoc=disabled -Dgst_debug=true -Dgst_parse=true -Dregistry=true build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1473,7 +1473,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-base-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=enabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Ddoc=disabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Ddsd=enabled -Dencoding=enabled -Dgio=enabled -Dgio-typefinder=enabled -Dpbtypes=enabled -Dplayback=enabled -Dtcp=enabled -Dtypefind=enabled -Dvolume=enabled -Dogg=enabled -Dopus=enabled -Dvorbis=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=disabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Ddoc=disabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Ddsd=enabled -Dencoding=enabled -Dgio=enabled -Dgio-typefinder=enabled -Dpbtypes=enabled -Dplayback=enabled -Dtcp=enabled -Dtypefind=enabled -Dvolume=enabled -Dogg=enabled -Dopus=enabled -Dvorbis=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1501,7 +1501,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-good-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dnls=enabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dasm=enabled -Ddoc=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dautodetect=enabled -Dequalizer=enabled -Dicydemux=enabled -Did3demux=enabled -Disomp4=enabled -Dreplaygain=enabled -Drtp=enabled -Drtsp=enabled -Dspectrum=enabled -Dudp=enabled -Dwavenc=enabled -Dwavparse=enabled -Dxingmux=enabled -Dadaptivedemux2=enabled -Ddirectsound=enabled -Dflac=enabled -Dlame=enabled -Dmpg123=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dwaveform=enabled -Dwavpack=enabled -Dsoup=enabled -Dhls-crypto=openssl build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dnls=disabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dasm=enabled -Ddoc=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dautodetect=enabled -Dequalizer=enabled -Dicydemux=enabled -Did3demux=enabled -Disomp4=enabled -Dreplaygain=enabled -Drtp=enabled -Drtsp=enabled -Dspectrum=enabled -Dudp=enabled -Dwavenc=enabled -Dwavparse=enabled -Dxingmux=enabled -Dadaptivedemux2=enabled -Ddirectsound=enabled -Dflac=enabled -Dlame=enabled -Dmpg123=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dwaveform=enabled -Dwavpack=enabled -Dsoup=enabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1531,7 +1531,7 @@ if "%GST_DEV%" == "ON" @(
   patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-meson-dependency.patch"
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtools=enabled -Dtests=disabled -Dintrospection=disabled -Dnls=enabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dextra-checks=enabled -Dgpl=enabled -Daiff=enabled -Dasfmux=enabled -Did3tag=enabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dremovesilence=enabled -Daes=enabled -Dasio=enabled -Dbluez=enabled -Dbs2b=enabled -Dchromaprint=enabled -Ddash=enabled -Ddirectsound=enabled -Dfaac=enabled -Dfaad=enabled -Dfdkaac=enabled -Dgme=enabled -Dmusepack=enabled -Dopenmpt=enabled -Dopus=enabled -Dwasapi=enabled -Dwasapi2=enabled -Dhls=enabled -Dasio-sdk-path="%PREFIX_PATH%\share\asiosdk_%ASIOSDK_VERSION%" build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtools=enabled -Dtests=disabled -Dintrospection=disabled -Dnls=disabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dextra-checks=enabled -Dgpl=enabled -Daiff=enabled -Dasfmux=enabled -Did3tag=enabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dremovesilence=enabled -Daes=enabled -Dasio=enabled -Dbluez=enabled -Dbs2b=enabled -Dchromaprint=enabled -Ddash=enabled -Ddirectsound=enabled -Dfaac=enabled -Dfaad=enabled -Dfdkaac=enabled -Dgme=enabled -Dmusepack=enabled -Dopenmpt=enabled -Dopus=enabled -Dwasapi=enabled -Dwasapi2=enabled -Dhls=enabled -Dasio-sdk-path="%PREFIX_PATH%\share\asiosdk_%ASIOSDK_VERSION%" build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1559,7 +1559,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-ugly-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dnls=enabled -Dorc=enabled -Dtests=disabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Ddoc=disabled -Dgpl=enabled -Dasfdemux=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dnls=disabled -Dorc=enabled -Dtests=disabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Ddoc=disabled -Dgpl=enabled -Dasfdemux=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
