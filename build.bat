@@ -1856,6 +1856,7 @@ copy /y "%prefix_path%\bin\kdsingleapplication*.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end
+copy /y "%PREFIX_PATH%\plugins\styles\qmodernwindowsstyle*.dll" ".\styles\" || goto end
 copy /y "%PREFIX_PATH%\plugins\tls\*.dll" ".\tls\" || goto end
 copy /y "%PREFIX_PATH%\plugins\sqldrivers\qsqlite*.dll" ".\sqldrivers\" || goto end
 copy /y "%PREFIX_PATH%\plugins\imageformats\*.dll" ".\imageformats\" || goto end
