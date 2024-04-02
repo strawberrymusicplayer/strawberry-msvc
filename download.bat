@@ -158,6 +158,7 @@ https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg
 https://github.com/frida/proxy-libintl
 https://gitlab.freedesktop.org/gstreamer/gstreamer
 https://github.com/strawberrymusicplayer/strawberry
+https://git.tukaani.org/xz
 ) do @(
   if exist %%~nxx @(
     echo Updating repository %%x

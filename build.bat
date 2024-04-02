@@ -462,17 +462,20 @@ cmake --install . || goto end
 
 @echo Building xz
 
-cd "%BUILD_PATH%" || goto end
-if not exist "xz-%XZ_VERSION%" tar -xvf "%DOWNLOADS_PATH%\xz-%XZ_VERSION%.tar.gz" || goto end
-cd "xz-%XZ_VERSION%" || goto end
-cd "windows\vs2019" || goto end
-start /w devenv.exe xz_win.sln /upgrade
-msbuild xz_win.sln /property:Configuration=%BUILD_TYPE% || goto end
-copy /y "%BUILD_TYPE%\x64\liblzma_dll\*.lib" "%PREFIX_PATH%\lib\" || goto end
-copy /y "%BUILD_TYPE%\x64\liblzma_dll\*.dll" "%PREFIX_PATH%\bin\" || goto end
-copy /y "..\..\src\liblzma\api\*.h" "%PREFIX_PATH%\include\" || goto end
-if not exist "%PREFIX_PATH%\include\lzma" mkdir "%PREFIX_PATH%\include\lzma" || goto end
-copy /y "..\..\src\liblzma\api\lzma\*.*" "%PREFIX_PATH%\include\lzma\" || goto end
+if not exist "xz" @(
+  mkdir xz || goto end
+  cd xz || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\xz" . || goto end
+  cd ..
+) || goto end
+
+cd "xz" || goto end
+git checkout v%XZ_VERSION% || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DBUILD_TESTING=OFF || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
 
 @goto continue
 
@@ -1853,7 +1856,6 @@ copy /y "%prefix_path%\bin\kdsingleapplication*.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end
-copy /y "%PREFIX_PATH%\plugins\styles\qwindowsvistastyle*.dll" ".\styles\" || goto end
 copy /y "%PREFIX_PATH%\plugins\tls\*.dll" ".\tls\" || goto end
 copy /y "%PREFIX_PATH%\plugins\sqldrivers\qsqlite*.dll" ".\sqldrivers\" || goto end
 copy /y "%PREFIX_PATH%\plugins\imageformats\*.dll" ".\imageformats\" || goto end
