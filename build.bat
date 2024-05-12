@@ -611,7 +611,7 @@ cmake --install . || goto end
 
 cd "%BUILD_PATH%" || goto end
 
-if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.gz" || goto end
+if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.bz2" || goto end
 cd "%BUILD_PATH%\boost_%BOOST_VERSION_UNDERSCORE%" || goto end
 if exist b2.exe del b2.exe
 if exist bjam.exe del bjam.exe
@@ -647,7 +647,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "nghttp2-%NGHTTP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\nghttp2-%NGHTTP2_VERSION%.tar.bz2" || goto end
 cd "nghttp2-%NGHTTP2_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=ON -DSTATIC_LIB_SUFFIX="static" || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -701,6 +701,7 @@ ninja install || goto end
 
 cd "%BUILD_PATH%" || goto end
 if not exist "libproxy-%LIBPROXY_VERSION%" 7z x "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.xz" -so | 7z x -aoa -si"libproxy-%LIBPROXY_VERSION%.tar"
+@rem if not exist "libproxy-%LIBPROXY_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.xz" || goto end
 cd "libproxy-%LIBPROXY_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DLIB_INSTALL_DIR="%PREFIX_PATH%\lib" -DBIN_INSTALL_DIR="%PREFIX_PATH%\bin" -DLIBEXEC_INSTALL_DIR="%PREFIX_PATH%\bin" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWITH_DBUS=OFF -DWITH_DOTNET=OFF -DWITH_DUKTAPE=OFF -DWITH_GNOME2=OFF -DWITH_GNOME3=OFF -DWITH_KDE=OFF -DWITH_MOZJS=OFF -DWITH_NATUS=OFF -DWITH_NM=OFF -DWITH_NMold=OFF -DWITH_PERL=OFF -DWITH_PYTHON2=OFF -DWITH_PYTHON3=OFF -DWITH_SYSCONFIG=OFF -DWITH_VALA=OFF -DWITH_WEBKIT=OFF -DWITH_WEBKIT3=OFF || goto end
@@ -756,6 +757,7 @@ ninja install || goto end
 
 cd "%BUILD_PATH%" || goto end
 if not exist "orc-%ORC_VERSION%" 7z x "%DOWNLOADS_PATH%\orc-%ORC_VERSION%.tar.xz" -so | 7z x -aoa -si"orc-%ORC_VERSION%.tar" || goto end
+@rem if not exist "orc-%ORC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\orc-%ORC_VERSION%.tar.xz" || goto end
 cd "orc-%ORC_VERSION%" || goto end
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload build || goto end
 cd build || goto end
@@ -805,6 +807,7 @@ echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/sqli
 
 cd "%BUILD_PATH%" || goto end
 if not exist "glib-%GLIB_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-%GLIB_VERSION%.tar"
+@rem if not exist "glib-%GLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" || goto end
 cd "glib-%GLIB_VERSION%" || goto end
 @rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" build || goto end
@@ -839,6 +842,7 @@ copy /y "debug\x64\pkg-config.exe" "%PREFIX_PATH%\bin\" || goto end
 
 cd "%BUILD_PATH%" || goto end
 if not exist "libsoup-%LIBSOUP_VERSION%" 7z x "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" -so | 7z x -aoa -si"libsoup-%LIBSOUP_VERSION%.tar" || goto end
+@rem if not exist "libsoup-%LIBSOUP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" || goto end
 cd "libsoup-%LIBSOUP_VERSION%" || goto end
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
 cd build || goto end
@@ -854,6 +858,7 @@ ninja install || goto end
 
 cd "%BUILD_PATH%" || goto end
 if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-networking-%GLIB_NETWORKING_VERSION%.tar" || goto end
+@rem if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" tar -xvf "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" || goto end
 cd "glib-networking-%GLIB_NETWORKING_VERSION%" || goto end
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled -Dgnome_proxy=disabled -Dlibproxy=disabled build || goto end
 cd build || goto end
@@ -886,6 +891,7 @@ copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
 
 cd "%BUILD_PATH%" || goto end
 if not exist "cairo-%CAIRO_VERSION%" 7z x "%DOWNLOADS_PATH%\cairo-%CAIRO_VERSION%.tar.xz" -so | 7z x -aoa -si"cairo-%CAIRO_VERSION%.tar" || goto end
+@rem if not exist "cairo-%CAIRO_VERSION%" tar -xvf "%DOWNLOADS_PATH%\cairo-%CAIRO_VERSION%.tar.xz" || goto end
 cd "cairo-%CAIRO_VERSION%" || goto end
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload -Dfontconfig=disabled -Dfreetype=enabled -Dzlib=enabled -Dpng=enabled -Dtests=disabled -Dgtk_doc=false build || goto end
 cd build || goto end
@@ -905,9 +911,10 @@ ninja install || goto end
 
 cd "%BUILD_PATH%" || goto end
 if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar" || goto end
+@rem if not exist "harfbuzz-%HARFBUZZ_VERSION%" tar -xvf "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" || goto end
 cd "harfbuzz-%HARFBUZZ_VERSION%" || goto end
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dtests=disabled -Ddocs=disabled -Dicu=enabled -Dfreetype=enabled -Dcairo=disabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --wrap-mode=nodownload -Dcpp_std=c++17 -Dtests=disabled -Ddocs=disabled -Dicu=enabled -Dfreetype=enabled -Dcairo=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -975,6 +982,7 @@ cmake --install . || goto end
 
 cd "%BUILD_PATH%" || goto end
 if not exist "flac-%FLAC_VERSION%" 7z x "%DOWNLOADS_PATH%\flac-%FLAC_VERSION%.tar.xz" -so | 7z x -aoa -si"flac-%FLAC_VERSION%.tar" || goto end
+@rem if not exist "flac-%FLAC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\flac-%FLAC_VERSION%.tar.xz" || goto end
 cd "flac-%FLAC_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
 cmake --log-level="DEBUG" -S . -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_MANPAGES=OFF -DBUILD_TESTING=OFF -DBUILD_PROGRAMS=OFF || goto end
@@ -1443,6 +1451,7 @@ if "%GST_DEV%" == "ON" @(
   xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gstreamer" . || goto end
 ) else @(
   if not exist "gstreamer-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gstreamer-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gstreamer-%GSTREAMER_VERSION%.tar" || goto end
+  @rem if not exist "gstreamer-%GSTREAMER_VERSION%" tar -xvf "%DOWNLOADS_PATH%\gstreamer-%GSTREAMER_VERSION%.tar.xz" || goto end
   cd "gstreamer-%GSTREAMER_VERSION%" || goto end
 )
 
@@ -1473,6 +1482,7 @@ if "%GST_DEV%" == "ON" @(
   xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-base" . || goto end
 ) else @(
   if not exist "gst-plugins-base-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-base-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-base-%GSTREAMER_VERSION%.tar" || goto end
+  @rem if not exist "gst-plugins-base-%GSTREAMER_VERSION%" tar -xvf "%DOWNLOADS_PATH%\gst-plugins-base-%GSTREAMER_VERSION%.tar.xz" || goto end
   cd "gst-plugins-base-%GSTREAMER_VERSION%" || goto end
 )
 
@@ -1501,6 +1511,7 @@ if "%GST_DEV%" == "ON" @(
   xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-good" . || goto end
 ) else @(
   if not exist "gst-plugins-good-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-good-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-good-%GSTREAMER_VERSION%.tar" || goto end
+  @rem if not exist "gst-plugins-good-%GSTREAMER_VERSION%" tar -xvf "%DOWNLOADS_PATH%\gst-plugins-good-%GSTREAMER_VERSION%.tar.xz" || goto end
   cd "gst-plugins-good-%GSTREAMER_VERSION%" || goto end
 )
 
@@ -1530,6 +1541,7 @@ if "%GST_DEV%" == "ON" @(
   patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-meson-dependency.patch"
 ) else @(
   if not exist "gst-plugins-bad-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-bad-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-bad-%GSTREAMER_VERSION%.tar" || goto end
+  @rem if not exist "gst-plugins-bad-%GSTREAMER_VERSION%" tar -xvf "%DOWNLOADS_PATH%\gst-plugins-bad-%GSTREAMER_VERSION%.tar.xz" || goto end
   cd "gst-plugins-bad-%GSTREAMER_VERSION%" || goto end
   patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-meson-dependency.patch"
 )
@@ -1559,6 +1571,7 @@ if "%GST_DEV%" == "ON" @(
   xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-plugins-ugly" . || goto end
 ) else @(
   if not exist "gst-plugins-ugly-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-plugins-ugly-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-plugins-ugly-%GSTREAMER_VERSION%.tar" || goto end
+  @rem if not exist "gst-plugins-ugly-%GSTREAMER_VERSION%" tar -xvf "%DOWNLOADS_PATH%\gst-plugins-ugly-%GSTREAMER_VERSION%.tar.xz" || goto end
   cd "gst-plugins-ugly-%GSTREAMER_VERSION%" || goto end
 )
 
@@ -1587,6 +1600,7 @@ if "%GST_DEV%" == "ON" @(
   xcopy /s /y /h "%DOWNLOADS_PATH%\gstreamer\subprojects\gst-libav" . || goto end
 ) else @(
   if not exist "gst-libav-%GSTREAMER_VERSION%" 7z x "%DOWNLOADS_PATH%\gst-libav-%GSTREAMER_VERSION%.tar.xz" -so | 7z x -aoa -si"gst-libav-%GSTREAMER_VERSION%.tar" || goto end
+  @rem if not exist "gst-libav-%GSTREAMER_VERSION%" tar -xvf "%DOWNLOADS_PATH%\gst-libav-%GSTREAMER_VERSION%.tar.xz" || goto end
   cd "gst-libav-%GSTREAMER_VERSION%" || goto end
 )
 
@@ -1615,6 +1629,7 @@ if "%QT_DEV%" == "ON" @(
   xcopy /s /y /h "%DOWNLOADS_PATH%\qtbase" . || goto end
 ) else @(
   if not exist "qtbase-everywhere-src-%QT_VERSION%" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-%QT_VERSION%.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-%QT_VERSION%.tar" || goto end
+  @rem if not exist "qtbase-everywhere-src-%QT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\qtbase-everywhere-src-%QT_VERSION%.tar.xz" || goto end
   cd "qtbase-everywhere-src-%QT_VERSION%" || goto end
 )
 
@@ -1641,6 +1656,7 @@ if "%QT_DEV%" == "ON" @(
   )
 ) else (
   if not exist "qttools-everywhere-src-%QT_VERSION%" 7z x "%DOWNLOADS_PATH%\qttools-everywhere-src-%QT_VERSION%.tar.xz" -so | 7z x -aoa -si"qttools-everywhere-src-%QT_VERSION%.tar" || goto end
+  @rem if not exist "qttools-everywhere-src-%QT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\qttools-everywhere-src-%QT_VERSION%.tar.xz" || goto end
   cd "qttools-everywhere-src-%QT_VERSION%" || goto end
 )
 
@@ -1806,9 +1822,9 @@ copy /y "%prefix_path%\bin\gsturidownloader-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstvideo-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gstwinrt-1.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\harfbuzz*.dll" || goto end
-copy /y "%prefix_path%\bin\icudt74*.dll" || goto end
-copy /y "%prefix_path%\bin\icuin74*.dll" || goto end
-copy /y "%prefix_path%\bin\icuuc74*.dll" || goto end
+copy /y "%prefix_path%\bin\icudt75*.dll" || goto end
+copy /y "%prefix_path%\bin\icuin75*.dll" || goto end
+copy /y "%prefix_path%\bin\icuuc75*.dll" || goto end
 copy /y "%prefix_path%\bin\intl-8.dll" || goto end
 copy /y "%prefix_path%\bin\jpeg62.dll" || goto end
 copy /y "%prefix_path%\bin\libbs2b.dll" || goto end
