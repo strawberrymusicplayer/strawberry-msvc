@@ -517,11 +517,9 @@ copy /y "include\*.h" "%PREFIX_PATH%\include\" || goto end
 
 cd "%BUILD_PATH%" || goto end
 if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip" || goto end
-cd "icu" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/icu-uwp.patch"
-cd "source\allinone" || goto end
+cd "icu\source\allinone" || goto end
 @rem start /w devenv.exe allinone.sln /upgrade
-msbuild allinone.sln /property:Configuration="%BUILD_TYPE%" /p:Platform="x64" || goto end
+msbuild allinone.sln /property:Configuration="%BUILD_TYPE%" /p:Platform="x64" /p:SkipUWP=true || goto end
 cd ..\..\ || goto end
 if not exist "%PREFIX_PATH%\include\unicode" mkdir "%PREFIX_PATH%\include\unicode" || goto end
 copy /y "include\unicode\*.h" "%PREFIX_PATH%\include\unicode\" || goto end
