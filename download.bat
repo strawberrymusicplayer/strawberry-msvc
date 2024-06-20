@@ -156,6 +156,7 @@ https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi
 https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg
 https://github.com/frida/proxy-libintl
 https://gitlab.freedesktop.org/gstreamer/gstreamer
+https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs
 https://github.com/strawberrymusicplayer/strawberry
 ) do @(
   if exist %%~nxx @(

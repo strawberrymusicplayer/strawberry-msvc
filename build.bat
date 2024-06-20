@@ -226,6 +226,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc" goto gst-plugins-bad
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\gstspotify.pc" goto gst-plugins-rs
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
@@ -1609,6 +1610,35 @@ ninja install || goto end
 @goto continue
 
 
+:gst-plugins-rs
+
+@echo Building gst-plugins-rs
+
+cd "%BUILD_PATH%" || goto end
+
+if not exist "gst-plugins-rs" git clone https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs || goto end
+cd "gst-plugins-rs" || goto end
+git reset --hard HEAD || goto end
+git fetch || goto end
+git checkout "%GSTREAMER_GST_PLUGINS_RS_VERSION%" || goto end
+
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dspotify=enabled build || goto end
+cd build || goto end
+
+mkdir "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps"
+copy /y "%PREFIX_PATH%\lib\gobject-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
+copy /y "%PREFIX_PATH%\lib\glib-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
+copy /y "%PREFIX_PATH%\lib\gio-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
+copy /y "%PREFIX_PATH%\lib\intl.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
+copy /y "%PREFIX_PATH%\lib\gstbase-1.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
+
+ninja || goto end
+ninja install || goto end
+
+@goto continue
+
+
 :qtbase
 
 @echo Building qtbase
@@ -1933,6 +1963,7 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavenc.dll" ".\gstreamer-plugins\" |
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavpack.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavparse.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstxingmux.dll" ".\gstreamer-plugins\" || goto end
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstspotify.dll" ".\gstreamer-plugins\" || goto end
 
 copy /y "..\COPYING" . || goto end
 copy /y "..\dist\windows\*.nsi" . || goto end
