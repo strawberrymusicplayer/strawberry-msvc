@@ -233,6 +233,8 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\glew.pc" goto glew
+@if not exist "%PREFIX_PATH%\lib\cmake\projectM4\projectM4Config.cmake" goto libprojectm
 @if not exist "%BUILD_PATH%\strawberry\build\strawberrysetup*.exe" goto strawberry
 
 
@@ -1770,6 +1772,38 @@ cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
+
+@goto continue
+
+
+:libprojectm
+
+@echo Building libprojectm
+
+cd "%BUILD_PATH%" || goto end
+if not exist "libprojectm-%LIBPROJECTM_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libprojectm-%LIBPROJECTM_VERSION%.tar.gz" || goto end
+cd "libprojectm-%LIBPROJECTM_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:glew
+
+@echo Building glew
+
+cd "%BUILD_PATH%" || goto end
+if not exist "glew-%GLEW_VERSION%" tar -xvf "%DOWNLOADS_PATH%\glew-%GLEW_VERSION%.tgz" || goto end
+cd "glew-%GLEW_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S build\cmake -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
 
 @goto continue
 

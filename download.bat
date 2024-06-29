@@ -104,6 +104,8 @@ https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-%GSTREAMER
 https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-%GSTREAMER_VERSION%.tar.xz
 https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-%GSTREAMER_VERSION%.tar.xz
 https://github.com/protocolbuffers/protobuf/releases/download/v%PROTOBUF_VERSION%/protobuf-%PROTOBUF_VERSION%.tar.gz
+https://downloads.sourceforge.net/project/glew/glew/%GLEW_VERSION%/glew-%GLEW_VERSION%.tgz
+https://github.com/projectM-visualizer/projectm/releases/download/v%LIBPROJECTM_VERSION%/libprojectm-%LIBPROJECTM_VERSION%.tar.gz
 https://github.com/libexpat/libexpat/releases/download/R_%EXPAT_VERSION_UNDERSCORE%/expat-%EXPAT_VERSION%.tar.bz2
 https://downloads.sourceforge.net/project/freetype/freetype2/%FREETYPE_VERSION%/freetype-%FREETYPE_VERSION%.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-%ICU4C_VERSION_DASH%/icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip
