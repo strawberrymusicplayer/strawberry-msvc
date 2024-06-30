@@ -1776,22 +1776,6 @@ copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 @goto continue
 
 
-:libprojectm
-
-@echo Building libprojectm
-
-cd "%BUILD_PATH%" || goto end
-if not exist "libprojectm-%LIBPROJECTM_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libprojectm-%LIBPROJECTM_VERSION%.tar.gz" || goto end
-cd "libprojectm-%LIBPROJECTM_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-
-@goto continue
-
-
 :glew
 
 @echo Building glew
@@ -1801,6 +1785,22 @@ if not exist "glew-%GLEW_VERSION%" tar -xvf "%DOWNLOADS_PATH%\glew-%GLEW_VERSION
 cd "glew-%GLEW_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S build\cmake -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:libprojectm
+
+@echo Building libprojectm
+
+cd "%BUILD_PATH%" || goto end
+if not exist "libprojectm-%LIBPROJECTM_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libprojectm-%LIBPROJECTM_VERSION%.tar.gz" || goto end
+cd "libprojectm-%LIBPROJECTM_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
