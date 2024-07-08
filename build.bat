@@ -1750,8 +1750,9 @@ cmake --install . || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "abseil-cpp-%ABSEIL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_VERSION%.tar.gz" || goto end
 cd "abseil-cpp-%ABSEIL_VERSION%" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/abseil-cpp-cmake.patch"
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DABSL_BUILD_TESTING=OFF || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
