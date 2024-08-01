@@ -140,7 +140,6 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtsparkle-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/faad2-cmake.patch
-https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/abseil-cpp-cmake.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx
