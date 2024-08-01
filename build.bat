@@ -612,7 +612,7 @@ if exist b2.exe del b2.exe
 if exist bjam.exe del bjam.exe
 if exist stage rmdir /s /q stage
 call .\bootstrap.bat || goto end
-.\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --without-mpi --without-python --prefix="%PREFIX_PATH%" --exec-prefix="%PREFIX_PATH%\bin" --libdir="%PREFIX_PATH%\lib" --includedir="%PREFIX_PATH%\include" toolset=msvc architecture=x86 address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi variant=%BUILD_TYPE% install || goto end
+.\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --without-mpi --without-python --prefix="%PREFIX_PATH%" --exec-prefix="%PREFIX_PATH%\bin" --libdir="%PREFIX_PATH%\lib" --includedir="%PREFIX_PATH%\include" toolset=msvc architecture=x86 address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi variant=%BUILD_TYPE% install
 
 @goto continue
 
