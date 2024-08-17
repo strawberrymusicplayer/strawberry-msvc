@@ -1705,7 +1705,7 @@ if not exist "qtsparkle" @(
   cd ..
  ) || goto end
 cd "qtsparkle" || goto end
-patch -p1 -N < "%DOWNLOADS_PATH%/qtsparkle-msvc.patch"
+patch -p1 -N < "%DOWNLOADS_PATH%/qtsparkle-fixes.patch"
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DBUILD_WITH_QT6=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
