@@ -58,7 +58,7 @@ https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-%PKGCONF_VERSION%.tar.gz
 https://github.com/microsoft/mimalloc/archive/refs/tags/v%MIMALLOC_VERSION%.tar.gz
 https://zlib.net/zlib-%ZLIB_VERSION%.tar.gz
-https://www.openssl.org/source/openssl-%OPENSSL_VERSION%.tar.gz
+https://github.com/openssl/openssl/releases/download/openssl-%OPENSSL_VERSION%/openssl-%OPENSSL_VERSION%.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/%GNUTLS_VERSION%/libgnutls_%GNUTLS_VERSION%_msvc17.zip
 https://downloads.sourceforge.net/project/libpng/libpng16/%LIBPNG_VERSION%/libpng-%LIBPNG_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/libjpeg-turbo/%LIBJPEG_VERSION%/libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz
@@ -85,11 +85,11 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%.ta
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
-https://download.gnome.org/sources/glib/2.81/glib-%GLIB_VERSION%.tar.xz
+https://download.gnome.org/sources/glib/2.82/glib-%GLIB_VERSION%.tar.xz
 https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
 https://github.com/libproxy/libproxy/releases/download/%LIBPROXY_VERSION%/libproxy-%LIBPROXY_VERSION%.tar.xz
-https://download.gnome.org/sources/libsoup/3.4/libsoup-%LIBSOUP_VERSION%.tar.xz
+https://download.gnome.org/sources/libsoup/3.6/libsoup-%LIBSOUP_VERSION%.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-%ORC_VERSION%.tar.xz
 https://files.musepack.net/source/musepack_src_r%MUSEPACK_VERSION%.tar.gz
 https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-%LIBOPENMPT_VERSION%+release.msvc.zip
