@@ -166,6 +166,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
+@if not exist "%PREFIX_PATH%\lib\getopt.lib" goto getopt-win
 @if not exist "%PREFIX_PATH%\lib\zlib*.lib" goto zlib
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\openssl.pc" goto openssl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc" goto gnutls
@@ -285,6 +286,29 @@ cd "%BUILD_PATH%" || goto end
 if not exist "yasm-%YASM_VERSION%" tar -xvf "%DOWNLOADS_PATH%\yasm-%YASM_VERSION%.tar.gz" || goto end
 cd "yasm-%YASM_VERSION%" || goto end
 if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:getopt-win
+
+@echo Building getopt-win
+
+cd "%BUILD_PATH%" || goto end
+
+if not exist "getopt-win" @(
+  mkdir getopt-win || goto end
+  cd getopt-win || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\getopt-win" . || goto end
+  cd ..
+) || goto end
+cd "getopt-win" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/getopt-win-cmake.patch"
+if not exist build mkdir build
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
 cmake --build . || goto end

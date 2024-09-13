@@ -140,6 +140,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtsparkle-fixes.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/faad2-cmake.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/getopt-win-cmake.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx
@@ -158,6 +159,7 @@ https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg
 https://github.com/frida/proxy-libintl
 https://gitlab.freedesktop.org/gstreamer/gstreamer
 https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs
+https://github.com/ludvikjerabek/getopt-win
 https://github.com/strawberrymusicplayer/strawberry
 ) do @(
   if exist %%~nxx @(
