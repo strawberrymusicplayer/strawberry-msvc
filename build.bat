@@ -232,10 +232,10 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
 @if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\glew.pc" goto glew
-@if not exist "%PREFIX_PATH%\lib\cmake\projectM4\projectM4Config.cmake" goto libprojectm
+@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
+@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
+@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\glew.pc" goto glew
+@rem @if not exist "%PREFIX_PATH%\lib\cmake\projectM4\projectM4Config.cmake" goto libprojectm
 @if not exist "%BUILD_PATH%\strawberry\build\strawberrysetup*.exe" goto strawberry
 
 
@@ -1858,7 +1858,7 @@ if not exist sqldrivers mkdir sqldrivers || goto end
 if not exist imageformats mkdir imageformats || goto end
 if not exist gstreamer-plugins mkdir gstreamer-plugins || goto end
 
-copy /y "%prefix_path%\bin\abseil_dll.dll" || goto end
+@rem copy /y "%prefix_path%\bin\abseil_dll.dll" || goto end
 copy /y "%prefix_path%\bin\avcodec*.dll" || goto end
 copy /y "%prefix_path%\bin\avfilter*.dll" || goto end
 copy /y "%prefix_path%\bin\avformat*.dll" || goto end
@@ -1916,7 +1916,7 @@ copy /y "%prefix_path%\bin\liblzma.dll" || goto end
 copy /y "%prefix_path%\bin\libmp3lame.dll" || goto end
 copy /y "%prefix_path%\bin\libopenmpt.dll" || goto end
 copy /y "%prefix_path%\bin\libpng16*.dll" || goto end
-copy /y "%prefix_path%\bin\libprotobuf*.dll" || goto end
+@rem copy /y "%prefix_path%\bin\libprotobuf*.dll" || goto end
 copy /y "%prefix_path%\bin\libspeex*.dll" || goto end
 copy /y "%prefix_path%\bin\libssl-3-x64.dll" || goto end
 copy /y "%prefix_path%\bin\libxml2*.dll" || goto end
@@ -1949,7 +1949,7 @@ copy /y "%prefix_path%\bin\vorbisfile.dll" || goto end
 copy /y "%prefix_path%\bin\wavpackdll.dll" || goto end
 copy /y "%prefix_path%\bin\zlib*.dll" || goto end
 copy /y "%prefix_path%\bin\kdsingleapplication*.dll" || goto end
-copy /y "%prefix_path%\bin\utf8_validity.dll" || goto end
+@rem copy /y "%prefix_path%\bin\utf8_validity.dll" || goto end
 copy /y "%prefix_path%\bin\getopt.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
