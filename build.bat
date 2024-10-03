@@ -236,6 +236,7 @@ goto continue
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\glew.pc" goto glew
 @rem @if not exist "%PREFIX_PATH%\lib\cmake\projectM4\projectM4Config.cmake" goto libprojectm
+@if not exist "%PREFIX_PATH%\bin\gettext.exe" goto gettext
 @if not exist "%BUILD_PATH%\strawberry\build\strawberrysetup*.exe" goto strawberry
 
 
@@ -1828,6 +1829,19 @@ cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
+
+@goto continue
+
+
+:gettext
+
+@echo Installing gettext
+
+cd "%BUILD_PATH%" || goto end
+if not exist gettext mkdir gettext || goto end
+cd gettext || goto end
+7z x -aoa "%DOWNLOADS_PATH%\gettext%GETTEXT_VERSION%-iconv1.17-static-64.zip" || goto end
+xcopy /s /y "bin\*.exe" "%PREFIX_PATH%\bin\" || goto end
 
 @goto continue
 
