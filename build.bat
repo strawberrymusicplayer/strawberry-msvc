@@ -1746,7 +1746,7 @@ cmake --install . || goto end
 @echo Version:>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 @echo Description: Qt auto-updater lib>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 @echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lqtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 
 
 @goto continue
