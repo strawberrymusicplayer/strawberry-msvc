@@ -118,7 +118,7 @@ https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
 https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%.tar.gz
 https://github.com/KDAB/KDSingleApplication/releases/download/v%KDSINGLEAPPLICATION_VERSION%/kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz
 https://download.steinberg.net/sdk_downloads/asiosdk_%ASIOSDK_VERSION%.zip
-https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.22.5a-v1.17/gettext%GETTEXT_VERSION%-iconv1.17-static-64.zip
+https://github.com/mlocati/gettext-iconv-windows/releases/download/v%GETTEXT_VERSION%-v1.17/gettext%GETTEXT_VERSION%-iconv1.17-static-64.zip
 https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/Git-%GIT_VERSION%-64-bit.exe
 https://github.com/Kitware/CMake/releases/download/v%CMAKE_VERSION%/cmake-%CMAKE_VERSION%-windows-x86_64.msi
 https://github.com/mesonbuild/meson/releases/download/%MESON_VERSION%/meson-%MESON_VERSION%-64.msi
