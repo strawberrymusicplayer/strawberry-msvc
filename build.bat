@@ -207,7 +207,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libmpg123.pc" goto mpg123
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mp3lame.pc" goto lame
 @if not exist "%PREFIX_PATH%\lib\libtwolame_dll.lib" goto twolame
-@if not exist "%PREFIX_PATH%\lib\libfftw3-3.lib" goto fftw3
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\fftw3.pc" goto fftw3
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc" goto musepack
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libopenmpt.pc" goto libopenmpt
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libgme.pc" goto libgme
@@ -1195,6 +1195,18 @@ lib /machine:x64 /def:libfftw3-3.def || goto end
 xcopy /s /y libfftw3-3.dll "%PREFIX_PATH%\bin\" || goto end
 xcopy /s /y libfftw3-3.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y fftw3.h "%PREFIX_PATH%\include\" || goto end
+
+echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo.>>"%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo Name: fftw3>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo Description: discrete Fourier transform (DFT)>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo URL: https://www.fftw.org/>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo Version: %FFTW_VERSION%>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo Libs: -L${libdir} -lfftw3-3>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
+echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/fftw3.pc"
 
 @goto continue
 
