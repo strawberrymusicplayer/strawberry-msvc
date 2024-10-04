@@ -413,8 +413,8 @@ xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 @echo Description: gnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo URL: https://www.gnutls.org/>> %PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Version: %GNUTLS_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lgnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Libs: -L${libdir} -lgnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 
 @goto continue
 
@@ -811,9 +811,9 @@ echo Name: SQLite>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 echo Description: SQL database engine>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 echo URL: https://www.sqlite.org/>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 echo Version: 3.38.1>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lsqlite3>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo Libs: -L${libdir} -lsqlite3>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 echo Libs.private: -lz -ldl>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
-echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
+echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 
 @goto continue
 
@@ -1132,8 +1132,8 @@ copy output\libmp3lame*.dll "%PREFIX_PATH%\bin\" || goto end
 @echo Description: encoder that converts audio to the MP3 file format.>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 @echo URL: https://lame.sourceforge.io/>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 @echo Version: %LAME_VERSION%>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lmp3lame>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo Libs: -L${libdir} -lmp3lame>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/mp3lame.pc"
 
 
 @goto continue
@@ -1167,8 +1167,8 @@ copy /y lib\*.dll "%PREFIX_PATH%\bin\" || goto end
 @echo Description: optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 @echo URL: https://www.twolame.org/>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 @echo Version: %TWOLAME_VERSION%>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -ltwolame_dll>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Libs: -L${libdir} -ltwolame_dll>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/twolame.pc"
 
 @goto continue
 
@@ -1224,8 +1224,8 @@ copy libmpcdec\*.dll %PREFIX_PATH%\bin\ || goto end
 @echo Description: mpc>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
 @echo URL: https://www.musepack.net/>> %PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
 @echo Version: %GNUTLS_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lmpcdec>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo Libs: -L${libdir} -lmpcdec>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\mpcdec.pc"
 
 goto continue
 
@@ -1332,8 +1332,8 @@ copy /y "bin\%BUILD_TYPE%\*.dll" "%PREFIX_PATH%\bin\" || goto end
 @echo Description: faac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
 @echo URL: https://github.com/knik0/faac>> %PREFIX_PATH%\lib\pkgconfig\faac.pc"
 @echo Version: 1.30>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lfaac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo Libs: -L${libdir} -lfaac>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\faac.pc"
 
 @goto continue
 
@@ -1745,8 +1745,8 @@ cmake --install . || goto end
 @echo Name: qtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 @echo Version:>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 @echo Description: Qt auto-updater lib>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Libs: -L%PREFIX_PATH_FORWARD%/lib -lqtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Cflags: -I%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo Libs: -L${libdir} -lqtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
 
 
 @goto continue
