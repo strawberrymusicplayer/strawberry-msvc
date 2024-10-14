@@ -1692,6 +1692,7 @@ if "%QT_DEV%" == "ON" @(
   if not exist "qtbase-everywhere-src-%QT_VERSION%" 7z x "%DOWNLOADS_PATH%\qtbase-everywhere-src-%QT_VERSION%.tar.xz" -so | 7z x -aoa -si"qtbase-everywhere-src-%QT_VERSION%.tar" || goto end
   @rem if not exist "qtbase-everywhere-src-%QT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\qtbase-everywhere-src-%QT_VERSION%.tar.xz" || goto end
   cd "qtbase-everywhere-src-%QT_VERSION%" || goto end
+  patch -p1 -N < "%DOWNLOADS_PATH%/qtbase-icu.patch"
 )
 
 if not exist build mkdir build || goto end

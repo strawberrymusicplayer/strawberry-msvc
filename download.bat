@@ -111,8 +111,8 @@ https://downloads.sourceforge.net/project/freetype/freetype2/%FREETYPE_VERSION%/
 https://github.com/unicode-org/icu/releases/download/release-%ICU4C_VERSION_DASH%/icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip
 https://cairographics.org/releases/cairo-%CAIRO_VERSION%.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/%HARFBUZZ_VERSION%/harfbuzz-%HARFBUZZ_VERSION%.tar.xz
-https://download.qt.io/official_releases/qt/6.7/%QT_VERSION%/submodules/qtbase-everywhere-src-%QT_VERSION%.tar.xz
-https://download.qt.io/official_releases/qt/6.7/%QT_VERSION%/submodules/qttools-everywhere-src-%QT_VERSION%.tar.xz
+https://download.qt.io/official_releases/qt/6.8/%QT_VERSION%/submodules/qtbase-everywhere-src-%QT_VERSION%.tar.xz
+https://download.qt.io/official_releases/qt/6.8/%QT_VERSION%/submodules/qttools-everywhere-src-%QT_VERSION%.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-%LIBGME_VERSION%.tar.gz
 https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
 https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%.tar.gz
@@ -142,6 +142,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/faad2-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/getopt-win-cmake.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/qtbase-icu.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx
