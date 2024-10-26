@@ -1,8 +1,13 @@
-:hammer_and_wrench: Strawberry - Compile with Visual Studio 2022
+:hammer_and_wrench: Strawberry - Build with Visual Studio 2022
 ================================================================
 
-This guide uses Visual Studio 2022 to compile Strawberry as well all required libraries.
+This guide uses Visual Studio 2022 to build Strawberry as well all required libraries.
 
+These instructions are provided as-is, they are primarily intended for developers working on Strawberry on Windows.
+
+We do not offer support to users for building Strawberry on Windows.
+
+Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary updated, so make sure you bump the versions in versions.bat before you run install.bat.
 
 ### Requirements
 
@@ -28,7 +33,7 @@ There is an install.bat batch file to install most of these automatically.
 
  - Remove "C:\Strawberry\c\bin" from PATH.
  - Make sure no pkg-config utility is in PATH, this will cause conflicts with Strawberry's own pkg-config.
-   del c:\strawberry\perl\bin\pkg-config.bat
+   (del c:\strawberry\perl\bin\pkg-config.bat).
  - Make sure no MinGW-W64 (gcc, g++, etc) installation is in PATH, as this can cause those to be picked up as compiler instead of MSVC.
  - You need the sed and patch utility, add C:\Program Files\Git\usr\bin to PATH.
 
@@ -48,14 +53,7 @@ Specifically, the following files need to exist:
     C:\Program Files (x86)\NSIS\Plugins\x86-unicode\INetC.dll
 
 
-### Alternative 1: Installing dependencies
-
-Download the latest dependencies from https://github.com/strawberrymusicplayer/strawberry-msvc-dependencies/releases
-
-Extract them to ie.: "c:\strawberry_msvc_x86_64_debug" for the debug version, or "c:\strawberry_msvc_x86_64_release" for the release version.
-
-
-### Alternative 2: Building all dependencies from source
+### Building all dependencies from source
 
 This guide provides a "download.bat" and "build.bat" file to automatically build all dependencies.
 
@@ -66,12 +64,12 @@ Run download.bat
 This should download all necessary sources.
 
 
-#### Compile for debug
+#### Build for debug
 
     build.bat "debug"
 
 
-#### Compile for release
+#### Build for release
 
     build.bat "release"
 
@@ -92,19 +90,3 @@ For debug:
 For release:
 
     -DARCH=x86_64 -DICU_ROOT=c:\\strawberry_msvc_x86_64_release
-
-
-### Copy dependencies (MSYS2 Shell)
-
-Run the "copy-deps-msvc-x64-debug-qt6.bat" or "copy-deps-msvc-x64-release-qt6.bat" batch file first to copy all plugins to the build directory.
-After that, you can use the copydlldeps.sh shell script to copy all the dependencies to the build directory.
-
-Install MSYS (https://www.msys2.org/)
-
-    pacman -Syu binutils
-    cd /c/Data/Projects/strawberry/strawberry/out/build/x64-Debug/Debug
-    wget https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-mxe/master/tools/copydlldeps.sh
-    chmod u+x copydlldeps.sh
-    ./copydlldeps.sh -c -d . -F . -F ./platforms -F ./styles -F ./tls -F ./sqldrivers -F ./imageformats -F ./gio-modules -F ./gstreamer-plugins -R /c/strawberry_msvc_x86_64_debug/bin -R /c/strawberry_msvc_x86_64_debug
-
-To create the NSIS installer open MakeNSIS and drag strawberry.nsi over in the MakeNSIS window.
