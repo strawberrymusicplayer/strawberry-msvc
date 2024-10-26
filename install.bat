@@ -72,7 +72,7 @@ goto end
 
 @echo Installing Perl...
 
-"%DOWNLOADS_PATH%\strawberry-perl-%PERL_VERSION%-64bit.msi" /quiet /norestart || goto end
+"%DOWNLOADS_PATH%\strawberry-perl-%STRAWBERRY_PERL_VERSION%-64bit.msi" /quiet /norestart || goto end
 
 @goto install
 

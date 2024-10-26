@@ -33,8 +33,8 @@
 @echo Installing git...
 
 cd "%DOWNLOADS_PATH%" || goto end
-curl -O -L -k https://github.com/git-for-windows/git/releases/download/v%GITL_VERSION%.windows.1/Git-%GITL_VERSION%-64-bit.exe || goto end
-"%DOWNLOADS_PATH%\Git-%GITL_VERSION%-64-bit.exe" /silent /norestart || goto end
+curl -O -L -k https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/Git-%GIT_VERSION%-64-bit.exe || goto end
+"%DOWNLOADS_PATH%\Git-%GIT_VERSION%-64-bit.exe" /silent /norestart || goto end
 
 @goto install
 
@@ -125,7 +125,7 @@ https://github.com/mesonbuild/meson/releases/download/%MESON_VERSION%/meson-%MES
 https://www.nasm.us/pub/nasm/releasebuilds/%NASM_VERSION%/win64/nasm-%NASM_VERSION%-installer-x64.exe
 http://www.tortall.net/projects/yasm/releases/yasm-%YASM_VERSION%.tar.gz
 https://github.com/lexxmark/winflexbison/releases/download/v%WINFLEXBISON_VERSION%/win_flex_bison-%WINFLEXBISON_VERSION%.zip
-https://strawberryperl.com/download/%PERL_VERSION%/strawberry-perl-%PERL_VERSION%-64bit.msi
+https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_%STRAWBERRY_PERL_VERSION_STRIPPED%_64bit/strawberry-perl-%STRAWBERRY_PERL_VERSION%-64bit.msi
 https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%-amd64.exe
 https://7-zip.org/a/7z%_7ZIP_VERSION%-x64.exe
 https://files.jkvinge.net/winbins/sed.exe
