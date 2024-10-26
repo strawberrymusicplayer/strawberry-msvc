@@ -227,7 +227,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc" goto gst-plugins-bad
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\gstspotify.pc" goto gst-plugins-rs
+@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstspotify.pc" goto gst-plugins-rs
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
@@ -1660,6 +1660,8 @@ cd "gst-plugins-rs" || goto end
 git reset --hard HEAD || goto end
 git fetch || goto end
 git checkout "%GSTREAMER_GST_PLUGINS_RS_VERSION%" || goto end
+@rem git checkout main || goto end
+@rem git pull origin main || goto end
 
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH_FORWARD%" --pkg-config-path="%PREFIX_PATH_FORWARD%/lib/pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dspotify=enabled build || goto end
 cd build || goto end
@@ -2050,7 +2052,7 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavenc.dll" ".\gstreamer-plugins\" |
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavpack.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavparse.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstxingmux.dll" ".\gstreamer-plugins\" || goto end
-copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstspotify.dll" ".\gstreamer-plugins\" || goto end
+@rem copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstspotify.dll" ".\gstreamer-plugins\" || goto end
 
 copy /y "..\COPYING" . || goto end
 copy /y "..\dist\windows\*.nsi" . || goto end
