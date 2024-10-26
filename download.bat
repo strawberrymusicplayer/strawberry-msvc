@@ -127,7 +127,7 @@ http://www.tortall.net/projects/yasm/releases/yasm-%YASM_VERSION%.tar.gz
 https://github.com/lexxmark/winflexbison/releases/download/v%WINFLEXBISON_VERSION%/win_flex_bison-%WINFLEXBISON_VERSION%.zip
 https://strawberryperl.com/download/%PERL_VERSION%/strawberry-perl-%PERL_VERSION%-64bit.msi
 https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%-amd64.exe
-https://7-zip.org/a/7z2201-x64.exe
+https://7-zip.org/a/7z%_7ZIP_VERSION%-x64.exe
 https://files.jkvinge.net/winbins/sed.exe
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-pkgconf.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch

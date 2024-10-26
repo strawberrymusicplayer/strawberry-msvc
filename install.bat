@@ -62,7 +62,7 @@ goto end
 
 @echo Installing 7-Zip...
 
-"%DOWNLOADS_PATH%\7z%7ZIP_VERSION%-x64.exe" /S || goto end
+"%DOWNLOADS_PATH%\7z%_7ZIP_VERSION%-x64.exe" /S || goto end
 
 @goto install
 
