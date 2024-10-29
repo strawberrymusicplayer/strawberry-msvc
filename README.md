@@ -66,12 +66,12 @@ This should download all necessary sources.
 
 #### Build for debug
 
-    build.bat "debug"
+    build.bat debug
 
 
 #### Build for release
 
-    build.bat "release"
+    build.bat release
 
 
 ### Building strawberry
