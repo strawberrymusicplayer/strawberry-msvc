@@ -636,8 +636,14 @@ cd "%BUILD_PATH%\boost_%BOOST_VERSION_UNDERSCORE%" || goto end
 if exist b2.exe del b2.exe
 if exist bjam.exe del bjam.exe
 if exist stage rmdir /s /q stage
+
+@echo Running bootstrap.bat
 call .\bootstrap.bat || goto end
-.\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --without-mpi --without-python --prefix="%PREFIX_PATH%" --exec-prefix="%PREFIX_PATH%\bin" --libdir="%PREFIX_PATH%\lib" --includedir="%PREFIX_PATH%\include" toolset=msvc architecture=x86 address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi variant=%BUILD_TYPE% install
+
+@echo Running b2.exe
+.\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --prefix="%PREFIX_PATH%" --exec-prefix="%PREFIX_PATH%\bin" --libdir="%PREFIX_PATH%\lib" --includedir="%PREFIX_PATH%\include" --without-python --without-mpi toolset=msvc architecture=x86 address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi variant=%BUILD_TYPE% install
+
+@rem --without-atomic --without-charconv --without-chrono --without-cobalt --without-container --without-context --without-contract --without-coroutine --without-date_time --without-exception --without-fiber --without-filesystem --without-graph --without-graph_parallel --without-headers --without-iostreams --without-json --without-locale --without-log --without-math --without-mpi --without-nowide --without-process --without-program_options --without-python --without-random --without-regex --without-serialization --without-stacktrace --without-system --without-test --without-thread --without-timer --without-type_erasure --without-url --without-wave --without-predef
 
 @goto continue
 
