@@ -165,7 +165,7 @@ goto continue
 
 @if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
+@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
 @if not exist "%PREFIX_PATH%\lib\getopt.lib" goto getopt-win
 @if not exist "%PREFIX_PATH%\lib\zlib*.lib" goto zlib
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\openssl.pc" goto openssl
