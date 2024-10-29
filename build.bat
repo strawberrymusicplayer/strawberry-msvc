@@ -1655,24 +1655,24 @@ ninja install || goto end
 
 cd "%BUILD_PATH%" || goto end
 
-if not exist "gst-plugins-rs" git clone https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs || goto end
+if not exist "gst-plugins-rs" git clone --depth 1 --recurse-submodules https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs || goto end
 cd "gst-plugins-rs" || goto end
 git reset --hard HEAD || goto end
 git fetch || goto end
-git checkout "%GSTREAMER_GST_PLUGINS_RS_VERSION%" || goto end
-@rem git checkout main || goto end
-@rem git pull origin main || goto end
+@rem git checkout "%GSTREAMER_GST_PLUGINS_RS_VERSION%" || goto end
+git checkout main || goto end
+git pull origin main || goto end
 
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dspotify=enabled build || goto end
 cd build || goto end
 
-mkdir "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps"
-copy /y "%PREFIX_PATH%\lib\gobject-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
-copy /y "%PREFIX_PATH%\lib\glib-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
-copy /y "%PREFIX_PATH%\lib\gio-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
-copy /y "%PREFIX_PATH%\lib\intl.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
-copy /y "%PREFIX_PATH%\lib\gstreamer-1.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
-copy /y "%PREFIX_PATH%\lib\gstbase-1.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\debug\deps\"
+mkdir "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\%MESON_BUILD_TYPE%\deps"
+copy /y "%PREFIX_PATH%\lib\gobject-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\%MESON_BUILD_TYPE%\deps\"
+copy /y "%PREFIX_PATH%\lib\glib-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\%MESON_BUILD_TYPE%\deps\"
+copy /y "%PREFIX_PATH%\lib\gio-2.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\%MESON_BUILD_TYPE%\deps\"
+copy /y "%PREFIX_PATH%\lib\intl.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\%MESON_BUILD_TYPE%\deps\"
+copy /y "%PREFIX_PATH%\lib\gstreamer-1.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\%MESON_BUILD_TYPE%\deps\"
+copy /y "%PREFIX_PATH%\lib\gstbase-1.0.lib" "%BUILD_PATH%\gst-plugins-rs\build\target\x86_64-pc-windows-msvc\%MESON_BUILD_TYPE%\deps\"
 
 ninja || goto end
 ninja install || goto end
