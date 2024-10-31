@@ -128,6 +128,10 @@ https://github.com/lexxmark/winflexbison/releases/download/v%WINFLEXBISON_VERSIO
 https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_%STRAWBERRY_PERL_VERSION_STRIPPED%_64bit/strawberry-perl-%STRAWBERRY_PERL_VERSION%-64bit.msi
 https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%-amd64.exe
 https://7-zip.org/a/7z%_7ZIP_VERSION%-x64.exe
+https://prdownloads.sourceforge.net/nsis/nsis-%NSIS_VERSION%-setup.exe
+https://nsis.sourceforge.io/mediawiki/images/d/d3/LockedList.zip
+https://nsis.sourceforge.io/mediawiki/images/4/47/Registry.zip
+https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip
 https://files.jkvinge.net/winbins/sed.exe
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-pkgconf.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch
