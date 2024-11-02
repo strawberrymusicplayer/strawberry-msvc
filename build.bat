@@ -2061,7 +2061,6 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstxingmux.dll" ".\gstreamer-plugins\" 
 @rem copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstspotify.dll" ".\gstreamer-plugins\" || goto end
 
 copy /y "..\COPYING" . || goto end
-copy /y "..\dist\windows\*.nsi" . || goto end
 copy /y "..\dist\windows\*.nsh" . || goto end
 copy /y "..\dist\windows\*.ico" . || goto end
 
