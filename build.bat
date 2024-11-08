@@ -185,13 +185,13 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libnghttp2.pc" goto nghttp2
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libffi.pc" goto libffi
 @rem @if not exist "%PREFIX_PATH%\lib\intl.lib" goto libintl
-@if not exist "%PREFIX_PATH%\lib\libproxy.lib" goto libproxy
 @if not exist "%PREFIX_PATH%\include\dlfcn.h" goto dlfcn-win32
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpsl.pc" goto libpsl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\orc-0.4.pc" goto orc
+@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\libcurl.pc" goto curl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\sqlite3.pc" goto sqlite
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\glib-2.0.pc" goto glib
-@rem @if not exist "%PREFIX_PATH%\bin\pkg-config.exe" goto pkg_config
+@rem @if not exist "%PREFIX_PATH%\lib\libproxy.lib" goto libproxy
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libsoup-3.0.pc" goto libsoup
 @if not exist "%PREFIX_PATH%\lib\gio\modules\gioopenssl.lib" goto glib-networking
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\freetype2.pc" goto freetype
@@ -598,7 +598,7 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 @echo Building pixman
 
 cd "%BUILD_PATH%" || goto end
-if not exist "pixman-%PIXMAN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pixman-%PIXMAN_VERSION%.tar.gz" || goto end
+if not exist "pixman-%PIXMAN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pixman-%PIXMAN_VERSION%.tar.gz"
 cd "pixman-%PIXMAN_VERSION%" || goto end
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload -Dgtk=disabled -Dlibpng=enabled build || goto end
 
@@ -721,24 +721,6 @@ ninja install || goto end
 @goto continue
 
 
-:libproxy
-
-@echo Building libproxy
-
-cd "%BUILD_PATH%" || goto end
-if not exist "libproxy-%LIBPROXY_VERSION%" 7z x "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.xz" -so | 7z x -aoa -si"libproxy-%LIBPROXY_VERSION%.tar"
-@rem if not exist "libproxy-%LIBPROXY_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.xz" || goto end
-cd "libproxy-%LIBPROXY_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH%" -DLIB_INSTALL_DIR="%PREFIX_PATH%\lib" -DBIN_INSTALL_DIR="%PREFIX_PATH%\bin" -DLIBEXEC_INSTALL_DIR="%PREFIX_PATH%\bin" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DWITH_DBUS=OFF -DWITH_DOTNET=OFF -DWITH_DUKTAPE=OFF -DWITH_GNOME2=OFF -DWITH_GNOME3=OFF -DWITH_KDE=OFF -DWITH_MOZJS=OFF -DWITH_NATUS=OFF -DWITH_NM=OFF -DWITH_NMold=OFF -DWITH_PERL=OFF -DWITH_PYTHON2=OFF -DWITH_PYTHON3=OFF -DWITH_SYSCONFIG=OFF -DWITH_VALA=OFF -DWITH_WEBKIT=OFF -DWITH_WEBKIT3=OFF || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || goto end
-
-@goto continue
-
-
 :dlfcn-win32
 
 @echo Building dlfcn-win32
@@ -790,6 +772,22 @@ cd build || goto end
 ninja || goto end
 ninja install || goto end
 
+
+@goto continue
+
+
+:curl
+
+@echo Building curl
+
+cd "%BUILD_PATH%" || goto end
+if not exist "curl-%CURL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\curl-%CURL_VERSION%.tar.gz" || goto end
+cd "curl-%CURL_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
 
 @goto continue
 
@@ -847,17 +845,18 @@ ninja install || goto end
 @goto continue
 
 
-:pkg_config
+:libproxy
 
-@echo Building pkg-config
+@echo Building libproxy
 
 cd "%BUILD_PATH%" || goto end
-
-if not exist "pkg-config-%PKG_CONFIG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pkg-config-%PKG_CONFIG_VERSION%.tar.gz" || goto end
-cd "pkg-config-%PKG_CONFIG_VERSION%" || goto end
-if not exist "debug\x64" mkdir debug\x64 || goto end
-nmake /f Makefile.vc CFG=%BUILD_TYPE% || goto end
-copy /y "debug\x64\pkg-config.exe" "%PREFIX_PATH%\bin\" || goto end
+if not exist "libproxy-%LIBPROXY_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%LIBPROXY_VERSION%.tar.gz" || goto end
+cd "libproxy-%LIBPROXY_VERSION%" || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload -Ddocs=false -Dtests=false -Dconfig-gnome=false -Dpacrunner-duktape=false -Dintrospection=false build || goto end
+cd build || goto end
+ninja || goto end
+ninja install || goto end
+move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || goto end
 
 @goto continue
 

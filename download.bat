@@ -85,10 +85,10 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%.ta
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
-https://download.gnome.org/sources/glib/2.82/glib-%GLIB_VERSION%.tar.xz
+https://download.gnome.org/sources/glib/2.83/glib-%GLIB_VERSION%.tar.xz
 https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
-https://github.com/libproxy/libproxy/releases/download/%LIBPROXY_VERSION%/libproxy-%LIBPROXY_VERSION%.tar.xz
+https://github.com/libproxy/libproxy/archive/refs/tags/%LIBPROXY_VERSION%.tar.gz
 https://download.gnome.org/sources/libsoup/3.6/libsoup-%LIBSOUP_VERSION%.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-%ORC_VERSION%.tar.xz
 https://files.musepack.net/source/musepack_src_r%MUSEPACK_VERSION%.tar.gz
@@ -117,6 +117,7 @@ https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-%LIBGME_VERS
 https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
 https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%.tar.gz
 https://github.com/KDAB/KDSingleApplication/releases/download/v%KDSINGLEAPPLICATION_VERSION%/kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz
+https://github.com/curl/curl/releases/download/curl-%CURL_VERSION_UNDERSCORE%/curl-%CURL_VERSION%.tar.gz
 https://download.steinberg.net/sdk_downloads/asiosdk_%ASIOSDK_VERSION%.zip
 https://github.com/mlocati/gettext-iconv-windows/releases/download/v%GETTEXT_VERSION%-v1.17/gettext%GETTEXT_VERSION%-iconv1.17-static-64.zip
 https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/Git-%GIT_VERSION%-64-bit.exe
