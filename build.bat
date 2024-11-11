@@ -742,7 +742,7 @@ cmake --install . || goto end
 @echo Building libpsl
 
 @set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-@set LDFLAGS="-L%PREFIX_PATH%\lib"
+@set LDFLAGS=-L%PREFIX_PATH%\lib
 
 cd "%BUILD_PATH%" || goto end
 if not exist "libpsl-%LIBPSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpsl-%LIBPSL_VERSION%.tar.gz" || goto end
@@ -827,7 +827,7 @@ echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 @echo Building glib
 
 @set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-@set LDFLAGS="-L%PREFIX_PATH%\lib"
+@set LDFLAGS=-L%PREFIX_PATH%\lib
 
 cd "%BUILD_PATH%" || goto end
 if not exist "glib-%GLIB_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-%GLIB_VERSION%.tar"
@@ -932,7 +932,7 @@ ninja install || goto end
 
 @set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
 @set CXXFLAGS=-I%PREFIX_PATH_FORWARD%/include
-@set LDFLAGS="-L%PREFIX_PATH%\lib"
+@set LDFLAGS=-L%PREFIX_PATH%\lib
 
 cd "%BUILD_PATH%" || goto end
 if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar"
