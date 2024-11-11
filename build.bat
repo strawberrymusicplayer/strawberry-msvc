@@ -66,7 +66,7 @@ copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
 @set PKG_CONFIG_EXECUTABLE=%PREFIX_PATH%\bin\pkgconf.exe
 @set PKG_CONFIG_PATH=%PREFIX_PATH%\lib\pkgconfig
 
-@set CL=/MP
+@set CL=-MP
 
 @set PATH=%PREFIX_PATH%\bin;%PATH%
 
