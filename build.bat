@@ -400,7 +400,7 @@ if not exist gnutls mkdir gnutls || goto end
 cd gnutls || goto end
 7z x -aoa "%DOWNLOADS_PATH%\libgnutls_%GNUTLS_VERSION%_msvc17.zip" || goto end
 xcopy /s /y "bin\x64\*.*" "%PREFIX_PATH%\bin\" || goto end
-xcopy /s /y "lib\x64\*.*" "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y "lib\x64\gnutls.*" "%PREFIX_PATH%\lib\" || goto end
 if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
 xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 
