@@ -1,0 +1,174 @@
+name: Build
+on: [push, pull_request]
+
+env:
+  curl_options: '-f -O -L --connect-timeout 15 -m 900 --retry 15 --retry-delay 10 --retry-max-time 300 --retry-all-errors'
+  nasm_version: '2.16.03'
+  win_flex_bison_version: '2.5.25'
+
+
+jobs:
+
+  build:
+    name: Build Windows MSVC
+    if: (!contains(github.event.head_commit.message, 'skip ci'))
+    runs-on: windows-2022
+
+    strategy:
+      matrix:
+       arch: [ x86_64, x86 ]
+       buildtype: [ release, debug ]
+
+    steps:
+
+      - name: Set buildtype
+        shell: bash
+        run: echo "buildtype=$(echo ${{matrix.buildtype}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Set cmake and meson buildtype
+        shell: bash
+        run: |
+          echo "cmake_buildtype=$(echo ${{env.buildtype}} | sed 's/.*/\u&/')" >> $GITHUB_ENV
+          echo "meson_buildtype=${{env.buildtype}}" >> $GITHUB_ENV
+
+      - name: Set prefix path
+        shell: bash
+        run: |
+          echo "prefix_path_backslash=c:\strawberry_msvc_${{matrix.arch}}_${{env.buildtype}}" >> $GITHUB_ENV
+          echo "prefix_path_backslash2=c:\\\\strawberry_msvc_${{matrix.arch}}_${{env.buildtype}}" >> $GITHUB_ENV
+          echo "prefix_path_forwardslash=c:/strawberry_msvc_${{matrix.arch}}_${{env.buildtype}}" >> $GITHUB_ENV
+          echo "prefix_path_unix=/c/strawberry_msvc_${{matrix.arch}}_${{env.buildtype}}" >> $GITHUB_ENV
+
+      - name: Cleanup PATH
+        uses: egor-tensin/cleanup-path@v4
+        with:
+          dirs: ${{env.prefix_path_backslash}}\bin;C:\Windows;C:\Windows\system32;C:\Program Files\Git\bin;C:\Program Files\CMake\bin;C:\Program Files\GitHub CLI;C:\ProgramData\Chocolatey\bin;C:\Strawberry\perl\bin;C:\hostedtoolcache\windows\Python\3.9.13\x64;C:\hostedtoolcache\windows\Python\3.9.13\x64\Scripts;C:\Users\runneradmin\.cargo\bin
+
+      - name: Set lib postfix
+        if: env.buildtype == 'debug'
+        shell: bash
+        run: echo "lib_postfix=d" >> $GITHUB_ENV
+
+      - name: Set arch variables (x86)
+        if: matrix.arch == 'x86'
+        shell: bash
+        run: |
+          echo "openssl_platform=VC-WIN32" >> $GITHUB_ENV
+          echo "msbuild_platform=win32" >> $GITHUB_ENV
+          echo "arch_short=x86" >> $GITHUB_ENV
+          echo "arch_win=win32" >> $GITHUB_ENV
+          echo "arch_bits=32" >> $GITHUB_ENV
+          echo "libdir=lib" >> $GITHUB_ENV
+          echo "bindir=bin" >> $GITHUB_ENV
+
+      - name: Set arch variables (x86_64)
+        if: matrix.arch == 'x86_64'
+        shell: bash
+        run: |
+          echo "openssl_platform=VC-WIN64A" >> $GITHUB_ENV
+          echo "msbuild_platform=x64" >> $GITHUB_ENV
+          echo "arch_short=x64" >> $GITHUB_ENV
+          echo "arch_win=win64" >> $GITHUB_ENV
+          echo "arch_bits=64" >> $GITHUB_ENV
+          echo "libdir=lib64" >> $GITHUB_ENV
+          echo "bindir=bin64" >> $GITHUB_ENV
+
+      - name: Create directories
+        shell: bash
+        run: mkdir -p ${{env.prefix_path_unix}}/{bin,lib,include}
+
+      - name: Update PATH
+        shell: pwsh
+        run: echo "${{env.prefix_path_backslash}}\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Copy bin files
+        shell: bash
+        run: cp /c/strawberry/c/bin/{patch.exe,strip.exe,strings.exe,objdump.exe} ${{env.prefix_path_unix}}/bin
+
+      - name: Delete conflicting libraries
+        shell: bash
+        run: rm -rf /c/{msys64,mingw32,mingw64} /c/strawberry/c "/c/program files/OpenSSL"
+
+      - name: Delete conflicting icu
+        shell: bash
+        run: find "/c/program files (x86)/windows kits/" -type f \( -iname 'icu*.lib' -o -iname 'icu*.h' \) -print -delete
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
+      - name: Install python dependencies
+        shell: cmd
+        run: pip install meson ninja
+
+
+      - name: Setup MSVC Environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{matrix.arch}}
+          sdk: 10.0.20348.0
+          vsversion: 2022
+
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+
+      - name: Create downloads directory
+        shell: cmd
+        run: mkdir downloads
+
+      - name: Create build directory
+        shell: cmd
+        run: mkdir build
+
+
+      - name: Download nasm
+        shell: bash
+        working-directory: downloads
+        run: curl ${{env.curl_options}} https://www.nasm.us/pub/nasm/releasebuilds/${{env.nasm_version}}/${{env.arch_win}}/nasm-${{env.nasm_version}}-installer-${{env.arch_short}}.exe
+
+      - name: Create nasm directory
+        shell: cmd
+        run: mkdir c:\nasm
+
+      - name: Extract nasm
+        shell: cmd
+        working-directory: c:/nasm
+        run: 7z x "${{github.workspace}}\downloads\nasm-${{env.nasm_version}}-installer-${{env.arch_short}}.exe"
+
+      - name: Copy nasm
+        shell: bash
+        run: cp /c/nasm/nasm.exe /c/nasm/nasmw.exe
+
+      - name: Add nasm to PATH
+        shell: pwsh
+        run: echo "c:\nasm" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+
+      - name: Download win_flex_bison
+        shell: bash
+        working-directory: downloads
+        run: curl ${{env.curl_options}} https://github.com/lexxmark/winflexbison/releases/download/v${{env.win_flex_bison_version}}/win_flex_bison-${{env.win_flex_bison_version}}.zip
+
+      - name: Create win_flex_bison directory
+        shell: cmd
+        run: mkdir c:\win_flex_bison
+
+      - name: Extract win_flex_bison
+        shell: cmd
+        working-directory: c:\win_flex_bison
+        run: 7z x "${{github.workspace}}\downloads\win_flex_bison-${{env.win_flex_bison_version}}.zip"
+
+      - name: Add win_flex_bison to PATH
+        shell: pwsh
+        run: echo "c:\win_flex_bison" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+
+      - name: Download
+        shell: cmd
+        run: download.bat
+
+      - name: Build
+        shell: cmd
+        run: build.bat ${{env.buildtype}}
+
