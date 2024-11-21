@@ -162,6 +162,7 @@ goto continue
 
 :continue
 
+@c:\
 
 @if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
