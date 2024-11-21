@@ -165,10 +165,12 @@ jobs:
 
 
       - name: Download
+        working-directory: c:\
         shell: cmd
         run: download.bat
 
       - name: Build
+        working-directory: c:\
         shell: cmd
         run: build.bat ${{env.buildtype}}
 
