@@ -20,6 +20,7 @@ Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary upd
 * [Python](https://www.python.org/downloads/windows/)
 * [7-Zip](https://www.7-zip.org/download.html)
 * [Win Flex/Bison](https://sourceforge.net/projects/winflexbison/)
+* [Rust compiler MSVC](https://www.rust-lang.org)
 * [NSIS](https://nsis.sourceforge.io/)
 * [NSIS LockedList Plugin](https://nsis.sourceforge.io/LockedList_plug-in)
 * [NSIS Inetc Plugin](https://nsis.sourceforge.io/Inetc_plug-in)
@@ -62,6 +63,8 @@ Install manually from `C:\data\projects\strawberry\msvc_\downloads`:
             - Click: `Disable path length limit`
     - Install `strawberry-perl-<VERSION>-64bit.msi`
     - Extract `win_flex_bison-<VERSION>.zip` to `C:\win_flex_bison`
+    - Install `rustup-init.exe`
+        - Type in a Command Prompt: `cargo install cargo-c`
 - **Recommended: When building dependencies from source**:
     - Install `nasm-<VERSION>-installer-x64.exe`
         - Run as `Administrator` and install into `C:\Program Files\NASM`.

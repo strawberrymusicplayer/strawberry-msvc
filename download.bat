@@ -134,6 +134,7 @@ https://nsis.sourceforge.io/mediawiki/images/d/d3/LockedList.zip
 https://nsis.sourceforge.io/mediawiki/images/4/47/Registry.zip
 https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip
 https://files.jkvinge.net/winbins/sed.exe
+https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-pkgconf.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/opusfile-cmake.patch
