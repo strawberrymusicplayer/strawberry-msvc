@@ -158,6 +158,8 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 @for %%x in (
 https://code.qt.io/qt/qtbase
 https://code.qt.io/qt/qttools
+https://github.com/ShiftMediaProject/VSYASM
+https://github.com/ShiftMediaProject/gnutls
 https://github.com/knik0/faac
 https://github.com/pffang/libiconv-for-Windows
 https://github.com/davidsansome/qtsparkle
@@ -176,7 +178,7 @@ https://github.com/strawberrymusicplayer/strawberry
 	cd ..
   ) else (
     echo Cloning repository %%x
-    git clone %%x
+    git clone --recurse-submodules %%x
   )
 )
 

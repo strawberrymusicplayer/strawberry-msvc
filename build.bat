@@ -295,6 +295,23 @@ cmake --install . || goto end
 @goto continue
 
 
+:vsyasm
+
+@echo Building vsyasm
+
+cd "%BUILD_PATH%" || goto end
+
+if not exist "vsyasm" @(
+  mkdir vsyasm || goto end
+  cd vsyasm || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\vsyasm" . || goto end
+  cd ..
+) || goto end
+cd "vsyasm" || goto end
+
+copy yasm.props yasm.targets yasm.xml  || goto end
+
+
 :getopt-win
 
 @echo Building getopt-win
