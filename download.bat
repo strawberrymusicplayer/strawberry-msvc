@@ -140,6 +140,7 @@ https://files.jkvinge.net/winbins/sed.exe
 https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe
 https://aka.ms/vs/17/release/vc_redist.x86.exe
 https://aka.ms/vs/17/release/vc_redist.x64.exe
+https://github.com/ShiftMediaProject/VSYASM/releases/download/1.0/VSYASM.zip
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-pkgconf.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/opusfile-cmake.patch
@@ -172,6 +173,9 @@ https://gitlab.freedesktop.org/gstreamer/gstreamer
 https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs
 https://github.com/Pro/tinysvcmdns
 https://github.com/Tencent/rapidjson
+https://github.com/ShiftMediaProject/gmp
+https://github.com/ShiftMediaProject/nettle
+https://github.com/ShiftMediaProject/gnutls
 https://github.com/strawberrymusicplayer/strawberry
 ) do @(
   if exist %%~nxx @(

@@ -18,6 +18,7 @@
 @rem @if not exist "C:\Program Files\Python311\python.exe" goto python
 @if not exist "c:\win_flex_bison\win_bison.exe" goto win_flex_bison
 @if not exist "c:\win_flex_bison\win_flex.exe" goto win_flex_bison
+@if not exist "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\yasm.exe" goto vsyasm || goto end
 
 goto end
 
@@ -95,8 +96,17 @@ cd "win_flex_bison" || goto end
 @7z --version >NUL 2>&1 || set PATH=%PATH%;C:\Program Files\7-Zip
 "c:\Program Files\7-zip\7z.exe" x -aoa "%DOWNLOADS_PATH%\win_flex_bison-%WINFLEXBISON_VERSION%.zip" || goto end
 
+@goto install
 
-@goto end
+
+:vsyasm
+
+mkdir "%DOWNLOADS_PATH%\vsyasm" || goto end
+cd "%DOWNLOADS_PATH%\vsyasm" || goto end
+"c:\Program Files\7-zip\7z.exe" x -aoa "%DOWNLOADS_PATH%\vsyasm.zip" || goto end
+call install_script.bat || goto end
+
+@goto install
 
 
 :end

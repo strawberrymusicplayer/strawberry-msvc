@@ -76,7 +76,8 @@ copy /y "%DOWNLOADS_PATH%\sed.exe" "%PREFIX_PATH%\bin\" || goto end
 
 @set PATH=%PREFIX_PATH%\bin;%PATH%
 
-@set YASMPATH=%PREFIX_PATH%\bin\
+@rem @set YASMPATH=%PREFIX_PATH%\bin\
+@set YASMPATH=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\
 
 @goto check
 
@@ -175,6 +176,8 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\getopt.lib" goto getopt-win
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\zlib.pc" goto zlib
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\openssl.pc" goto openssl
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\gmp.pc" goto gmp
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\nettle.pc" goto nettle
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc" goto gnutls
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpng.pc" goto libpng
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libjpeg.pc" goto libjpeg
@@ -400,18 +403,135 @@ copy %PREFIX_PATH%\lib\libcrypto.lib %PREFIX_PATH%\lib\crypto.lib
 @goto continue
 
 
+:gmp
+
+@echo Installing gmp
+
+if not exist "%BUILD_PATH%\ShiftMediaProject\build" mkdir "%BUILD_PATH%\ShiftMediaProject\build" || goto end
+cd "%BUILD_PATH%\ShiftMediaProject\build" || goto end
+
+if not exist "gmp" @(
+  mkdir gmp || goto end
+  cd gmp || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\gmp" . || goto end
+  git checkout %GMP_VERSION% || goto end
+  cd ..
+) || goto end
+
+cd gmp\SMP || goto end
+
+msbuild libgmp.sln -p:Configuration=%BUILD_TYPE%DLL || goto end
+
+xcopy /s /y ..\..\..\msvc\lib\x64\gmp*.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y ..\..\..\msvc\bin\x64\gmp*.dll "%PREFIX_PATH%\bin\" || goto end
+xcopy /s /y ..\..\..\msvc\include\gmp*.h "%PREFIX_PATH%\include\" || goto end
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo Name: gmp>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo Description: gmp>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo URL: https://gmplib.org/>> %PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo Version: %GMP_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo Libs: -L${libdir} -lgmp%LIB_POSTFIX%>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
+
+@goto continue
+
+
+:nettle
+
+@echo Installing nettle
+
+if not exist "%BUILD_PATH%\ShiftMediaProject\build" mkdir "%BUILD_PATH%\ShiftMediaProject\build" || goto end
+cd "%BUILD_PATH%\ShiftMediaProject\build" || goto end
+
+if not exist "nettle" @(
+  mkdir nettle || goto end
+  cd nettle || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\nettle" . || goto end
+  git checkout nettle_%NETTLE_VERSION% || goto end
+  cd ..
+) || goto end
+
+cd nettle\SMP || goto end
+
+msbuild libnettle.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
+xcopy /s /y ..\..\..\msvc\lib\x64\nettle*.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y ..\..\..\msvc\bin\x64\nettle*.dll "%PREFIX_PATH%\bin\" || goto end
+if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
+xcopy /s /y ..\..\..\msvc\include\nettle\*.h "%PREFIX_PATH%\include\nettle\" || goto end
+
+msbuild libhogweed.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
+xcopy /s /y ..\..\..\msvc\lib\x64\hogweed*.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y ..\..\..\msvc\bin\x64\hogweed*.dll "%PREFIX_PATH%\bin\" || goto end
+if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
+xcopy /s /y ..\..\..\msvc\include\nettle\*.h "%PREFIX_PATH%\include\nettle\" || goto end
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo Name: nettle>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo Description: nettle>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo URL: https://www.lysator.liu.se/~nisse/nettle/>> %PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo Version: %NETTLE_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo Libs: -L${libdir} -lnettle%LIB_POSTFIX%>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\nettle.pc"
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo Name: hogweed>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo Description: hogweed>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo URL: https://www.lysator.liu.se/~nisse/nettle/>> %PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo Version: %NETTLE_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo Libs: -L${libdir} -lhogweed%LIB_POSTFIX%>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\hogweed.pc"
+
+@goto continue
+
+
 :gnutls
 
 @echo Installing gnutls
 
-cd "%BUILD_PATH%" || goto end
-if not exist gnutls mkdir gnutls || goto end
-cd gnutls || goto end
-7z x -aoa "%DOWNLOADS_PATH%\libgnutls_%GNUTLS_VERSION%_msvc17.zip" || goto end
-xcopy /s /y "bin\x64\*.*" "%PREFIX_PATH%\bin\" || goto end
-xcopy /s /y "lib\x64\gnutls.*" "%PREFIX_PATH%\lib\" || goto end
+if not exist "%BUILD_PATH%\ShiftMediaProject\build" mkdir "%BUILD_PATH%\ShiftMediaProject\build" || goto end
+cd "%BUILD_PATH%\ShiftMediaProject\build" || goto end
+
+if not exist "gnutls" @(
+  mkdir gnutls || goto end
+  cd gnutls || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\gnutls" . || goto end
+  git checkout %GNUTLS_VERSION% || goto end
+  cd ..
+) || goto end
+
+cd gnutls\SMP || goto end
+
+echo ^<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"^>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo   ^<ItemDefinitionGroup^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo     ^<ClCompile^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo       ^<AdditionalIncludeDirectories^>%PREFIX_PATH%\include;%%(AdditionalIncludeDirectories)^</AdditionalIncludeDirectories^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo     ^</ClCompile^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo     ^<Link^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo       ^<AdditionalLibraryDirectories^>%PREFIX_PATH%\lib;%%(AdditionalLibraryDirectories)^</AdditionalLibraryDirectories^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+@rem echo       ^<AdditionalDependencies^>zlibd.lib;%%(AdditionalDependencies)^</AdditionalDependencies^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo     ^</Link^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo   ^</ItemDefinitionGroup^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+echo ^</Project^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
+
+msbuild libgnutls.sln -p:Configuration=%CMAKE_BUILD_TYPE%DLL -p:ForceImportBeforeCppTargets=%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props || goto end
+
+xcopy /s /y ..\..\..\msvc\lib\x64\gnutls*.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y ..\..\..\msvc\bin\x64\gnutls*.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
-xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
+xcopy /s /y ..\..\..\msvc\include\gnutls\*.h "%PREFIX_PATH%\include\gnutls\" || goto end
 
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
@@ -422,7 +542,7 @@ xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 @echo Description: gnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo URL: https://www.gnutls.org/>> %PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Version: %GNUTLS_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Libs: -L${libdir} -lgnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Libs: -L${libdir} -lgnutls%LIB_POSTFIX%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 
 @goto continue
