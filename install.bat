@@ -11,11 +11,11 @@
 
 @if not exist "C:\Program Files\Git\bin\git.exe" goto git
 @if not exist "c:\Program Files\CMake\bin\cmake.exe" goto cmake
-@if not exist "c:\Program Files\meson\meson.exe" goto meson
+@rem @if not exist "c:\Program Files\meson\meson.exe" goto meson
 @if not exist "c:\Program Files\nasm\nasm.exe" goto nasm
 @if not exist "c:\Program Files\7-zip\7z.exe" goto 7z
 @if not exist "C:\Strawberry\perl\bin" goto perl
-@if not exist "C:\Program Files\Python311\python.exe" goto python
+@rem @if not exist "C:\Program Files\Python311\python.exe" goto python
 @if not exist "c:\win_flex_bison\win_bison.exe" goto win_flex_bison
 @if not exist "c:\win_flex_bison\win_flex.exe" goto win_flex_bison
 
