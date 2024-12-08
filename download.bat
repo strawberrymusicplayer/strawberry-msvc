@@ -113,6 +113,7 @@ https://cairographics.org/releases/cairo-%CAIRO_VERSION%.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/%HARFBUZZ_VERSION%/harfbuzz-%HARFBUZZ_VERSION%.tar.xz
 https://download.qt.io/official_releases/qt/6.8/%QT_VERSION%/submodules/qtbase-everywhere-src-%QT_VERSION%.tar.xz
 https://download.qt.io/official_releases/qt/6.8/%QT_VERSION%/submodules/qttools-everywhere-src-%QT_VERSION%.tar.xz
+https://download.qt.io/official_releases/qt/6.8/%QT_VERSION%/submodules/qtgrpc-everywhere-src-%QT_VERSION%.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-%LIBGME_VERSION%.tar.gz
 https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
 https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%.tar.gz

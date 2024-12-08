@@ -230,6 +230,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstspotify.pc" goto gst-plugins-rs
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
+@if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtoc.cmake" goto qtgrpc
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
 @if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
@@ -1724,6 +1725,33 @@ if "%QT_DEV%" == "ON" @(
 
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G Ninja -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_WHEN_CROSSCOMPILING=ON -DFEATURE_assistant=OFF -DFEATURE_designer=OFF -DFEATURE_distancefieldgenerator=OFF -DFEATURE_kmap2qmap=OFF -DFEATURE_pixeltool=OFF -DFEATURE_qdbus=OFF -DFEATURE_qev=OFF -DFEATURE_qtattributionsscanner=OFF -DFEATURE_qtdiag=OFF -DFEATURE_qtplugininfo=OFF -DFEATURE_linguist=ON
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:qtgrpc
+
+@echo Building qtgrpc
+
+cd "%BUILD_PATH%" || goto end
+
+if "%QT_DEV%" == "ON" @(
+  if not exist "qtgrpc" @(
+    mkdir "qtgrpc" || goto end
+    cd "qtgrpc" || goto end
+    xcopy /s /y /h "%DOWNLOADS_PATH%\qtgrpc" . || goto end
+  )
+) else (
+  if not exist "qtgrpc-everywhere-src-%QT_VERSION%" 7z x "%DOWNLOADS_PATH%\qtgrpc-everywhere-src-%QT_VERSION%.tar.xz" -so | 7z x -aoa -si"qtgrpc-everywhere-src-%QT_VERSION%.tar" || goto end
+  @rem if not exist "qtgrpc-everywhere-src-%QT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\qtgrpc-everywhere-src-%QT_VERSION%.tar.xz" || goto end
+  cd "qtgrpc-everywhere-src-%QT_VERSION%" || goto end
+)
+
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G Ninja -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_PREFIX_PATH="%PREFIX_PATH_FORWARD%/lib/cmake" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF -DQT_BUILD_TOOLS_WHEN_CROSSCOMPILING=ON
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
