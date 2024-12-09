@@ -238,6 +238,7 @@ goto continue
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\glew.pc" goto glew
 @rem @if not exist "%PREFIX_PATH%\lib\cmake\projectM4\projectM4Config.cmake" goto libprojectm
 @if not exist "%PREFIX_PATH%\bin\gettext.exe" goto gettext
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc" goto tinysvcmdns
 @if not exist "%BUILD_PATH%\strawberry\build\strawberrysetup*.exe" goto strawberry
 
 
@@ -1884,6 +1885,44 @@ if not exist gettext mkdir gettext || goto end
 cd gettext || goto end
 7z x -aoa "%DOWNLOADS_PATH%\gettext%GETTEXT_VERSION%-iconv1.17-static-64.zip" || goto end
 xcopy /s /y "bin\*.exe" "%PREFIX_PATH%\bin\" || goto end
+
+@goto continue
+
+
+:tinysvcmdns
+
+@echo Building tinysvcmdns
+
+cd "%BUILD_PATH%" || goto end
+if not exist "tinysvcmdns" @(
+  mkdir "tinysvcmdns" || goto end
+  cd "tinysvcmdns" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\tinysvcmdns" . || goto end
+  cd ..
+ ) || goto end
+cd "tinysvcmdns" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+xcopy /y "*.lib" "%PREFIX_PATH%\lib\" || goto end
+xcopy /y "*.dll" "%PREFIX_PATH%\bin\" || goto end
+xcopy /y "*.exe" "%PREFIX_PATH%\bin\" || goto end
+xcopy /y "*.h" "%PREFIX_PATH%\include\" || goto end
+xcopy /y "..\*.h" "%PREFIX_PATH%\include\" || goto end
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo Name: tinysvcmdns>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo Description: tinysvcmdns>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo Version: 0.1>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo Libs: -L${libdir} -ltinysvcmdns>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
 
 @goto continue
 

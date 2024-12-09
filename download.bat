@@ -168,6 +168,7 @@ https://github.com/frida/proxy-libintl
 https://gitlab.freedesktop.org/gstreamer/gstreamer
 https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs
 https://github.com/ludvikjerabek/getopt-win
+https://github.com/Pro/tinysvcmdns
 https://github.com/strawberrymusicplayer/strawberry
 ) do @(
   if exist %%~nxx @(
