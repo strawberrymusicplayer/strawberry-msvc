@@ -228,13 +228,13 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstspotify.pc" goto gst-plugins-rs
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
-@if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtoc.cmake" goto qtgrpc
+@if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtobuf.cmake" goto qtgrpc
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
 @if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
-@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
-@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\glew.pc" goto glew
 @rem @if not exist "%PREFIX_PATH%\lib\cmake\projectM4\projectM4Config.cmake" goto libprojectm
 @if not exist "%PREFIX_PATH%\bin\gettext.exe" goto gettext
@@ -1680,6 +1680,39 @@ ninja install || goto end
 @goto continue
 
 
+:abseil-cpp
+
+@echo Building abseil-cpp
+
+cd "%BUILD_PATH%" || goto end
+if not exist "abseil-cpp-%ABSEIL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_VERSION%.tar.gz" || goto end
+cd "abseil-cpp-%ABSEIL_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DABSL_BUILD_TESTING=OFF || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:protobuf
+
+@echo Building protobuf
+
+cd "%BUILD_PATH%" || goto end
+if not exist "protobuf-%PROTOBUF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
+cd "protobuf-%PROTOBUF_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_EXAMPLES=OFF -Dprotobuf_ABSL_PROVIDER="package" -Dprotobuf_BUILD_LIBPROTOC=OFF -Dprotobuf_BUILD_PROTOC_BINARIES=ON -Dprotobuf_WITH_ZLIB=ON || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
+
+@goto continue
+
+
 :qtbase
 
 @echo Building qtbase
@@ -1806,38 +1839,6 @@ cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 
-
-@goto continue
-
-:abseil-cpp
-
-@echo Building abseil-cpp
-
-cd "%BUILD_PATH%" || goto end
-if not exist "abseil-cpp-%ABSEIL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_VERSION%.tar.gz" || goto end
-cd "abseil-cpp-%ABSEIL_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DABSL_BUILD_TESTING=OFF || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-
-@goto continue
-
-
-:protobuf
-
-@echo Building protobuf
-
-cd "%BUILD_PATH%" || goto end
-if not exist "protobuf-%PROTOBUF_VERSION%" tar -xvf "%DOWNLOADS_PATH%\protobuf-%PROTOBUF_VERSION%.tar.gz" || goto end
-cd "protobuf-%PROTOBUF_VERSION%" || goto end
-if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_EXAMPLES=OFF -Dprotobuf_ABSL_PROVIDER="package" -Dprotobuf_BUILD_LIBPROTOC=OFF -Dprotobuf_BUILD_PROTOC_BINARIES=ON -Dprotobuf_WITH_ZLIB=ON || goto end
-cd build || goto end
-cmake --build . || goto end
-cmake --install . || goto end
-copy /y "protobuf.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 
 @goto continue
 
