@@ -2124,6 +2124,9 @@ copy /y "..\COPYING" . || goto end
 copy /y "..\dist\windows\*.nsh" . || goto end
 copy /y "..\dist\windows\*.ico" . || goto end
 
+xcopy /y "%DOWNLOADS_PATH%\vc_redist.x86.exe" .
+xcopy /y "%DOWNLOADS_PATH%\vc_redist.x64.exe" .
+
 makensis "strawberry.nsi" || goto end
 
 
