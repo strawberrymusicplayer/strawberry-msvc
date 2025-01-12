@@ -233,7 +233,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtobuf.cmake" goto qtgrpc
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\qtsparkle-qt6.pc" goto qtsparkle
+@if not exist "%PREFIX_PATH%\lib\cmake\qtsparkle-qt6\qtsparkle-qt6Config.cmake" goto qtsparkle
 @if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\glew.pc" goto glew
 @rem @if not exist "%PREFIX_PATH%\lib\cmake\projectM4\projectM4Config.cmake" goto libprojectm
@@ -1811,18 +1811,6 @@ cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-
-@echo prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo.>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Name: qtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Version:>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Description: Qt auto-updater lib>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Libs: -L${libdir} -lqtsparkle-qt6>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-@echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/qtsparkle-qt6.pc"
-
 
 @goto continue
 
