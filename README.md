@@ -146,7 +146,7 @@ Debug build:
 - Open a local folder `C:\data\projects\strawberry\strawberry`
 - Toolbar Project | CMake Settings:
     - Select Configurations `x64-Debug`
-    - Add `CMake command arguments`: `-DARCH=x86_64 -DICU_ROOT=c:\\strawberry_msvc_x86_64_debug`
+    - Add `CMake command arguments`: `-DARCH=x86_64 -DICU_ROOT=c:\\strawberry_msvc_x86_64_debug -DBUILD_WERROR=ON -DENABLE_WIN32_CONSOLE=ON -DENABLE_AUDIOCD=OFF -DENABLE_MTP=OFF -DENABLE_GPOD=OFF`
 - Select in the toolbar `x64-Debug`
 - Toolbar: Build | Build All
 
@@ -157,7 +157,7 @@ Release build:
 - Toolbar Project | CMake Settings:
     - Create new `x64-Release`
     - Select Configurations `x64-Release`
-    - Add `CMake command arguments`: `-DARCH=x86_64 -DICU_ROOT=c:\\strawberry_msvc_x86_64_release -DENABLE_WIN32_CONSOLE=OFF`
+    - Add `CMake command arguments`: `-DARCH=x86_64 -DICU_ROOT=c:\\strawberry_msvc_x86_64_release -DBUILD_WERROR=ON -DENABLE_WIN32_CONSOLE=OFF -DENABLE_AUDIOCD=OFF -DENABLE_MTP=OFF -DENABLE_GPOD=OFF`
     - Save the changes
     - In the toolbar select `x64-Release`
     - Project | Delete Cache and Reconfigure
