@@ -69,7 +69,7 @@ https://github.com/google/brotli/archive/refs/tags/v%BROTLI_VERSION%.tar.gz
 https://www.cairographics.org/releases/pixman-%PIXMAN_VERSION%.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v%LIBXML2_VERSION%/libxml2-v%LIBXML2_VERSION%.tar.bz2
 https://github.com/nghttp2/nghttp2/releases/download/v%NGHTTP2_VERSION%/nghttp2-%NGHTTP2_VERSION%.tar.bz2
-https://sqlite.org/2024/sqlite-autoconf-%SQLITE_VERSION%.tar.gz
+https://sqlite.org/2025/sqlite-autoconf-%SQLITE_VERSION%.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-%LIBOGG_VERSION%.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-%LIBVORBIS_VERSION%.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-%FLAC_VERSION%.tar.xz
