@@ -232,6 +232,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libsparsehash.pc" goto sparsehash
 @if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtobuf.cmake" goto qtgrpc
 @if not exist "%PREFIX_PATH%\lib\cmake\qtsparkle-qt6\qtsparkle-qt6Config.cmake" goto qtsparkle
 @if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
@@ -1677,6 +1678,36 @@ ninja || goto end
 ninja install || goto end
 
 @set PKG_CONFIG_PATH=%PREFIX_PATH%\lib\pkgconfig
+
+@goto continue
+
+
+:sparsehash
+
+@echo Building sparsehash
+
+cd "%BUILD_PATH%" || goto end
+if not exist "sparsehash-sparsehash-%SPARSEHASH_VERSION%" tar -xvf "%DOWNLOADS_PATH%\sparsehash-%SPARSEHASH_VERSION%.tar.gz" || goto end
+cd "sparsehash-sparsehash-%SPARSEHASH_VERSION%" || goto end
+if not exist "%PREFIX_PATH%\include\google" mkdir -p "%PREFIX_PATH%\include\google" || goto end
+if not exist "%PREFIX_PATH%\include\sparsehash" mkdir -p "%PREFIX_PATH%\include\sparsehash" || goto end
+xcopy /s /y "src\google" "%PREFIX_PATH%\include\google\" || goto end
+xcopy /s /y "src\sparsehash" "%PREFIX_PATH%\include\sparsehash\" || goto end
+xcopy /s /y "src\windows\sparsehash\internal\sparseconfig.h" "%PREFIX_PATH%\include\sparsehash\internal\" || goto end
+xcopy /s /y "src\windows\google\sparsehash\sparseconfig.h" "%PREFIX_PATH%\include\google\sparsehash\" || goto end
+
+@echo "Create sparsehash pc file"
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo includedir=%PREFIX_PATH_FORWARD%/include>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo.>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo Name: sparsehash>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo Description: C++ associative containers>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo URL: https://github.com/sparsehash/sparsehash>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo Version: %SPARSEHASH_VERSION%>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
+@echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/libsparsehash.pc"
 
 @goto continue
 

@@ -116,6 +116,7 @@ https://download.qt.io/official_releases/qt/6.8/%QT_VERSION%/submodules/qttools-
 https://download.qt.io/official_releases/qt/6.8/%QT_VERSION%/submodules/qtgrpc-everywhere-src-%QT_VERSION%.tar.xz
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-%LIBGME_VERSION%.tar.gz
 https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
+https://github.com/sparsehash/sparsehash/archive/refs/tags/sparsehash-%SPARSEHASH_VERSION%.tar.gz
 https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%.tar.gz
 https://github.com/KDAB/KDSingleApplication/releases/download/v%KDSINGLEAPPLICATION_VERSION%/kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz
 https://github.com/curl/curl/releases/download/curl-%CURL_VERSION_UNDERSCORE%/curl-%CURL_VERSION%.tar.gz
