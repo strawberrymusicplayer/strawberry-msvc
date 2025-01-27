@@ -1689,6 +1689,7 @@ ninja install || goto end
 cd "%BUILD_PATH%" || goto end
 if not exist "sparsehash-sparsehash-%SPARSEHASH_VERSION%" tar -xvf "%DOWNLOADS_PATH%\sparsehash-%SPARSEHASH_VERSION%.tar.gz" || goto end
 cd "sparsehash-sparsehash-%SPARSEHASH_VERSION%" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%/sparsehash-msvc.patch"
 if not exist "%PREFIX_PATH%\include\google" mkdir -p "%PREFIX_PATH%\include\google" || goto end
 if not exist "%PREFIX_PATH%\include\sparsehash" mkdir -p "%PREFIX_PATH%\include\sparsehash" || goto end
 xcopy /s /y "src\google" "%PREFIX_PATH%\include\google\" || goto end
