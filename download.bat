@@ -74,7 +74,7 @@ https://downloads.xiph.org/releases/ogg/libogg-%LIBOGG_VERSION%.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-%LIBVORBIS_VERSION%.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/flac/flac-%FLAC_VERSION%.tar.xz
 https://www.wavpack.com/wavpack-%WAVPACK_VERSION%.tar.bz2
-https://archive.mozilla.org/pub/opus/opus-%OPUS_VERSION%.tar.gz
+https://downloads.xiph.org/releases/opus-%OPUS_VERSION%.tar.gz
 https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-%OPUSFILE_VERSION%.tar.gz
 https://gitlab.xiph.org/xiph/speex/-/archive/Speex-%SPEEX_VERSION%/speex-Speex-%SPEEX_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/mpg123/mpg123/%MPG123_VERSION%/mpg123-%MPG123_VERSION%.tar.bz2
