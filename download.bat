@@ -94,6 +94,7 @@ https://gstreamer.freedesktop.org/src/orc/orc-%ORC_VERSION%.tar.xz
 https://files.musepack.net/source/musepack_src_r%MUSEPACK_VERSION%.tar.gz
 https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-%LIBOPENMPT_VERSION%+release.msvc.zip
 https://github.com/knik0/faad2/tarball/%FAAD2_VERSION%/faad2-%FAAD2_VERSION%.tar.gz
+https://github.com/knik0/faac/archive/refs/tags/faac-%FAAC_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-%FDK_AAC_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/bs2b/libbs2b/%LIBBS2B_VERSION%/libbs2b-%LIBBS2B_VERSION%.tar.bz2
 https://github.com/jiixyj/libebur128/archive/refs/tags/v%LIBEBUR128_VERSION%.tar.gz
@@ -163,7 +164,6 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 @for %%x in (
 https://code.qt.io/qt/qtbase
 https://code.qt.io/qt/qttools
-https://github.com/knik0/faac
 https://github.com/pffang/libiconv-for-Windows
 https://github.com/davidsansome/qtsparkle
 https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi

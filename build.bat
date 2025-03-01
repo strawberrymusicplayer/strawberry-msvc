@@ -1326,13 +1326,8 @@ cmake --install . --config %CMAKE_BUILD_TYPE% || goto end
 @echo Building faac
 
 cd "%BUILD_PATH%" || goto end
-if not exist "faac" @(
-  mkdir "faac" || goto end
-  cd "faac" || goto end
-  xcopy /s /y /h "%DOWNLOADS_PATH%\faac" . || goto end
-  cd ..
- ) || goto end
-cd faac
+if not exist "faac-faac-%FAAC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\faac-%FAAC_VERSION%.tar.gz" || goto end
+cd "faac-faac-%FAAC_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\faac-msvc.patch"
 cd project\msvc || goto end
 start /w devenv.exe faac.sln /upgrade
