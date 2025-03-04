@@ -163,7 +163,7 @@ goto continue
 :continue
 
 
-@rem @if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
+@if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
 @if not exist "%PREFIX_PATH%\lib\getopt.lib" goto getopt-win
@@ -289,8 +289,9 @@ cd "%BUILD_PATH%" || goto end
 
 if not exist "yasm-%YASM_VERSION%" tar -xvf "%DOWNLOADS_PATH%\yasm-%YASM_VERSION%.tar.gz" || goto end
 cd "yasm-%YASM_VERSION%" || goto end
+patch -p1 -N < "%DOWNLOADS_PATH%\yasm-cmake.patch"
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -1106,8 +1107,8 @@ cd "%BUILD_PATH%" || goto end
 if not exist "mpg123-%MPG123_VERSION%" tar -xvf "%DOWNLOADS_PATH%\mpg123-%MPG123_VERSION%.tar.bz2" || goto end
 cd "mpg123-%MPG123_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
-cmake --log-level="DEBUG" -S ports/cmake -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF  || goto end
-@rem -DYASM_ASSEMBLER="%PREFIX_PATH_FORWARD%/bin/vsyasm.exe"
+cmake --log-level="DEBUG" -S ports/cmake -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF -DYASM_ASSEMBLER="%PREFIX_PATH_FORWARD%/bin/vsyasm.exe" || goto end
+
 cd build2 || goto end
 cmake --build . || goto end
 cmake --install . || goto end

@@ -153,6 +153,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/getopt-win-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/sparsehash-msvc.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/yasm-cmake.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx
