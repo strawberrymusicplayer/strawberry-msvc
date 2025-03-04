@@ -163,7 +163,7 @@ goto continue
 :continue
 
 
-@if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
+@rem @if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
 @if not exist "%PREFIX_PATH%\lib\getopt.lib" goto getopt-win
@@ -290,7 +290,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "yasm-%YASM_VERSION%" tar -xvf "%DOWNLOADS_PATH%\yasm-%YASM_VERSION%.tar.gz" || goto end
 cd "yasm-%YASM_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -448,7 +448,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "libjpeg-turbo-%LIBJPEG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz" || goto end
 cd "libjpeg-turbo-%LIBJPEG_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DENABLE_SHARED=ON || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DENABLE_SHARED=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -481,7 +481,7 @@ if not exist "bzip2-%BZIP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\bzip2-%BZIP2_VER
 cd bzip2-%BZIP2_VERSION% || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/bzip2-cmake.patch"
 if not exist build2 mkdir build2 || goto end
-cmake --log-level="DEBUG" -S . -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cmake --log-level="DEBUG" -S . -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build2 || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -978,7 +978,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "libogg-%LIBOGG_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libogg-%LIBOGG_VERSION%.tar.gz" || goto end
 cd "libogg-%LIBOGG_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -994,7 +994,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "libvorbis-%LIBVORBIS_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libvorbis-%LIBVORBIS_VERSION%.tar.gz" || goto end
 cd "libvorbis-%LIBVORBIS_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DINSTALL_DOCS=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -1068,7 +1068,7 @@ if not exist "opusfile-%OPUSFILE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\opusfile-%
 cd "opusfile-%OPUSFILE_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%/opusfile-cmake.patch"
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -1106,7 +1106,8 @@ cd "%BUILD_PATH%" || goto end
 if not exist "mpg123-%MPG123_VERSION%" tar -xvf "%DOWNLOADS_PATH%\mpg123-%MPG123_VERSION%.tar.bz2" || goto end
 cd "mpg123-%MPG123_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
-cmake --log-level="DEBUG" -S ports/cmake -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF -DYASM_ASSEMBLER="%PREFIX_PATH_FORWARD%/bin/vsyasm.exe" || goto end
+cmake --log-level="DEBUG" -S ports/cmake -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_PROGRAMS=OFF -DBUILD_LIBOUT123=OFF  || goto end
+@rem -DYASM_ASSEMBLER="%PREFIX_PATH_FORWARD%/bin/vsyasm.exe"
 cd build2 || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -1226,7 +1227,7 @@ if not exist "musepack_src_r%MUSEPACK_VERSION%" tar -xvf "%DOWNLOADS_PATH%\musep
 cd "musepack_src_r%MUSEPACK_VERSION%" || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\musepack-fixes.patch"
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DSHARED=ON || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DSHARED=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -1278,7 +1279,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "game-music-emu-%LIBGME_VERSION%" tar -xf "%DOWNLOADS_PATH%/game-music-emu-%LIBGME_VERSION%.tar.gz" || goto end
 cd game-music-emu-%LIBGME_VERSION% || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -1409,7 +1410,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "libebur128 -%LIBEBUR128_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%LIBEBUR128_VERSION%.tar.gz" || goto end
 cd "libebur128-%LIBEBUR128_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -1450,7 +1451,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "chromaprint-%CHROMAPRINT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\chromaprint-%CHROMAPRINT_VERSION%.tar.gz"
 cd "chromaprint-%CHROMAPRINT_VERSION%" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="%PREFIX_PATH%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DBUILD_SHARED_LIBS=ON -DFFMPEG_ROOT="%PREFIX_PATH%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 nmake || goto end
 cmake --install . || goto end
@@ -1916,7 +1917,7 @@ if not exist "tinysvcmdns" @(
  ) || goto end
 cd "tinysvcmdns" || goto end
 if not exist build mkdir build || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
