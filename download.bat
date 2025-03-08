@@ -85,7 +85,7 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%.ta
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
-https://download.gnome.org/sources/glib/2.83/glib-%GLIB_VERSION%.tar.xz
+https://download.gnome.org/sources/glib/2.84/glib-%GLIB_VERSION%.tar.xz
 https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
 https://github.com/libproxy/libproxy/archive/refs/tags/%LIBPROXY_VERSION%.tar.gz
@@ -154,6 +154,7 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/getopt-win-cmake.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/sparsehash-msvc.patch
 https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/yasm-cmake.patch
+https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libgme-pkgconf.patch
 ) do @(
   if not exist %%~nxx (
     echo Downloading %%~nxx
