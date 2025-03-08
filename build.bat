@@ -635,7 +635,7 @@ cmake --install . || goto end
 
 cd "%BUILD_PATH%" || goto end
 
-if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.bz2" || goto end
+if not exist "boost_%BOOST_VERSION_UNDERSCORE%" tar -xvf "%DOWNLOADS_PATH%\boost_%BOOST_VERSION_UNDERSCORE%.tar.gz" || goto end
 cd "%BUILD_PATH%\boost_%BOOST_VERSION_UNDERSCORE%" || goto end
 if exist b2.exe del b2.exe
 if exist bjam.exe del bjam.exe
