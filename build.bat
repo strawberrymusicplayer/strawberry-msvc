@@ -220,7 +220,6 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libebur128.pc" goto libebur128
 @if not exist "%PREFIX_PATH%\lib\avutil.lib" goto ffmpeg
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libchromaprint.pc" goto chromaprint
-@if not exist "%PREFIX_PATH%\share\asiosdk_%ASIOSDK_VERSION%\readme.txt" goto asiosdk
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-1.0.pc" goto gstreamer
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-base-1.0.pc" goto gst-plugins-base
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstdirectsound.lib" goto gst-plugins-good
@@ -1462,17 +1461,6 @@ cmake --install . || goto end
 @goto continue
 
 
-:asiosdk
-
-@echo Installing ASIO SDK
-
-cd "%PREFIX_PATH%\share" || goto end
-7z x -aoa "%DOWNLOADS_PATH%\asiosdk_%ASIOSDK_VERSION%.zip" || goto end
-cd "%BUILD_PATH%" || goto end
-
-@goto continue
-
-
 :gstreamer
 
 @echo Building GStreamer
@@ -1583,7 +1571,6 @@ if "%GST_DEV%" == "ON" @(
 )
 
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtools=enabled -Dtests=disabled -Dintrospection=disabled -Dnls=disabled -Dorc=enabled -Dgobject-cast-checks=enabled -Dglib-asserts=enabled -Dglib-checks=enabled -Dextra-checks=enabled -Dgpl=enabled -Daiff=enabled -Dasfmux=enabled -Did3tag=enabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dremovesilence=enabled -Daes=enabled -Dasio=enabled -Dbluez=enabled -Dbs2b=enabled -Dchromaprint=enabled -Ddash=enabled -Ddirectsound=enabled -Dfaac=enabled -Dfaad=enabled -Dfdkaac=enabled -Dgme=enabled -Dmusepack=enabled -Dopenmpt=enabled -Dopus=enabled -Dwasapi=enabled -Dwasapi2=enabled -Dhls=enabled build || goto end
-@rem -Dasio-sdk-path="%PREFIX_PATH%\share\asiosdk_%ASIOSDK_VERSION%"
 cd build || goto end
 ninja || goto end
 ninja install || goto end
