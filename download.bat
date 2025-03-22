@@ -161,6 +161,8 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
   )
 )
 
+curl -f -L -k https://github.com/Tencent/rapidjson/archive/refs/tags/v%RAPIDJSON_VERSION%.tar.gz -o rapidjson-%RAPIDJSON_VERSION%.tar.gz
+
 @for %%x in (
 https://code.qt.io/qt/qtbase
 https://code.qt.io/qt/qttools
