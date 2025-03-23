@@ -269,7 +269,7 @@ copy /y "%PREFIX_PATH%\bin\pkgconf.exe" "%PREFIX_PATH%\bin\pkg-config.exe" || go
 
 cd "%BUILD_PATH%" || goto end
 
-if not exist "mimalloc-%MIMALLOC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%MIMALLOC_VERSION%.tar.gz" || goto end
+if not exist "mimalloc-%MIMALLOC_VERSION%" tar -xvf "%DOWNLOADS_PATH%\mimalloc-%MIMALLOC_VERSION%.tar.gz" || goto end
 cd "mimalloc-%MIMALLOC_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DMI_BUILD_SHARED=ON -DMI_BUILD_STATIC=OFF -DMI_BUILD_TESTS=OFF -DMI_CHECK_FULL=OFF -DMI_DEBUG_FULL=OFF -DMI_DEBUG_TSAN=OFF -DMI_DEBUG_UBSAN=OFF -DMI_OVERRIDE=ON -DMI_USE_CXX=ON -DMI_WIN_REDIRECT=ON || goto end
@@ -511,7 +511,7 @@ cmake --install . || goto end
 @echo Building brotli
 
 cd "%BUILD_PATH%" || goto end
-if not exist "brotli-%BROTLI_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%BROTLI_VERSION%.tar.gz" || goto end
+if not exist "brotli-%BROTLI_VERSION%" tar -xvf "%DOWNLOADS_PATH%\brotli-%BROTLI_VERSION%.tar.gz" || goto end
 cd "brotli-%BROTLI_VERSION%" || goto end
 if not exist build2 mkdir build2 || goto end
 cmake --log-level="DEBUG" -S . -B build2 -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_TESTING=OFF || goto end
@@ -728,7 +728,7 @@ ninja install || goto end
 @echo Building dlfcn-win32
 
 cd "%BUILD_PATH%" || goto end
-if not exist "dlfcn-win32-%DLFCN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%DLFCN_VERSION%.tar.gz" || goto end
+if not exist "dlfcn-win32-%DLFCN_VERSION%" tar -xvf "%DOWNLOADS_PATH%\dlfcn-win32-%DLFCN_VERSION%.tar.gz" || goto end
 cd "dlfcn-win32-%DLFCN_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
@@ -852,7 +852,7 @@ ninja install || goto end
 @echo Building libproxy
 
 cd "%BUILD_PATH%" || goto end
-if not exist "libproxy-%LIBPROXY_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%LIBPROXY_VERSION%.tar.gz" || goto end
+if not exist "libproxy-%LIBPROXY_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libproxy-%LIBPROXY_VERSION%.tar.gz" || goto end
 cd "libproxy-%LIBPROXY_VERSION%" || goto end
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload -Ddocs=false -Dtests=false -Dconfig-gnome=false -Dpacrunner-duktape=false -Dintrospection=false build || goto end
 cd build || goto end
@@ -1358,7 +1358,7 @@ copy /y "bin\%BUILD_TYPE%\*.dll" "%PREFIX_PATH%\bin\" || goto end
 @echo Building utfcpp
 
 cd "%BUILD_PATH%" || goto end
-if not exist "utfcpp-%UTFCPP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%UTFCPP_VERSION%.tar.gz" || goto end
+if not exist "utfcpp-%UTFCPP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\utfcpp-%UTFCPP_VERSION%.tar.gz" || goto end
 cd "utfcpp-%UTFCPP_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON || goto end
@@ -1409,7 +1409,7 @@ cmake --install . || goto end
 @echo Building libebur128
 
 cd "%BUILD_PATH%" || goto end
-if not exist "libebur128 -%LIBEBUR128_VERSION%" tar -xvf "%DOWNLOADS_PATH%\v%LIBEBUR128_VERSION%.tar.gz" || goto end
+if not exist "libebur128 -%LIBEBUR128_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libebur128-%LIBEBUR128_VERSION%.tar.gz" || goto end
 cd "libebur128-%LIBEBUR128_VERSION%" || goto end
 sed -i "/^Libs.private.*/d" ebur128\libebur128.pc.cmake || goto end
 if not exist build mkdir build || goto end
@@ -1720,7 +1720,7 @@ cmake --install . || goto end
 @echo Building abseil-cpp
 
 cd "%BUILD_PATH%" || goto end
-if not exist "abseil-cpp-%ABSEIL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\%ABSEIL_VERSION%.tar.gz" || goto end
+if not exist "abseil-cpp-%ABSEIL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\abseil-cpp-%ABSEIL_VERSION%.tar.gz" || goto end
 cd "abseil-cpp-%ABSEIL_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DABSL_BUILD_TESTING=OFF || goto end

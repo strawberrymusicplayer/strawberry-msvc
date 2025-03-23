@@ -56,7 +56,7 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v%GIT_VER
 https://archives.boost.io/release/1.87.0/source/boost_%BOOST_VERSION_UNDERSCORE%.tar.gz
 https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-%PKGCONF_VERSION%.tar.gz
-https://github.com/microsoft/mimalloc/archive/refs/tags/v%MIMALLOC_VERSION%.tar.gz
+https://github.com/microsoft/mimalloc/archive/refs/tags/v%MIMALLOC_VERSION%/mimalloc-%MIMALLOC_VERSION%.tar.gz
 https://zlib.net/zlib-%ZLIB_VERSION%.tar.gz
 https://github.com/openssl/openssl/releases/download/openssl-%OPENSSL_VERSION%/openssl-%OPENSSL_VERSION%.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/%GNUTLS_VERSION%/libgnutls_%GNUTLS_VERSION%_msvc17.zip
@@ -65,7 +65,7 @@ https://downloads.sourceforge.net/project/libjpeg-turbo/%LIBJPEG_VERSION%/libjpe
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-%PCRE2_VERSION%/pcre2-%PCRE2_VERSION%.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-%BZIP2_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/lzmautils/xz-%XZ_VERSION%.tar.gz
-https://github.com/google/brotli/archive/refs/tags/v%BROTLI_VERSION%.tar.gz
+https://github.com/google/brotli/archive/refs/tags/v%BROTLI_VERSION%/brotli-%BROTLI_VERSION%.tar.gz
 https://www.cairographics.org/releases/pixman-%PIXMAN_VERSION%.tar.gz
 https://gitlab.gnome.org/GNOME/libxml2/-/archive/v%LIBXML2_VERSION%/libxml2-v%LIBXML2_VERSION%.tar.bz2
 https://github.com/nghttp2/nghttp2/releases/download/v%NGHTTP2_VERSION%/nghttp2-%NGHTTP2_VERSION%.tar.bz2
@@ -79,16 +79,16 @@ https://ftp.osuosl.org/pub/xiph/releases/opus/opusfile-%OPUSFILE_VERSION%.tar.gz
 https://gitlab.xiph.org/xiph/speex/-/archive/Speex-%SPEEX_VERSION%/speex-Speex-%SPEEX_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/mpg123/mpg123/%MPG123_VERSION%/mpg123-%MPG123_VERSION%.tar.bz2
 https://downloads.sourceforge.net/project/lame/lame/%LAME_VERSION%/lame-%LAME_VERSION%.tar.gz
-https://github.com/nemtrif/utfcpp/archive/refs/tags/v%UTFCPP_VERSION%.tar.gz
+https://github.com/nemtrif/utfcpp/archive/refs/tags/v%UTFCPP_VERSION%/utfcpp-%UTFCPP_VERSION%.tar.gz
 https://taglib.org/releases/taglib-%TAGLIB_VERSION%.tar.gz
-https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%.tar.gz
+https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%/dlfcn-win32-%DLFCN_VERSION%.tar.gz
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
 https://download.gnome.org/sources/glib/2.84/glib-%GLIB_VERSION%.tar.xz
 https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
-https://github.com/libproxy/libproxy/archive/refs/tags/%LIBPROXY_VERSION%.tar.gz
+https://github.com/libproxy/libproxy/archive/refs/tags/%LIBPROXY_VERSION%/libproxy-%LIBPROXY_VERSION%.tar.gz
 https://download.gnome.org/sources/libsoup/3.6/libsoup-%LIBSOUP_VERSION%.tar.xz
 https://gstreamer.freedesktop.org/src/orc/orc-%ORC_VERSION%.tar.xz
 https://files.musepack.net/source/musepack_src_r%MUSEPACK_VERSION%.tar.gz
@@ -97,7 +97,7 @@ https://github.com/knik0/faad2/tarball/%FAAD2_VERSION%/faad2-%FAAD2_VERSION%.tar
 https://github.com/knik0/faac/archive/refs/tags/faac-%FAAC_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-%FDK_AAC_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/bs2b/libbs2b/%LIBBS2B_VERSION%/libbs2b-%LIBBS2B_VERSION%.tar.bz2
-https://github.com/jiixyj/libebur128/archive/refs/tags/v%LIBEBUR128_VERSION%.tar.gz
+https://github.com/jiixyj/libebur128/archive/refs/tags/v%LIBEBUR128_VERSION%/libebur128-%LIBEBUR128_VERSION%.tar.gz
 https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-%GSTREAMER_VERSION%.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-%GSTREAMER_VERSION%.tar.xz
 https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-%GSTREAMER_VERSION%.tar.xz
@@ -118,7 +118,8 @@ https://download.qt.io/official_releases/qt/6.8/%QT_VERSION%/submodules/qtgrpc-e
 https://bitbucket.org/mpyne/game-music-emu/downloads/game-music-emu-%LIBGME_VERSION%.tar.gz
 https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
 https://github.com/sparsehash/sparsehash/archive/refs/tags/sparsehash-%SPARSEHASH_VERSION%.tar.gz
-https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%.tar.gz
+https://github.com/Tencent/rapidjson/archive/refs/tags/v%RAPIDJSON_VERSION%/rapidjson-%RAPIDJSON_VERSION%.tar.gz
+https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%/abseil-cpp-%ABSEIL_VERSION%.tar.gz
 https://github.com/KDAB/KDSingleApplication/releases/download/v%KDSINGLEAPPLICATION_VERSION%/kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz
 https://github.com/curl/curl/releases/download/curl-%CURL_VERSION_UNDERSCORE%/curl-%CURL_VERSION%.tar.gz
 https://github.com/mlocati/gettext-iconv-windows/releases/download/v%GETTEXT_VERSION%-v1.17/gettext%GETTEXT_VERSION%-iconv1.17-static-64.zip
@@ -160,8 +161,6 @@ https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependen
     curl -f -O -L -k %%x
   )
 )
-
-curl -f -L -k https://github.com/Tencent/rapidjson/archive/refs/tags/v%RAPIDJSON_VERSION%.tar.gz -o rapidjson-%RAPIDJSON_VERSION%.tar.gz
 
 @for %%x in (
 https://code.qt.io/qt/qtbase
