@@ -1705,8 +1705,15 @@ xcopy /s /y "src\windows\google\sparsehash\sparseconfig.h" "%PREFIX_PATH%\includ
 @echo Building rapidjson
 
 cd "%BUILD_PATH%" || goto end
-if not exist "rapidjson-%RAPIDJSON_VERSION%" tar -xvf "%DOWNLOADS_PATH%\rapidjson-%RAPIDJSON_VERSION%.tar.gz" || goto end
-cd "rapidjson-%RAPIDJSON_VERSION%" || goto end
+@rem if not exist "rapidjson-%RAPIDJSON_VERSION%" tar -xvf "%DOWNLOADS_PATH%\rapidjson-%RAPIDJSON_VERSION%.tar.gz" || goto end
+@rem cd "rapidjson-%RAPIDJSON_VERSION%" || goto end
+if not exist "rapidjson" @(
+  mkdir "rapidjson" || goto end
+  cd "rapidjson" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\rapidjson" . || goto end
+  cd ..
+ ) || goto end
+cd "rapidjson" || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
 cd build || goto end
 cmake --build . || goto end
