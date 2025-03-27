@@ -232,7 +232,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libsparsehash.pc" goto sparsehash
-@if not exist "%PREFIX_PATH%\cmake\RapidJSONConfig.cmake" goto rapidjson
+@if not exist "%PREFIX_PATH%\lib\cmake\RapidJSON\RapidJSONConfig.cmake" goto rapidjson
 @if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtobuf.cmake" goto qtgrpc
 @if not exist "%PREFIX_PATH%\lib\cmake\qtsparkle-qt6\qtsparkle-qt6Config.cmake" goto qtsparkle
 @if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
@@ -1714,7 +1714,7 @@ if not exist "rapidjson" @(
   cd ..
  ) || goto end
 cd "rapidjson" || goto end
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DBUILD_TESTING=OFF -DRAPIDJSON_BUILD_TESTS=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_DOC=OFF -DCMAKE_INSTALL_DIR="%PREFIX_PATH_FORWARD%\lib\cmake\RapidJSON" || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
