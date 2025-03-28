@@ -1277,8 +1277,8 @@ goto continue
 @echo Building libgme
 
 cd "%BUILD_PATH%" || goto end
-if not exist "game-music-emu-%LIBGME_VERSION%" tar -xf "%DOWNLOADS_PATH%/game-music-emu-%LIBGME_VERSION%.tar.gz" || goto end
-cd game-music-emu-%LIBGME_VERSION% || goto end
+if not exist "libgme-%LIBGME_VERSION%" tar -xf "%DOWNLOADS_PATH%/libgme-%LIBGME_VERSION%-src.tar.gz" || goto end
+cd libgme-%LIBGME_VERSION% || goto end
 patch -p1 -N < "%DOWNLOADS_PATH%\libgme-pkgconf.patch"
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 || goto end
