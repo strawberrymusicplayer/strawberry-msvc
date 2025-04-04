@@ -233,7 +233,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libsparsehash.pc" goto sparsehash
 @if not exist "%PREFIX_PATH%\lib\cmake\RapidJSON\RapidJSONConfig.cmake" goto rapidjson
-@if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtobuf.cmake" goto qtgrpc
+@rem @if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtobuf.cmake" goto qtgrpc
 @if not exist "%PREFIX_PATH%\lib\cmake\qtsparkle-qt6\qtsparkle-qt6Config.cmake" goto qtsparkle
 @if not exist "%PREFIX_PATH%\lib\kdsingleapplication-qt6.lib" goto kdsingleapplication
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\glew.pc" goto glew
