@@ -226,7 +226,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc" goto gst-plugins-bad
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstasf.lib" goto gst-plugins-ugly
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstlibav.lib" goto gst-libav
-@if not exist "%PREFIX_PATH%\lib\pkgconfig\gstspotify.pc" goto gst-plugins-rs
+@rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstspotify.pc" goto gst-plugins-rs
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
@@ -2146,7 +2146,7 @@ copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavenc.dll" ".\gstreamer-plugins\" |
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavpack.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstwavparse.dll" ".\gstreamer-plugins\" || goto end
 copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstxingmux.dll" ".\gstreamer-plugins\" || goto end
-copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstspotify.dll" ".\gstreamer-plugins\" || goto end
+@rem copy /y "%PREFIX_PATH%\lib\gstreamer-1.0\gstspotify.dll" ".\gstreamer-plugins\" || goto end
 
 copy /y "..\COPYING" . || goto end
 copy /y "..\dist\windows\*.nsh" . || goto end
