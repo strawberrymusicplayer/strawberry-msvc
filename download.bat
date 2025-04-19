@@ -61,7 +61,7 @@ https://zlib.net/zlib-%ZLIB_VERSION%.tar.gz
 https://github.com/openssl/openssl/releases/download/openssl-%OPENSSL_VERSION%/openssl-%OPENSSL_VERSION%.tar.gz
 https://github.com/ShiftMediaProject/gnutls/releases/download/%GNUTLS_VERSION%/libgnutls_%GNUTLS_VERSION%_msvc17.zip
 https://downloads.sourceforge.net/project/libpng/libpng16/%LIBPNG_VERSION%/libpng-%LIBPNG_VERSION%.tar.gz
-https://downloads.sourceforge.net/project/libjpeg-turbo/%LIBJPEG_VERSION%/libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz
+https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/%LIBJPEG_VERSION%/libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz
 https://github.com/PhilipHazel/pcre2/releases/download/pcre2-%PCRE2_VERSION%/pcre2-%PCRE2_VERSION%.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-%BZIP2_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/lzmautils/xz-%XZ_VERSION%.tar.gz
