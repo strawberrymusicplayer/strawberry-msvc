@@ -11,6 +11,8 @@
 @if /I "%BUILD_TYPE%" == "release" set CMAKE_BUILD_TYPE=Release
 @if /I "%BUILD_TYPE%" == "release" set MESON_BUILD_TYPE=release
 
+@if /I "%BUILD_TYPE%" == "debug" set LIB_POSTFIX=d
+
 @set DOWNLOADS_PATH=c:\data\projects\strawberry\msvc_\downloads
 @set BUILD_PATH=c:\data\projects\strawberry\msvc_\build_%BUILD_TYPE%
 @set PREFIX_PATH=c:\strawberry_msvc_x86_64_%BUILD_TYPE%
@@ -334,6 +336,9 @@ cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
+
+copy "%PREFIX_PATH%\share\pkgconfig\zlib.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
+sed -i "s/\-lz/\-lzlib%LIB_POSTFIX%/g" "%PREFIX_PATH%\lib\pkgconfig\zlib.pc" || goto end
 
 @if "%BUILD_TYPE%" == "release" copy /y "%PREFIX_PATH%\lib\zlib.lib" "%PREFIX_PATH%\lib\z.lib" || goto end
 @if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\zlibd.lib" "%PREFIX_PATH%\lib\z.lib" || goto end
@@ -867,6 +872,8 @@ move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || got
 
 @echo Building libsoup
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
+
 cd "%BUILD_PATH%" || goto end
 if not exist "libsoup-%LIBSOUP_VERSION%" 7z x "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" -so | 7z x -aoa -si"libsoup-%LIBSOUP_VERSION%.tar" || goto end
 @rem if not exist "libsoup-%LIBSOUP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" || goto end
@@ -876,12 +883,16 @@ cd build || goto end
 ninja || goto end
 ninja install || goto end
 
+@set CFLAGS=
+
 @goto continue
 
 
 :glib-networking
 
 @echo Building glib-networking
+
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
 
 cd "%BUILD_PATH%" || goto end
 if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-networking-%GLIB_NETWORKING_VERSION%.tar" || goto end
@@ -891,6 +902,8 @@ if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --
 cd build || goto end
 ninja || goto end
 ninja install || goto end
+
+@set CFLAGS=
 
 @goto continue
 
@@ -1528,6 +1541,8 @@ ninja install || goto end
 
 @echo Building gst-plugins-good
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
+
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
@@ -1547,6 +1562,8 @@ ninja install || goto end
 
 @rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
 @rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
+
+@set CFLAGS=
 
 @goto continue
 
@@ -1588,6 +1605,8 @@ ninja install || goto end
 
 @echo Building gst-plugins-ugly
 
+@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
+
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
@@ -1607,6 +1626,8 @@ ninja install || goto end
 
 @rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
 @rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
+
+@set CFLAGS=
 
 @goto continue
 
