@@ -332,7 +332,7 @@ cd "%BUILD_PATH%" || goto end
 if not exist "zlib-%ZLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\zlib-%ZLIB_VERSION%.tar.gz" || goto end
 cd "zlib-%ZLIB_VERSION%" || goto end
 if not exist build mkdir build
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
@@ -342,6 +342,8 @@ sed -i "s/\-lz/\-lzlib%LIB_POSTFIX%/g" "%PREFIX_PATH%\lib\pkgconfig\zlib.pc" || 
 
 @if "%BUILD_TYPE%" == "release" copy /y "%PREFIX_PATH%\lib\zlib.lib" "%PREFIX_PATH%\lib\z.lib" || goto end
 @if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\zlibd.lib" "%PREFIX_PATH%\lib\z.lib" || goto end
+
+del %PREFIX_PATH%\lib\zlibstatic*.lib
 
 @goto continue
 
