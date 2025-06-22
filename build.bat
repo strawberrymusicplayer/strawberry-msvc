@@ -169,7 +169,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
 @if not exist "%PREFIX_PATH%\lib\getopt.lib" goto getopt-win
-@if not exist "%PREFIX_PATH%\lib\zlib*.lib" goto zlib
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\zlib.pc" goto zlib
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\openssl.pc" goto openssl
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc" goto gnutls
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libpng.pc" goto libpng
