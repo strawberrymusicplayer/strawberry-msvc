@@ -222,6 +222,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libebur128.pc" goto libebur128
 @if not exist "%PREFIX_PATH%\lib\avutil.lib" goto ffmpeg
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libchromaprint.pc" goto chromaprint
+@if not exist "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc" goto libcdio
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-1.0.pc" goto gstreamer
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\gstreamer-plugins-base-1.0.pc" goto gst-plugins-base
 @if not exist "%PREFIX_PATH%\lib\gstreamer-1.0\gstdirectsound.lib" goto gst-plugins-good
@@ -406,14 +407,14 @@ copy %PREFIX_PATH%\lib\libcrypto.lib %PREFIX_PATH%\lib\crypto.lib
 
 @echo Installing gnutls
 
-cd "%BUILD_PATH%" || goto end
-if not exist gnutls mkdir gnutls || goto end
-cd gnutls || goto end
-7z x -aoa "%DOWNLOADS_PATH%\libgnutls_%GNUTLS_VERSION%_msvc17.zip" || goto end
-xcopy /s /y "bin\x64\*.*" "%PREFIX_PATH%\bin\" || goto end
-xcopy /s /y "lib\x64\gnutls.*" "%PREFIX_PATH%\lib\" || goto end
-if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
-xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
+@rem cd "%BUILD_PATH%" || goto end
+@rem if not exist gnutls mkdir gnutls || goto end
+@rem cd gnutls || goto end
+@rem 7z x -aoa "%DOWNLOADS_PATH%\libgnutls_%GNUTLS_VERSION%_msvc17.zip" || goto end
+@rem xcopy /s /y "bin\x64\*.*" "%PREFIX_PATH%\bin\" || goto end
+@rem xcopy /s /y "lib\x64\gnutls.*" "%PREFIX_PATH%\lib\" || goto end
+@rem if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
+@rem xcopy /s /y "include\gnutls\*.h" "%PREFIX_PATH%\include\gnutls\" || goto end
 
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
@@ -1477,6 +1478,25 @@ cmake --install . || goto end
 @goto continue
 
 
+:libcdio
+
+cd "%BUILD_PATH%" || goto end
+
+@echo Building libcdio
+
+@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+@echo.>> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+@echo Name: libcdio>> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+@echo Description: libcdio>> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+@echo Version: 2.2.0>> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+@echo Libs: -L${libdir} -lcdio>> "%PREFIX_PATH%\lib\pkgconfig\libcdio.pc"
+
+@goto continue
+
+
 :gstreamer
 
 @echo Building GStreamer
@@ -1622,7 +1642,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-ugly-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dnls=disabled -Dorc=enabled -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dasfdemux=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dnls=disabled -Dorc=enabled -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dasfdemux=enabled -Dcdio=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
