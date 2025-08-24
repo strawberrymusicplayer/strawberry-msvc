@@ -315,7 +315,7 @@ if not exist "getopt-win" @(
 ) || goto end
 cd "getopt-win" || goto end
 if not exist build mkdir build
-cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DBUILD_TESTING=OFF || goto end
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
