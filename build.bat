@@ -307,13 +307,8 @@ cmake --install . || goto end
 
 cd "%BUILD_PATH%" || goto end
 
-if not exist "getopt-win" @(
-  mkdir getopt-win || goto end
-  cd getopt-win || goto end
-  xcopy /s /y /h "%DOWNLOADS_PATH%\getopt-win" . || goto end
-  cd ..
-) || goto end
-cd "getopt-win" || goto end
+if not exist "getopt-win-%GETOPT_WIN_VERSION%" tar -xvf %DOWNLOADS_PATH%\getopt-win-%GETOPT_WIN_VERSION%.tar.gz || goto end
+cd "getopt-win-%GETOPT_WIN_VERSION%" || goto end
 if not exist build mkdir build
 cmake --log-level="DEBUG" -S . -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_SHARED_LIB=ON -DBUILD_STATIC_LIBS=OFF -DBUILD_STATIC_LIB=OFF -DBUILD_TESTING=OFF || goto end
 cd build || goto end
