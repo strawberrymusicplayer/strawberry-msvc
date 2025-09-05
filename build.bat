@@ -467,7 +467,7 @@ cmake --install . || goto end
 @echo Building pcre2
 
 cd "%BUILD_PATH%" || goto end
-if not exist "pcre2-%PCRE2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pcre2-%PCRE2_VERSION%.tar.bz2" || goto end
+if not exist "pcre2-%PCRE2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pcre2-%PCRE2_VERSION%.tar.gz" || goto end
 cd "pcre2-%PCRE2_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_PCRE2_8=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_SUPPORT_UNICODE=ON || goto end
@@ -623,7 +623,7 @@ ninja install || goto end
 @echo Building expat
 
 cd "%BUILD_PATH%" || goto end
-if not exist "expat-%EXPAT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\expat-%EXPAT_VERSION%.tar.bz2" || goto end
+if not exist "expat-%EXPAT_VERSION%" tar -xvf "%DOWNLOADS_PATH%\expat-%EXPAT_VERSION%.tar.gz" || goto end
 cd "expat-%EXPAT_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DEXPAT_SHARED_LIBS=ON -DEXPAT_BUILD_DOCS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_FUZZERS=OFF -DEXPAT_BUILD_TESTS=OFF -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_PKGCONFIG=ON || goto end
@@ -660,7 +660,7 @@ call .\bootstrap.bat || goto end
 @echo Building libxml2
 
 cd "%BUILD_PATH%" || goto end
-if not exist "libxml2-v%LIBXML2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libxml2-v%LIBXML2_VERSION%.tar.bz2"
+if not exist "libxml2-v%LIBXML2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libxml2-v%LIBXML2_VERSION%.tar.gz"
 cd "libxml2-v%LIBXML2_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DLIBXML2_WITH_PYTHON=OFF -DLIBXML2_WITH_ZLIB=ON -DLIBXML2_WITH_LZMA=ON -DLIBXML2_WITH_ICONV=ON -DLIBXML2_WITH_ICU=ON -DICU_ROOT="%PREFIX_PATH_FORWARD%" || goto end
@@ -677,7 +677,7 @@ cmake --install . || goto end
 @echo Building nghttp2
 
 cd "%BUILD_PATH%" || goto end
-if not exist "nghttp2-%NGHTTP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\nghttp2-%NGHTTP2_VERSION%.tar.bz2" || goto end
+if not exist "nghttp2-%NGHTTP2_VERSION%" tar -xvf "%DOWNLOADS_PATH%\nghttp2-%NGHTTP2_VERSION%.tar.gz" || goto end
 cd "nghttp2-%NGHTTP2_VERSION%" || goto end
 if not exist build mkdir build || goto end
 cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF || goto end

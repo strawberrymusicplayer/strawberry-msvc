@@ -62,13 +62,13 @@ https://github.com/openssl/openssl/releases/download/openssl-%OPENSSL_VERSION%/o
 https://github.com/ShiftMediaProject/gnutls/releases/download/%GNUTLS_VERSION%/libgnutls_%GNUTLS_VERSION%_msvc17.zip
 https://downloads.sourceforge.net/project/libpng/libpng16/%LIBPNG_VERSION%/libpng-%LIBPNG_VERSION%.tar.gz
 https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/%LIBJPEG_VERSION%/libjpeg-turbo-%LIBJPEG_VERSION%.tar.gz
-https://github.com/PhilipHazel/pcre2/releases/download/pcre2-%PCRE2_VERSION%/pcre2-%PCRE2_VERSION%.tar.bz2
+https://github.com/PhilipHazel/pcre2/releases/download/pcre2-%PCRE2_VERSION%/pcre2-%PCRE2_VERSION%.tar.gz
 https://sourceware.org/pub/bzip2/bzip2-%BZIP2_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/lzmautils/xz-%XZ_VERSION%.tar.gz
 https://github.com/google/brotli/archive/refs/tags/v%BROTLI_VERSION%/brotli-%BROTLI_VERSION%.tar.gz
 https://www.cairographics.org/releases/pixman-%PIXMAN_VERSION%.tar.gz
-https://gitlab.gnome.org/GNOME/libxml2/-/archive/v%LIBXML2_VERSION%/libxml2-v%LIBXML2_VERSION%.tar.bz2
-https://github.com/nghttp2/nghttp2/releases/download/v%NGHTTP2_VERSION%/nghttp2-%NGHTTP2_VERSION%.tar.bz2
+https://gitlab.gnome.org/GNOME/libxml2/-/archive/v%LIBXML2_VERSION%/libxml2-v%LIBXML2_VERSION%.tar.gz
+https://github.com/nghttp2/nghttp2/releases/download/v%NGHTTP2_VERSION%/nghttp2-%NGHTTP2_VERSION%.tar.gz
 https://sqlite.org/2025/sqlite-autoconf-%SQLITE_VERSION%.tar.gz
 https://downloads.xiph.org/releases/ogg/libogg-%LIBOGG_VERSION%.tar.gz
 https://downloads.xiph.org/releases/vorbis/libvorbis-%LIBVORBIS_VERSION%.tar.gz
@@ -107,7 +107,7 @@ https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-%GSTREAMER_VERSION%.ta
 https://github.com/protocolbuffers/protobuf/releases/download/v%PROTOBUF_VERSION%/protobuf-%PROTOBUF_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/glew/glew/%GLEW_VERSION%/glew-%GLEW_VERSION%.tgz
 https://github.com/projectM-visualizer/projectm/releases/download/v%LIBPROJECTM_VERSION%/libprojectm-%LIBPROJECTM_VERSION%.tar.gz
-https://github.com/libexpat/libexpat/releases/download/R_%EXPAT_VERSION_UNDERSCORE%/expat-%EXPAT_VERSION%.tar.bz2
+https://github.com/libexpat/libexpat/releases/download/R_%EXPAT_VERSION_UNDERSCORE%/expat-%EXPAT_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/freetype/freetype2/%FREETYPE_VERSION%/freetype-%FREETYPE_VERSION%.tar.gz
 https://github.com/unicode-org/icu/releases/download/release-%ICU4C_VERSION_DASH%/icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip
 https://cairographics.org/releases/cairo-%CAIRO_VERSION%.tar.xz
