@@ -177,11 +177,11 @@ https://github.com/strawberrymusicplayer/strawberry
   if exist %%~nxx @(
     echo Updating repository %%x
     cd %%~nxx
-	git pull
+	git pull --rebase
 	cd ..
   ) else (
     echo Cloning repository %%x
-    git clone %%x
+    git clone --recurse-submodules %%x
   )
 )
 
