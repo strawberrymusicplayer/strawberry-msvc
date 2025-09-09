@@ -85,7 +85,7 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%/dl
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
-https://download.gnome.org/sources/glib/2.85/glib-%GLIB_VERSION%.tar.xz
+https://download.gnome.org/sources/glib/2.86/glib-%GLIB_VERSION%.tar.xz
 https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
 https://github.com/libproxy/libproxy/archive/refs/tags/%LIBPROXY_VERSION%/libproxy-%LIBPROXY_VERSION%.tar.gz
