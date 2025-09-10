@@ -1793,13 +1793,8 @@ ninja install || goto end
 
 cd "%BUILD_PATH%" || goto end
 
-if not exist "gst-plugins-rs" git clone --depth 1 --recurse-submodules https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs || goto end
+if not exist "gst-plugins-rs" git clone --recurse-submodules --depth 1 -b "%GSTREAMER_GST_PLUGINS_RS_VERSION%" https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs || goto end
 cd "gst-plugins-rs" || goto end
-git reset --hard HEAD || goto end
-git fetch || goto end
-@rem git checkout "%GSTREAMER_GST_PLUGINS_RS_VERSION%" || goto end
-git checkout main || goto end
-git pull --rebase origin main || goto end
 
 if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dspotify=enabled build || goto end
 cd build || goto end
