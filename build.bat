@@ -458,13 +458,15 @@ if not exist "nettle" @(
 
 cd nettle\SMP || goto end
 
-msbuild libnettle.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
+msbuild libnettle.sln -p:Configuration=%BUILD_TYPE%DLL || goto end
+
+@rem msbuild libnettle.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
 xcopy /s /y ..\..\..\msvc\lib\x64\nettle%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y ..\..\..\msvc\bin\x64\nettle%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
 xcopy /s /y ..\..\..\msvc\include\nettle\*.h "%PREFIX_PATH%\include\nettle\" || goto end
 
-msbuild libhogweed.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
+@rem msbuild libhogweed.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
 xcopy /s /y ..\..\..\msvc\lib\x64\hogweed%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y ..\..\..\msvc\bin\x64\hogweed%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
