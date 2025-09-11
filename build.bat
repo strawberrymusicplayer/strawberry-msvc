@@ -422,8 +422,8 @@ cd gmp\SMP || goto end
 
 msbuild libgmp.sln -p:Configuration=%BUILD_TYPE%DLL || goto end
 
-xcopy /s /y ..\..\..\msvc\lib\x64\gmp*.lib "%PREFIX_PATH%\lib\" || goto end
-xcopy /s /y ..\..\..\msvc\bin\x64\gmp*.dll "%PREFIX_PATH%\bin\" || goto end
+xcopy /s /y ..\..\..\msvc\lib\x64\gmp%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y ..\..\..\msvc\bin\x64\gmp%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 xcopy /s /y ..\..\..\msvc\include\gmp*.h "%PREFIX_PATH%\include\" || goto end
 
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\gmp.pc"
@@ -459,14 +459,14 @@ if not exist "nettle" @(
 cd nettle\SMP || goto end
 
 msbuild libnettle.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
-xcopy /s /y ..\..\..\msvc\lib\x64\nettle*.lib "%PREFIX_PATH%\lib\" || goto end
-xcopy /s /y ..\..\..\msvc\bin\x64\nettle*.dll "%PREFIX_PATH%\bin\" || goto end
+xcopy /s /y ..\..\..\msvc\lib\x64\nettle%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y ..\..\..\msvc\bin\x64\nettle%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
 xcopy /s /y ..\..\..\msvc\include\nettle\*.h "%PREFIX_PATH%\include\nettle\" || goto end
 
 msbuild libhogweed.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
-xcopy /s /y ..\..\..\msvc\lib\x64\hogweed*.lib "%PREFIX_PATH%\lib\" || goto end
-xcopy /s /y ..\..\..\msvc\bin\x64\hogweed*.dll "%PREFIX_PATH%\bin\" || goto end
+xcopy /s /y ..\..\..\msvc\lib\x64\hogweed%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y ..\..\..\msvc\bin\x64\hogweed%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
 xcopy /s /y ..\..\..\msvc\include\nettle\*.h "%PREFIX_PATH%\include\nettle\" || goto end
 
@@ -527,8 +527,8 @@ echo ^</Project^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib
 
 msbuild libgnutls.sln -p:Configuration=%CMAKE_BUILD_TYPE%DLL -p:ForceImportBeforeCppTargets=%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props || goto end
 
-xcopy /s /y ..\..\..\msvc\lib\x64\gnutls*.lib "%PREFIX_PATH%\lib\" || goto end
-xcopy /s /y ..\..\..\msvc\bin\x64\gnutls*.dll "%PREFIX_PATH%\bin\" || goto end
+xcopy /s /y ..\..\..\msvc\lib\x64\gnutls%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
+xcopy /s /y ..\..\..\msvc\bin\x64\gnutls%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
 xcopy /s /y ..\..\..\msvc\include\gnutls\*.h "%PREFIX_PATH%\include\gnutls\" || goto end
 
