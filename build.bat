@@ -534,6 +534,15 @@ xcopy /s /y ..\..\..\msvc\bin\x64\gnutls%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" |
 if not exist "%PREFIX_PATH%\include\gnutls" mkdir "%PREFIX_PATH%\include\gnutls" || goto end
 xcopy /s /y ..\..\..\msvc\include\gnutls\*.h "%PREFIX_PATH%\include\gnutls\" || goto end
 
+@rem FIXME: GNUTLS built with shared dependencies currently crashes, workaround using build with static dependencies in the meantime
+call project_get_dependencies.bat
+msbuild libgnutls_deps.sln -p:Configuration=ReleaseDLLStaticDeps || goto end
+msbuild libgnutls.sln -p:Configuration=ReleaseDLLStaticDeps || goto end
+del /q /f "%PREFIX_PATH%\lib\gnutls%LIB_POSTFIX%.lib" >NUL
+del /q /f "%PREFIX_PATH%\bin\gnutls%LIB_POSTFIX%.dll" >NUL
+copy /y ..\..\..\msvc\lib\x64\gnutls.lib "%PREFIX_PATH%\lib\" || goto end
+copy /y ..\..\..\msvc\bin\x64\gnutls.dll "%PREFIX_PATH%\bin\" || goto end
+
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo exec_prefix=%PREFIX_PATH_FORWARD%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo libdir=%PREFIX_PATH_FORWARD%/lib>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
@@ -543,7 +552,8 @@ xcopy /s /y ..\..\..\msvc\include\gnutls\*.h "%PREFIX_PATH%\include\gnutls\" || 
 @echo Description: gnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo URL: https://www.gnutls.org/>> %PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Version: %GNUTLS_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
-@echo Libs: -L${libdir} -lgnutls%LIB_POSTFIX%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@rem @echo Libs: -L${libdir} -lgnutls%LIB_POSTFIX%>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
+@echo Libs: -L${libdir} -lgnutls>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 @echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\gnutls.pc"
 
 @goto continue
