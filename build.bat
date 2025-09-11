@@ -521,7 +521,6 @@ echo       ^<AdditionalIncludeDirectories^>%PREFIX_PATH%\include;%%(AdditionalIn
 echo     ^</ClCompile^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
 echo     ^<Link^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
 echo       ^<AdditionalLibraryDirectories^>%PREFIX_PATH%\lib;%%(AdditionalLibraryDirectories)^</AdditionalLibraryDirectories^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
-@rem echo       ^<AdditionalDependencies^>zlibd.lib;%%(AdditionalDependencies)^</AdditionalDependencies^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
 echo     ^</Link^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
 echo   ^</ItemDefinitionGroup^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
 echo ^</Project^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
