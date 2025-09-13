@@ -420,7 +420,7 @@ if not exist "gmp" @(
 
 cd gmp\SMP || goto end
 
-msbuild libgmp.sln -p:Configuration=%BUILD_TYPE%DLL || goto end
+msbuild libgmp.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
 
 xcopy /s /y ..\..\..\msvc\lib\x64\gmp%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y ..\..\..\msvc\bin\x64\gmp%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
@@ -458,15 +458,13 @@ if not exist "nettle" @(
 
 cd nettle\SMP || goto end
 
-msbuild libnettle.sln -p:Configuration=%BUILD_TYPE%DLL || goto end
-
-@rem msbuild libnettle.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
+msbuild libnettle.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
 xcopy /s /y ..\..\..\msvc\lib\x64\nettle%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y ..\..\..\msvc\bin\x64\nettle%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
 xcopy /s /y ..\..\..\msvc\include\nettle\*.h "%PREFIX_PATH%\include\nettle\" || goto end
 
-@rem msbuild libhogweed.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
+msbuild libhogweed.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
 xcopy /s /y ..\..\..\msvc\lib\x64\hogweed%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y ..\..\..\msvc\bin\x64\hogweed%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
@@ -536,8 +534,13 @@ xcopy /s /y ..\..\..\msvc\include\gnutls\*.h "%PREFIX_PATH%\include\gnutls\" || 
 
 @rem FIXME: GNUTLS built with shared dependencies currently crashes, workaround using build with static dependencies in the meantime
 call project_get_dependencies.bat
-msbuild libgnutls_deps.sln -p:Configuration=ReleaseDLLStaticDeps || goto end
-msbuild libgnutls.sln -p:Configuration=ReleaseDLLStaticDeps || goto end
+
+msbuild ..\..\gmp\SMP\libgmp.vcxproj -p:Configuration=Release || goto end
+msbuild ..\..\zlib\SMP\libzlib.vcxproj -p:Configuration=Release || goto end
+msbuild ..\..\nettle\SMP\libnettle.vcxproj -p:Configuration=Release || goto end
+msbuild ..\..\nettle\SMP\libhogweed.vcxproj -p:Configuration=Release || goto end
+msbuild libgnutls.vcxproj -p:Configuration=ReleaseDLLStaticDeps || goto end
+
 del /q /f "%PREFIX_PATH%\lib\gnutls%LIB_POSTFIX%.lib" >NUL
 del /q /f "%PREFIX_PATH%\bin\gnutls%LIB_POSTFIX%.dll" >NUL
 copy /y ..\..\..\msvc\lib\x64\gnutls.lib "%PREFIX_PATH%\lib\" || goto end
@@ -2147,7 +2150,7 @@ copy /y "%prefix_path%\bin\gio-2.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\glib-2.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gme.dll" || goto end
 copy /y "%prefix_path%\bin\gmodule-2.0-0.dll" || goto end
-copy /y "%prefix_path%\bin\gnutls%LIB_POSTFIX%.dll" || goto end
+copy /y "%prefix_path%\bin\gnutls.dll" || goto end
 copy /y "%prefix_path%\bin\gobject-2.0-0.dll" || goto end
 copy /y "%prefix_path%\bin\gst-discoverer-1.0.exe" || goto end
 copy /y "%prefix_path%\bin\gst-launch-1.0.exe" || goto end
@@ -2222,9 +2225,9 @@ copy /y "%prefix_path%\bin\zlib%LIB_POSTFIX%1.dll" || goto end
 copy /y "%prefix_path%\bin\kdsingleapplication*.dll" || goto end
 @rem copy /y "%prefix_path%\bin\utf8_validity.dll" || goto end
 copy /y "%prefix_path%\bin\getopt.dll" || goto end
-copy /y "%prefix_path%\bin\gmp%LIB_POSTFIX%.dll" || goto end
-copy /y "%prefix_path%\bin\nettle%LIB_POSTFIX%.dll" || goto end
-copy /y "%prefix_path%\bin\hogweed%LIB_POSTFIX%.dll" || goto end
+@rem copy /y "%prefix_path%\bin\gmp%LIB_POSTFIX%.dll" || goto end
+@rem copy /y "%prefix_path%\bin\nettle%LIB_POSTFIX%.dll" || goto end
+@rem copy /y "%prefix_path%\bin\hogweed%LIB_POSTFIX%.dll" || goto end
 
 copy /y "%PREFIX_PATH%\lib\gio\modules\*.dll" ".\gio-modules\" || goto end
 copy /y "%PREFIX_PATH%\plugins\platforms\qwindows*.dll" ".\platforms\" || goto end
