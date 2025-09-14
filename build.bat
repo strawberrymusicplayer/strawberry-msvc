@@ -285,7 +285,7 @@ cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYP
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-move "%PREFIX_PATH%\lib\mimalloc*.dll" "%PREFIX_PATH%\bin\" || goto end
+move "%PREFIX_PATH%\lib\mimalloc%LIB_POSTFIX%.dll" "%PREFIX_PATH%\bin\" || goto end
 
 @goto continue
 
@@ -341,8 +341,7 @@ cmake --install . || goto end
 copy "%PREFIX_PATH%\share\pkgconfig\zlib.pc" "%PREFIX_PATH%\lib\pkgconfig\" || goto end
 sed -i "s/\-lz/\-lzlib%LIB_POSTFIX%/g" "%PREFIX_PATH%\lib\pkgconfig\zlib.pc" || goto end
 
-@if "%BUILD_TYPE%" == "release" copy /y "%PREFIX_PATH%\lib\zlib.lib" "%PREFIX_PATH%\lib\z.lib" || goto end
-@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\zlibd.lib" "%PREFIX_PATH%\lib\z.lib" || goto end
+copy /y "%PREFIX_PATH%\lib\zlib%LIB_POSTFIX%.lib" "%PREFIX_PATH%\lib\z.lib" || goto end
 
 del %PREFIX_PATH%\lib\zlibstatic*.lib
 
@@ -705,8 +704,7 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 @echo Name: icu-uc>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
 @echo Description: International Components for Unicode: Common and Data libraries>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
 @echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
-@if "%BUILD_TYPE%" == "debug" @echo Libs: -L${libdir} -licuucd -licudt>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
-@if "%BUILD_TYPE%" == "release" @echo Libs: -L${libdir} -licuuc -licudt>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
+@echo Libs: -L${libdir} -licuuc%LIB_POSTFIX% -licudt>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
 @echo Libs.private: -lpthread -lm>> "%PREFIX_PATH%\lib\pkgconfig\icu-uc.pc"
 
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
@@ -717,8 +715,7 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 @echo Name: icu-i18n>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 @echo Description: International Components for Unicode: Stream and I/O Library>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 @echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
-@if "%BUILD_TYPE%" == "debug" @echo Libs: -licuind>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
-@if "%BUILD_TYPE%" == "release" @echo Libs: -licuin>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
+@echo Libs: -licuin%LIB_POSTFIX%>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 @echo Requires: icu-uc>> "%PREFIX_PATH%\lib\pkgconfig\icu-i18n.pc"
 
 @echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
@@ -729,8 +726,7 @@ copy /y "bin64\*.*" "%PREFIX_PATH%\bin\" || goto end
 @echo Name: icu-io>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 @echo Description: International Components for Unicode: Stream and I/O Library>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 @echo Version: %ICU4C_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
-@if "%BUILD_TYPE%" == "debug" @echo Libs: -licuiod>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
-@if "%BUILD_TYPE%" == "release" @echo Libs: -licuio>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
+@echo Libs: -licuio%LIB_POSTFIX%>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 @echo Requires: icu-i18n>> "%PREFIX_PATH%\lib\pkgconfig\icu-io.pc"
 
 @goto continue
