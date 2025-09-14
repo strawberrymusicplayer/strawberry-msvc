@@ -1050,7 +1050,7 @@ cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYP
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
+@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib" || goto end
 
 @goto continue
 
@@ -1105,7 +1105,7 @@ cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYP
 cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
-copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib"
+@if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib" || goto end
 
 @set CFLAGS=
 @set CXXFLAGS=
