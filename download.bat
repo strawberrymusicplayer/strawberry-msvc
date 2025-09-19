@@ -53,6 +53,7 @@ curl -O -L -k https://github.com/git-for-windows/git/releases/download/v%GIT_VER
 
 
 @for %%x in (
+https://github.com/ccache/ccache/releases/download/v%CCACHE_VERSION%/ccache-%CCACHE_VERSION%.tar.gz
 https://archives.boost.io/release/1.89.0/source/boost_%BOOST_VERSION_UNDERSCORE%.tar.gz
 https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
 https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-%PKGCONF_VERSION%.tar.gz

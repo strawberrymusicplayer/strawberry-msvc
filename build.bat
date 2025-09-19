@@ -170,6 +170,7 @@ goto continue
 :continue
 
 
+@rem @if not exist "%PREFIX_PATH%\bin\ccache.exe" goto ccache
 @if not exist "%PREFIX_PATH%\bin\yasm.exe" goto yasm
 @if not exist "%PREFIX_PATH%\bin\pkgconf.exe" goto pkgconf
 @rem @if not exist "%PREFIX_PATH%\lib\pkgconfig\mimalloc.pc" goto mimalloc
@@ -253,6 +254,22 @@ goto continue
 
 
 @goto end
+
+
+:ccache
+
+@echo Building ccache
+
+cd "%BUILD_PATH%" || goto end
+
+if not exist "ccache-%CCACHE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\ccache-%CCACHE_VERSION%.tar.gz" || goto end
+cd "ccache-%CCACHE_VERSION%" || goto end
+cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
 
 
 :pkgconf
