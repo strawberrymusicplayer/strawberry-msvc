@@ -123,6 +123,7 @@ https://github.com/Tencent/rapidjson/archive/refs/tags/v%RAPIDJSON_VERSION%/rapi
 https://github.com/abseil/abseil-cpp/archive/refs/tags/%ABSEIL_VERSION%/abseil-cpp-%ABSEIL_VERSION%.tar.gz
 https://github.com/KDAB/KDSingleApplication/releases/download/v%KDSINGLEAPPLICATION_VERSION%/kdsingleapplication-%KDSINGLEAPPLICATION_VERSION%.tar.gz
 https://github.com/ludvikjerabek/getopt-win/archive/refs/tags/v%GETOPT_WIN_VERSION%/getopt-win-%GETOPT_WIN_VERSION%.tar.gz
+https://github.com/trailofbits/pe-parse/archive/refs/tags/v%PEPARSE_VERSION%/pe-parse-%PEPARSE_VERSION%.tar.gz
 https://github.com/curl/curl/releases/download/curl-%CURL_VERSION_UNDERSCORE%/curl-%CURL_VERSION%.tar.gz
 https://github.com/mlocati/gettext-iconv-windows/releases/download/v%GETTEXT_VERSION%-v1.17/gettext%GETTEXT_VERSION%-iconv1.17-static-64.zip
 https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/Git-%GIT_VERSION%-64-bit.exe
@@ -177,6 +178,7 @@ https://github.com/Tencent/rapidjson
 https://github.com/ShiftMediaProject/gmp
 https://github.com/ShiftMediaProject/nettle
 https://github.com/ShiftMediaProject/gnutls
+https://github.com/gsauthof/pe-util
 https://github.com/strawberrymusicplayer/strawberry
 ) do @(
   if exist %%~nxx @(

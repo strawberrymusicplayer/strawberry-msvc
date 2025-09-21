@@ -250,6 +250,8 @@ goto continue
 @rem @if not exist "%PREFIX_PATH%\lib\cmake\projectM4\projectM4Config.cmake" goto libprojectm
 @if not exist "%PREFIX_PATH%\bin\gettext.exe" goto gettext
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc" goto tinysvcmdns
+@if not exist "%PREFIX_PATH%\lib\pe-parse.lib" goto peparse
+@if not exist "%PREFIX_PATH%\bin\peldd.exe" goto peutil
 @if not exist "%BUILD_PATH%\strawberry\build\strawberrysetup*.exe" goto strawberry
 
 
@@ -2115,6 +2117,44 @@ xcopy /y "..\*.h" "%PREFIX_PATH%\include\" || goto end
 @echo Version: 0.1>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
 @echo Libs: -L${libdir} -ltinysvcmdns>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
 @echo Cflags: -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\tinysvcmdns.pc"
+
+@goto continue
+
+
+:peparse
+
+@echo Building pe-parse
+
+cd "%BUILD_PATH%" || goto end
+if not exist "pe-parse-%PEPARSE_VERSION%" tar -xvf "%DOWNLOADS_PATH%\pe-parse-%PEPARSE_VERSION%.tar.gz" || goto end
+cd "pe-parse-%PEPARSE_VERSION%" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DBUILD_COMMAND_LINE_TOOLS=OFF || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
+
+@goto continue
+
+
+:peutil
+
+@echo Building pe-util
+
+cd "%BUILD_PATH%" || goto end
+
+if not exist "pe-util" @(
+  mkdir "pe-util" || goto end
+  cd "pe-util" || goto end
+  xcopy /s /y /h "%DOWNLOADS_PATH%\pe-util" . || goto end
+  cd ..
+ ) || goto end
+cd "pe-util" || goto end
+if not exist build mkdir build || goto end
+cmake --log-level="DEBUG" -S . -B build -G "%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE="%CMAKE_BUILD_TYPE%" -DCMAKE_INSTALL_PREFIX="%PREFIX_PATH_FORWARD%" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DBUILD_COMMAND_LINE_TOOLS=OFF || goto end
+cd build || goto end
+cmake --build . || goto end
+cmake --install . || goto end
 
 @goto continue
 
