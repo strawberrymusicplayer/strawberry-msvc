@@ -240,7 +240,7 @@ goto continue
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\absl_any.pc" goto abseil-cpp
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\protobuf.pc" goto protobuf
 @if not exist "%PREFIX_PATH%\bin\qt-configure-module.bat" goto qtbase
-@if not exist "%PREFIX_PATH%\bin\linguist.exe" goto qttools
+@if not exist "%PREFIX_PATH%\bin\lrelease.exe" goto qttools
 @if not exist "%PREFIX_PATH%\lib\pkgconfig\libsparsehash.pc" goto sparsehash
 @if not exist "%PREFIX_PATH%\lib\cmake\RapidJSON\RapidJSONConfig.cmake" goto rapidjson
 @rem @if not exist "%PREFIX_PATH%\lib\cmake\Qt6\FindWrapProtobuf.cmake" goto qtgrpc

@@ -113,9 +113,9 @@ https://downloads.sourceforge.net/project/freetype/freetype2/%FREETYPE_VERSION%/
 https://github.com/unicode-org/icu/releases/download/release-%ICU4C_VERSION_DASH%/icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip
 https://cairographics.org/releases/cairo-%CAIRO_VERSION%.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/%HARFBUZZ_VERSION%/harfbuzz-%HARFBUZZ_VERSION%.tar.xz
-https://download.qt.io/official_releases/qt/6.9/%QT_VERSION%/submodules/qtbase-everywhere-src-%QT_VERSION%.tar.xz
-https://download.qt.io/official_releases/qt/6.9/%QT_VERSION%/submodules/qttools-everywhere-src-%QT_VERSION%.tar.xz
-https://download.qt.io/official_releases/qt/6.9/%QT_VERSION%/submodules/qtgrpc-everywhere-src-%QT_VERSION%.tar.xz
+https://download.qt.io/official_releases/qt/6.10/%QT_VERSION%/submodules/qtbase-everywhere-src-%QT_VERSION%.tar.xz
+https://download.qt.io/official_releases/qt/6.10/%QT_VERSION%/submodules/qttools-everywhere-src-%QT_VERSION%.tar.xz
+https://download.qt.io/official_releases/qt/6.10/%QT_VERSION%/submodules/qtgrpc-everywhere-src-%QT_VERSION%.tar.xz
 https://github.com/libgme/game-music-emu/releases/download/%LIBGME_VERSION%/libgme-%LIBGME_VERSION%-src.tar.gz
 https://downloads.sourceforge.net/twolame/twolame-%TWOLAME_VERSION%.tar.gz
 https://github.com/sparsehash/sparsehash/archive/refs/tags/sparsehash-%SPARSEHASH_VERSION%.tar.gz
@@ -128,7 +128,7 @@ https://github.com/curl/curl/releases/download/curl-%CURL_VERSION_UNDERSCORE%/cu
 https://github.com/mlocati/gettext-iconv-windows/releases/download/v%GETTEXT_VERSION%-v1.17/gettext%GETTEXT_VERSION%-iconv1.17-static-64.zip
 https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/Git-%GIT_VERSION%-64-bit.exe
 https://github.com/Kitware/CMake/releases/download/v%CMAKE_VERSION%/cmake-%CMAKE_VERSION%-windows-x86_64.msi
-https://files.jkvinge.net/install/nasm-%NASM_VERSION%-installer-x64.exe
+https://www.nasm.us/pub/nasm/releasebuilds/%NASM_VERSION%/win64/nasm-%NASM_VERSION%-installer-x64.exe
 http://www.tortall.net/projects/yasm/releases/yasm-%YASM_VERSION%.tar.gz
 https://github.com/lexxmark/winflexbison/releases/download/v%WINFLEXBISON_VERSION%/win_flex_bison-%WINFLEXBISON_VERSION%.zip
 https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_%STRAWBERRY_PERL_VERSION_STRIPPED%_64bit_UCRT/strawberry-perl-%STRAWBERRY_PERL_VERSION%-64bit.msi
