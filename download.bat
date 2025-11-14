@@ -86,7 +86,7 @@ https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v%DLFCN_VERSION%/dl
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-debug.zip
 https://files.strawberrymusicplayer.org/fftw-%FFTW_VERSION%-x64-release.zip
 https://github.com/acoustid/chromaprint/releases/download/v%CHROMAPRINT_VERSION%/chromaprint-%CHROMAPRINT_VERSION%.tar.gz
-https://download.gnome.org/sources/glib/2.86/glib-%GLIB_VERSION%.tar.xz
+https://download.gnome.org/sources/glib/2.87/glib-%GLIB_VERSION%.tar.xz
 https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz
 https://github.com/rockdaboot/libpsl/releases/download/%LIBPSL_VERSION%/libpsl-%LIBPSL_VERSION%.tar.gz
 https://github.com/libproxy/libproxy/archive/refs/tags/%LIBPROXY_VERSION%/libproxy-%LIBPROXY_VERSION%.tar.gz
@@ -110,7 +110,7 @@ https://downloads.sourceforge.net/project/glew/glew/%GLEW_VERSION%/glew-%GLEW_VE
 https://github.com/projectM-visualizer/projectm/releases/download/v%LIBPROJECTM_VERSION%/libprojectm-%LIBPROJECTM_VERSION%.tar.gz
 https://github.com/libexpat/libexpat/releases/download/R_%EXPAT_VERSION_UNDERSCORE%/expat-%EXPAT_VERSION%.tar.gz
 https://downloads.sourceforge.net/project/freetype/freetype2/%FREETYPE_VERSION%/freetype-%FREETYPE_VERSION%.tar.gz
-https://github.com/unicode-org/icu/releases/download/release-%ICU4C_VERSION_DASH%/icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip
+https://github.com/unicode-org/icu/releases/download/release-%ICU4C_VERSION%/icu4c-%ICU4C_VERSION%-sources.tgz
 https://cairographics.org/releases/cairo-%CAIRO_VERSION%.tar.xz
 https://github.com/harfbuzz/harfbuzz/releases/download/%HARFBUZZ_VERSION%/harfbuzz-%HARFBUZZ_VERSION%.tar.xz
 https://download.qt.io/official_releases/qt/6.10/%QT_VERSION%/submodules/qtbase-everywhere-src-%QT_VERSION%.tar.xz

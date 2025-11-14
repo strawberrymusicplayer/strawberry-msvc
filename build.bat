@@ -705,7 +705,7 @@ copy /y "include\*.h" "%PREFIX_PATH%\include\" || goto end
 @echo Building icu4c
 
 cd "%BUILD_PATH%" || goto end
-if not exist "icu" 7z x "%DOWNLOADS_PATH%\icu4c-%ICU4C_VERSION_UNDERSCORE%-src.zip" || goto end
+if not exist "icu" tar -xvf "%DOWNLOADS_PATH%\icu4c-%ICU4C_VERSION%-sources.tgz" || goto end
 cd "icu\source\allinone" || goto end
 @rem start /w devenv.exe allinone.sln /upgrade
 msbuild allinone.sln /property:Configuration="%BUILD_TYPE%" /p:Platform="x64" /p:SkipUWP=true || goto end
