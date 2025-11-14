@@ -1,6 +1,6 @@
-# :hammer_and_wrench: Strawberry - Build with Visual Studio 2022
+# :hammer_and_wrench: Strawberry - Build with Visual Studio 2022/2026
 
-This guide uses Visual Studio 2022 to build Strawberry Music Player as well as required dependencies.
+This guide uses Visual Studio 2022/2026 to build Strawberry Music Player as well as required dependencies.
 
 These instructions are provided as-is, they are primarily intended for developers working on Strawberry on Windows.
 
@@ -11,7 +11,7 @@ Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary upd
 ### Requirements
 
 * [Git for Windows](https://gitforwindows.org/)
-* [Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
+* [Visual Studio 2022 or 2026](https://visualstudio.microsoft.com/vs/)
 * [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2022)
 * [CMake](https://cmake.org/)
 * [Meson](https://mesonbuild.com/)
@@ -33,7 +33,7 @@ Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary upd
 Download and install manually:
 - [Git](https://git-scm.com/downloads)
     - Default settings can be used
-- [Visual Studio 2022 Community](https://visualstudio.microsoft.com/vs/)
+- [Visual Studio 2022/2026 Community](https://visualstudio.microsoft.com/vs/)
     - Select `Desktop development with C++`
 
 ### Clone repositories and download tools/dependencies
@@ -98,7 +98,7 @@ Building with Meson 1.6.0 installation results in build issues
 [meson: error: unrecognized arguments:](https://github.com/strawberrymusicplayer/strawberry-msvc/issues/6).
 
 A temporary solution is to remove Meson via Windows Settings | `Apps or remove programs`.
-Then install Meson via Python PIP system wide. Start | `x64 Native Tools Command Prompt for VS 2022` and type:
+Then install Meson via Python PIP system wide. Start | `x64 Native Tools Command Prompt for VS 2026` and type:
 
 ```
 pip install meson
@@ -117,7 +117,7 @@ To use prebuilds, download the following `tar.xz` files from Github [strawberry-
 - Set one debug or release in `PATH` environment variable:
     - For debug: `C:\strawberry_msvc_x86_64_debug\bin`, or:
     - For release: `C:\strawberry_msvc_x86_64_release\bin`
-- Start | `x64 Native Tools Command Prompt for VS 2022`:
+- Start | `x64 Native Tools Command Prompt for VS 2026`:
 ```
 cd C:\data\projects\strawberry\strawberry-msvc
 ```
@@ -136,13 +136,13 @@ Strawberry and Windows installer executables are generated in:
 - For debug: `C:\data\projects\strawberry\msvc_\build_debug\strawberry\build\`
 - For release: `C:\data\projects\strawberry\msvc_\build_release\strawberry\build\`
 
-## Setting up Strawberry for development in Visual Studio 2022
+## Setting up Strawberry for development in Visual Studio 2022 or 2026
 
 Optional `Qt Visual Studio Tools` can be installed via the toolbar `Extensions | Manage Extensions` and search for `Qt Visual Studio Tools`. Then click `Install`.
 
 Debug build:
-- Make sure the path `C:\strawberry_msvc_x86_64_debug\bin` is added to the `PATH` environment variable before starting Visual Studio 2022.
-- Start | Visual Studio 2022
+- Make sure the path `C:\strawberry_msvc_x86_64_debug\bin` is added to the `PATH` environment variable before starting Visual Studio 2022 or 2026.
+- Start | Visual Studio 2022 or 2026
 - Open a local folder `C:\data\projects\strawberry\strawberry`
 - Toolbar Project | CMake Settings:
     - Select Configurations `x64-Debug`
@@ -151,8 +151,8 @@ Debug build:
 - Toolbar: Build | Build All
 
 Release build:
-- Make sure the path `C:\strawberry_msvc_x86_64_release\bin` is added to the `PATH` environment variable before starting Visual Studio 2022.
-- Start | Visual Studio 2022
+- Make sure the path `C:\strawberry_msvc_x86_64_release\bin` is added to the `PATH` environment variable before starting Visual Studio 2022 or 2026.
+- Start | Visual Studio 2022 or 2026
 - Open a local folder `C:\data\projects\strawberry\strawberry`
 - Toolbar Project | CMake Settings:
     - Create new `x64-Release`

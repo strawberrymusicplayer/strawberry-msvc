@@ -438,6 +438,7 @@ if not exist "gmp" @(
 
 cd gmp\SMP || goto end
 
+start /w devenv.exe libgmp.vcxproj /upgrade
 msbuild libgmp.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
 
 xcopy /s /y ..\..\..\msvc\lib\x64\gmp%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
@@ -476,12 +477,14 @@ if not exist "nettle" @(
 
 cd nettle\SMP || goto end
 
+start /w devenv.exe libnettle.vcxproj /upgrade
 msbuild libnettle.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
 xcopy /s /y ..\..\..\msvc\lib\x64\nettle%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y ..\..\..\msvc\bin\x64\nettle%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
 if not exist "%PREFIX_PATH%\include\nettle" mkdir "%PREFIX_PATH%\include\nettle" || goto end
 xcopy /s /y ..\..\..\msvc\include\nettle\*.h "%PREFIX_PATH%\include\nettle\" || goto end
 
+start /w devenv.exe libhogweed.vcxproj /upgrade
 msbuild libhogweed.vcxproj -p:Configuration=%BUILD_TYPE%DLL || goto end
 xcopy /s /y ..\..\..\msvc\lib\x64\hogweed%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
 xcopy /s /y ..\..\..\msvc\bin\x64\hogweed%LIB_POSTFIX%.dll "%PREFIX_PATH%\bin\" || goto end
@@ -543,6 +546,8 @@ echo     ^</Link^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zli
 echo   ^</ItemDefinitionGroup^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
 echo ^</Project^>>> "%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props"
 
+start /w devenv.exe libgnutls.sln /upgrade
+
 msbuild libgnutls.sln -p:Configuration=%CMAKE_BUILD_TYPE%DLL -p:ForceImportBeforeCppTargets=%BUILD_PATH%\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props || goto end
 
 xcopy /s /y ..\..\..\msvc\lib\x64\gnutls%LIB_POSTFIX%.lib "%PREFIX_PATH%\lib\" || goto end
@@ -552,6 +557,11 @@ xcopy /s /y ..\..\..\msvc\include\gnutls\*.h "%PREFIX_PATH%\include\gnutls\" || 
 
 @rem FIXME: GNUTLS built with shared dependencies currently crashes, workaround using build with static dependencies in the meantime
 call project_get_dependencies.bat
+
+start /w devenv.exe ..\..\gmp\SMP\libgmp.vcxproj /upgrade
+start /w devenv.exe ..\..\zlib\SMP\libzlib.vcxproj /upgrade
+start /w devenv.exe ..\..\nettle\SMP\libnettle.vcxproj /upgrade
+start /w devenv.exe ..\..\nettle\SMP\libhogweed.vcxproj /upgrade
 
 msbuild ..\..\gmp\SMP\libgmp.vcxproj -p:Configuration=Release || goto end
 msbuild ..\..\zlib\SMP\libzlib.vcxproj -p:Configuration=Release || goto end
