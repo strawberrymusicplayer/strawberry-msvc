@@ -806,7 +806,6 @@ if exist bjam.exe del bjam.exe
 if exist stage rmdir /s /q stage
 
 @echo Running bootstrap.bat
-call .\bootstrap.bat || goto end
 
 @echo Running b2.exe
 .\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --prefix="%PREFIX_PATH%" --exec-prefix="%PREFIX_PATH%\bin" --libdir="%PREFIX_PATH%\lib" --includedir="%PREFIX_PATH%\include" --with-headers toolset=msvc architecture=x86 address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi variant=%BUILD_TYPE% install
