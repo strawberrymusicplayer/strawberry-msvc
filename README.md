@@ -65,6 +65,11 @@ Install manually from `C:\data\projects\strawberry\msvc_\downloads`:
     - Extract `win_flex_bison-<VERSION>.zip` to `C:\win_flex_bison`
     - Install `rustup-init.exe`
         - Type in a Command Prompt: `cargo install cargo-c`
+	- Install `VSYASM`
+	    - Download and extract VSYASM.ZIP from https://github.com/ShiftMediaProject/VSNASM/releases
+		- Run `install_script.bat`, or manually copy `yasm.props`, `yasm.targets` and `yasm.xml`
+		  to `C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\BuildCustomizations` for Visual Studio 2026
+		  or `C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\BuildCustomizations` for Visual Studio 2022.
 - **Recommended: When building dependencies from source**:
     - Install `nasm-<VERSION>-installer-x64.exe`
         - Run as `Administrator` and install into `C:\Program Files\NASM`.
