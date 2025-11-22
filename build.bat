@@ -2265,7 +2265,6 @@ copy /y "%prefix_path%\bin\opus.dll" || goto end
 copy /y "%prefix_path%\bin\orc-0.4-0.dll" || goto end
 copy /y "%prefix_path%\bin\pcre2-16%LIB_POSTFIX%.dll" || goto end
 copy /y "%prefix_path%\bin\pcre2-8%LIB_POSTFIX%.dll" || goto end
-copy /y "%prefix_path%\bin\postproc*.dll" || goto end
 copy /y "%prefix_path%\bin\psl-5.dll" || goto end
 copy /y "%prefix_path%\bin\qt6concurrent%LIB_POSTFIX%.dll" || goto end
 copy /y "%prefix_path%\bin\qt6core%LIB_POSTFIX%.dll" || goto end
