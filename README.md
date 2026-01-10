@@ -66,10 +66,12 @@ Install manually from `C:\data\projects\strawberry\msvc_\downloads`:
     - Install `rustup-init.exe`
         - Type in a Command Prompt: `cargo install cargo-c`
 	- Install `VSYASM`
-	    - Download and extract VSYASM.ZIP from https://github.com/ShiftMediaProject/VSYASM/releases
+	    - Clone VSYASM from https://github.com/ShiftMediaProject/VSYASM
 		- Run `install_script.bat`, or manually copy `yasm.props`, `yasm.targets` and `yasm.xml`
 		  to `C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\BuildCustomizations` for Visual Studio 2026
 		  or `C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\BuildCustomizations` for Visual Studio 2022.
+		- Delete `yasm.exe` from `C:\Program Files\Microsoft Visual Studio\18\Community\VC` (or `C:\Program Files\Microsoft Visual Studio\2022\Community\VC`),
+		  the current latest version (1.3.0) crashes.
 - **Recommended: When building dependencies from source**:
     - Install `nasm-<VERSION>-installer-x64.exe`
         - Run as `Administrator` and install into `C:\Program Files\NASM`.
