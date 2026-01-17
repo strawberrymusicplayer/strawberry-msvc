@@ -746,20 +746,6 @@ function Invoke-DependencyDownload {
   
   Write-Host "`nDependency download completed!" -ForegroundColor Green
 }
-  
-  # Clone/update Git repositories
-  Write-Host "`nCloning/updating Git repositories..." -ForegroundColor Green
-  foreach ($repo in $deps.GitRepos) {
-    try {
-      Sync-GitRepository -Url $repo -DestinationPath $DownloadsPath
-    }
-    catch {
-      Write-Warning "Failed to sync repository $repo : $_"
-    }
-  }
-  
-  Write-Host "`nDependency download completed!" -ForegroundColor Green
-}
 
 Export-ModuleMember -Function @(
   'Invoke-CMakeBuild',
