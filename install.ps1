@@ -32,15 +32,74 @@ function Test-Command {
   return $?
 }
 
-function Test-ToolInstalled {
+function Get-ToolVersion {
   param(
-    [string]$Path,
-    [string]$name
+    [string]$tool_path,
+    [string]$version_arg = "--version"
   )
     
-  if (Test-Path $Path) {
-    Write-Host "✓ $name is already installed" -ForegroundColor Green
-    return $true
+  try {
+    $output = & $tool_path $version_arg 2>&1 | Out-String
+    return $output.Trim()
+  }
+  catch {
+    return $null
+  }
+}
+
+function Test-ToolVersionMatch {
+  param(
+    [string]$installed_version,
+    [string]$expected_version
+  )
+    
+  # Extract version numbers using regex
+  if ($installed_version -match '(\d+\.[\d\.]+)') {
+    $installed_ver = $matches[1]
+  }
+  else {
+    return $false
+  }
+    
+  # Compare versions
+  return $installed_ver -like "$expected_version*"
+}
+
+function Test-ToolInstalled {
+  param(
+    [string]$path,
+    [string]$name,
+    [string]$expected_version = $null,
+    [string]$version_arg = "--version"
+  )
+    
+  if (Test-Path $path) {
+    if ($expected_version) {
+      # Check version if expected version is provided
+      $installed_version = Get-ToolVersion -ToolPath $path -VersionArg $version_arg
+      if ($installed_version) {
+        if (Test-ToolVersionMatch -InstalledVersion $installed_version -ExpectedVersion $expected_version) {
+          Write-Host "✓ $name is already installed (version matches: $expected_version)" -ForegroundColor Green
+          return $true
+        }
+        else {
+          Write-Host "⚠ $name is installed but version doesn't match (installed: $installed_version, expected: $expected_version)" -ForegroundColor Yellow
+          Write-Host "  Will reinstall to update to version $expected_version" -ForegroundColor Yellow
+          return $false
+        }
+      }
+      else {
+        # Could not determine version, assume it needs reinstall
+        Write-Host "⚠ $name is installed but version could not be determined" -ForegroundColor Yellow
+        Write-Host "  Will reinstall to ensure version $expected_version" -ForegroundColor Yellow
+        return $false
+      }
+    }
+    else {
+      # No version check needed
+      Write-Host "✓ $name is already installed" -ForegroundColor Green
+      return $true
+    }
   }
   return $false
 }
@@ -71,31 +130,33 @@ function Install-Tool {
 }
 
 # Check and install Git
-if (-not (Test-ToolInstalled -Path "C:\Program Files\Git\bin\git.exe" -Name "Git")) {
+if (-not (Test-ToolInstalled -Path "C:\Program Files\Git\bin\git.exe" -Name "Git" -ExpectedVersion $git_version)) {
   $installer = Join-Path $downloads_path "Git-$git_version-64-bit.exe"
   Install-Tool -InstallerPath $installer -Arguments @("/silent", "/norestart") -Name "Git"
 }
 
 # Check and install CMake
-if (-not (Test-ToolInstalled -Path "C:\Program Files\CMake\bin\cmake.exe" -Name "CMake")) {
+if (-not (Test-ToolInstalled -Path "C:\Program Files\CMake\bin\cmake.exe" -Name "CMake" -ExpectedVersion $cmake_version)) {
   $installer = Join-Path $downloads_path "cmake-$cmake_version-windows-x86_64.msi"
   Install-Tool -InstallerPath $installer -Arguments @("/quiet", "/norestart") -Name "CMake"
 }
 
 # Check and install NASM
-if (-not (Test-ToolInstalled -Path "C:\Program Files\nasm\nasm.exe" -Name "NASM")) {
+if (-not (Test-ToolInstalled -Path "C:\Program Files\nasm\nasm.exe" -Name "NASM" -ExpectedVersion $nasm_version -VersionArg "-v")) {
   $installer = Join-Path $downloads_path "nasm-$nasm_version-installer-x64.exe"
   Install-Tool -InstallerPath $installer -Arguments @("/S") -Name "NASM"
 }
 
 # Check and install 7-Zip
+# Note: 7-Zip doesn't have a reliable version check via command line
 if (-not (Test-ToolInstalled -Path "C:\Program Files\7-Zip\7z.exe" -Name "7-Zip")) {
-  $installer = Join-Path $downloads_path "7z$_7ZIP_VERSION-x64.exe"
+  $installer = Join-Path $downloads_path "7z$_7zip_version-x64.exe"
   Install-Tool -InstallerPath $installer -Arguments @("/S") -Name "7-Zip"
 }
 
 # Check and install Strawberry Perl
-if (-not (Test-ToolInstalled -Path "C:\Strawberry\perl\bin" -Name "Strawberry Perl")) {
+# Note: Checking Perl version requires execution which may not work in all contexts
+if (-not (Test-ToolInstalled -Path "C:\Strawberry\perl\bin\perl.exe" -Name "Strawberry Perl" -ExpectedVersion $strawberry_perl_version -VersionArg "-v")) {
   $installer = Join-Path $downloads_path "strawberry-perl-$strawberry_perl_version-64bit.msi"
   Install-Tool -InstallerPath $installer -Arguments @("/quiet", "/norestart") -Name "Strawberry Perl"
 }
@@ -113,9 +174,23 @@ $python_paths = @(
 $python_installed = $false
 foreach ($python_path in $python_paths) {
   if (Test-Path $python_path) {
-    Write-Host "✓ Python is already installed at $python_path" -ForegroundColor Green
-    $python_installed = $true
-    break
+    # Check Python version
+    $installed_version = Get-ToolVersion -ToolPath $python_path
+    if ($installed_version -and $installed_version -match '(\d+\.\d+\.\d+)') {
+      $installed_ver = $matches[1]
+      if ($installed_ver -like "$python_version*") {
+        Write-Host "✓ Python is already installed at $python_path (version matches: $python_version)" -ForegroundColor Green
+        $python_installed = $true
+        break
+      }
+      else {
+        Write-Host "⚠ Python $installed_ver is installed at $python_path but expected version is $python_version" -ForegroundColor Yellow
+        Write-Host "  Will install the expected version" -ForegroundColor Yellow
+      }
+    }
+    else {
+      Write-Host "⚠ Python is installed at $python_path but version could not be determined" -ForegroundColor Yellow
+    }
   }
 }
 
