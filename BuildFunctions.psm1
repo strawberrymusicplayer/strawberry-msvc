@@ -695,6 +695,7 @@ function Invoke-PackageDownload {
   catch {
     Write-Warning "Failed to download package $package_name : $_"
     throw
+  }
 }
 
 <#
