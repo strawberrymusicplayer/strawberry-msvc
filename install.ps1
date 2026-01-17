@@ -25,6 +25,13 @@ $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 Write-Host "Strawberry MSVC Build Tools Installation Script" -ForegroundColor Green
 Write-Host ""
 
+function Test-Command {
+  param([string]$Command)
+    
+  $null = Get-Command $Command -ErrorAction SilentlyContinue
+  return $?
+}
+
 function Test-ToolInstalled {
   param(
     [string]$Path,
@@ -166,13 +173,6 @@ if (-not (Test-ToolInstalled -Path "C:\Program Files\Microsoft Visual Studio\202
     Write-Host "  1. Clone https://github.com/ShiftMediaProject/VSYASM" -ForegroundColor Yellow
     Write-Host "  2. Run install_script.bat" -ForegroundColor Yellow
   }
-}
-
-function Test-Command {
-  param([string]$Command)
-    
-  $null = Get-Command $Command -ErrorAction SilentlyContinue
-  return $?
 }
 
 Write-Host "`n" -NoNewline
