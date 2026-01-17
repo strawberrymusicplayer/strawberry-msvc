@@ -471,11 +471,13 @@ Version: $Version
 .SYNOPSIS
   Gets the list of dependency download URLs
 .DESCRIPTION
-  Returns an object containing download URLs and Git repository URLs for all dependencies.
+  Returns an object containing package URLs and Git repository URLs for all dependencies.
+  URLs are organized in a hashtable with package names as keys.
   This centralizes the download configuration so it can be used by both download.ps1 and build.ps1.
 .EXAMPLE
   $deps = Get-DependencyUrls
-  foreach ($url in $deps.DownloadUrls) { ... }
+  foreach ($packageName in $deps.PackageUrls.Keys) { ... }
+  foreach ($repoName in $deps.GitRepos.Keys) { ... }
 #>
 function Get-DependencyUrls {
   [CmdletBinding()]
