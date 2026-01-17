@@ -481,11 +481,8 @@ function Get-DependencyUrls {
   [CmdletBinding()]
   param()
   
-  # Load version information if not already loaded
-  if (-not $global:CCACHE_VERSION) {
-    $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
-    . "$scriptPath\versions.ps1"
-  }
+  # Note: Requires versions.ps1 to be loaded by the caller
+  # Both download.ps1 and build.ps1 already do this
   
   $downloadUrls = @(
     "https://github.com/ccache/ccache/releases/download/v$CCACHE_VERSION/ccache-$CCACHE_VERSION.tar.gz",
