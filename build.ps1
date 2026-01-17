@@ -112,7 +112,7 @@ $toolChecks = @(
     @{ Command = "win_flex"; Paths = @("C:\win_flex_bison"); Message = "Missing win_flex. Download from https://sourceforge.net/projects/winflexbison/" }
     @{ Command = "win_bison"; Paths = @("C:\win_flex_bison"); Message = "Missing win_bison. Download from https://sourceforge.net/projects/winflexbison/" }
     @{ Command = "perl"; Paths = @("C:\Strawberry\perl\bin"); Message = "Missing perl. Download Strawberry Perl from https://strawberryperl.com/" }
-    @{ Command = "python"; Paths = @("C:\Program Files\Python310"); Message = "Missing python. Download from https://www.python.org/" }
+    @{ Command = "python"; Paths = @("C:\Program Files\Python314", "C:\Program Files\Python313", "C:\Program Files\Python312", "C:\Program Files\Python311", "C:\Program Files\Python310"); Message = "Missing python. Download from https://www.python.org/" }
     @{ Command = "tar"; Paths = @("C:\Program Files\Git\usr\bin"); Message = "Missing tar" }
     @{ Command = "bzip2"; Paths = @("C:\Program Files\Git\usr\bin"); Message = "Missing bzip2" }
     @{ Command = "7z"; Paths = @("C:\Program Files\7-Zip"); Message = "Missing 7z. Download 7-Zip from https://www.7-zip.org/download.html" }
@@ -317,7 +317,7 @@ function Build-GMP {
         Set-Location "gmp\SMP"
         
         Update-VSProject -ProjectPath "libgmp.vcxproj"
-        Invoke-MSBuildProject -ProjectPath "libgmp.vcxproj" -Configuration "${BUILD_TYPE}DLL"
+        Invoke-MSBuildProject -ProjectPath "libgmp.vcxproj" -Configuration "${BuildType}DLL"
         
         Copy-Item "..\..\..\msvc\lib\x64\gmp$LIB_POSTFIX.lib" "$PREFIX_PATH\lib\" -Force
         Copy-Item "..\..\..\msvc\bin\x64\gmp$LIB_POSTFIX.dll" "$PREFIX_PATH\bin\" -Force
@@ -354,7 +354,7 @@ function Build-Nettle {
         Set-Location "nettle\SMP"
         
         Update-VSProject -ProjectPath "libnettle.vcxproj"
-        Invoke-MSBuildProject -ProjectPath "libnettle.vcxproj" -Configuration "${BUILD_TYPE}DLL"
+        Invoke-MSBuildProject -ProjectPath "libnettle.vcxproj" -Configuration "${BuildType}DLL"
         
         Copy-Item "..\..\..\msvc\lib\x64\nettle$LIB_POSTFIX.lib" "$PREFIX_PATH\lib\" -Force
         Copy-Item "..\..\..\msvc\bin\x64\nettle$LIB_POSTFIX.dll" "$PREFIX_PATH\bin\" -Force
@@ -365,7 +365,7 @@ function Build-Nettle {
         Copy-Item "..\..\..\msvc\include\nettle\*.h" "$PREFIX_PATH\include\nettle\" -Force
         
         Update-VSProject -ProjectPath "libhogweed.vcxproj"
-        Invoke-MSBuildProject -ProjectPath "libhogweed.vcxproj" -Configuration "${BUILD_TYPE}DLL"
+        Invoke-MSBuildProject -ProjectPath "libhogweed.vcxproj" -Configuration "${BuildType}DLL"
         
         Copy-Item "..\..\..\msvc\lib\x64\hogweed$LIB_POSTFIX.lib" "$PREFIX_PATH\lib\" -Force
         Copy-Item "..\..\..\msvc\bin\x64\hogweed$LIB_POSTFIX.dll" "$PREFIX_PATH\bin\" -Force

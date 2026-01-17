@@ -94,7 +94,25 @@ if (-not (Test-ToolInstalled -Path "C:\Strawberry\perl\bin" -Name "Strawberry Pe
 }
 
 # Check and install Python
-if (-not (Test-ToolInstalled -Path "C:\Program Files\Python311\python.exe" -Name "Python")) {
+# Note: Python may install to different paths depending on version
+$pythonPaths = @(
+    "C:\Program Files\Python314\python.exe",
+    "C:\Program Files\Python313\python.exe",
+    "C:\Program Files\Python312\python.exe",
+    "C:\Program Files\Python311\python.exe",
+    "C:\Program Files\Python310\python.exe"
+)
+
+$pythonInstalled = $false
+foreach ($pythonPath in $pythonPaths) {
+    if (Test-Path $pythonPath) {
+        Write-Host "✓ Python is already installed at $pythonPath" -ForegroundColor Green
+        $pythonInstalled = $true
+        break
+    }
+}
+
+if (-not $pythonInstalled) {
     $installer = Join-Path $DownloadsPath "python-$PYTHON_VERSION-amd64.exe"
     Install-Tool -InstallerPath $installer -Arguments @("/quiet", "InstallAllUsers=1", "PrependPath=1", "Include_test=0") -Name "Python"
 }
@@ -168,7 +186,7 @@ $tools = @(
     @{ Name = "NASM"; Command = "nasm"; Path = "C:\Program Files\nasm" },
     @{ Name = "7-Zip"; Command = "7z"; Path = "C:\Program Files\7-Zip" },
     @{ Name = "Perl"; Command = "perl"; Path = "C:\Strawberry\perl\bin" },
-    @{ Name = "Python"; Command = "python"; Path = "C:\Program Files\Python311" },
+    @{ Name = "Python"; Command = "python"; Paths = @("C:\Program Files\Python314", "C:\Program Files\Python313", "C:\Program Files\Python312", "C:\Program Files\Python311", "C:\Program Files\Python310") },
     @{ Name = "Win Flex"; Command = "win_flex"; Path = "C:\win_flex_bison" },
     @{ Name = "Win Bison"; Command = "win_bison"; Path = "C:\win_flex_bison" }
 )
@@ -176,16 +194,35 @@ $tools = @(
 foreach ($tool in $tools) {
     # Temporarily add path to check
     $originalPath = $env:PATH
-    $env:PATH = "$($tool.Path);$env:PATH"
     
-    if (Test-Command $tool.Command) {
-        Write-Host "✓ $($tool.Name) is available" -ForegroundColor Green
+    if ($tool.Paths) {
+        # Python has multiple possible paths
+        $found = $false
+        foreach ($path in $tool.Paths) {
+            $env:PATH = "$path;$env:PATH"
+            if (Test-Command $tool.Command) {
+                Write-Host "✓ $($tool.Name) is available" -ForegroundColor Green
+                $found = $true
+                break
+            }
+            $env:PATH = $originalPath
+        }
+        if (-not $found) {
+            Write-Host "✗ $($tool.Name) is NOT available" -ForegroundColor Red
+        }
     }
     else {
-        Write-Host "✗ $($tool.Name) is NOT available" -ForegroundColor Red
+        $env:PATH = "$($tool.Path);$env:PATH"
+        
+        if (Test-Command $tool.Command) {
+            Write-Host "✓ $($tool.Name) is available" -ForegroundColor Green
+        }
+        else {
+            Write-Host "✗ $($tool.Name) is NOT available" -ForegroundColor Red
+        }
+        
+        $env:PATH = $originalPath
     }
-    
-    $env:PATH = $originalPath
 }
 
 Write-Host "`nIMPORTANT: Next Steps" -ForegroundColor Cyan
