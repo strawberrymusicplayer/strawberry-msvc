@@ -54,7 +54,7 @@ function Test-ToolVersionMatch {
   )
     
   # Extract version numbers using regex
-  if ($installed_version -match '(\d+\.[\d\.]+)') {
+  if ($installed_version -match '(\d+(?:\.\d+)+)') {
     $installed_ver = $matches[1]
   }
   else {
@@ -176,17 +176,14 @@ foreach ($python_path in $python_paths) {
   if (Test-Path $python_path) {
     # Check Python version
     $installed_version = Get-ToolVersion -ToolPath $python_path
-    if ($installed_version -and $installed_version -match '(\d+\.\d+\.\d+)') {
-      $installed_ver = $matches[1]
-      if ($installed_ver -like "$python_version*") {
-        Write-Host "✓ Python is already installed at $python_path (version matches: $python_version)" -ForegroundColor Green
-        $python_installed = $true
-        break
-      }
-      else {
-        Write-Host "⚠ Python $installed_ver is installed at $python_path but expected version is $python_version" -ForegroundColor Yellow
-        Write-Host "  Will install the expected version" -ForegroundColor Yellow
-      }
+    if ($installed_version -and (Test-ToolVersionMatch -InstalledVersion $installed_version -ExpectedVersion $python_version)) {
+      Write-Host "✓ Python is already installed at $python_path (version matches: $python_version)" -ForegroundColor Green
+      $python_installed = $true
+      break
+    }
+    elseif ($installed_version) {
+      Write-Host "⚠ Python is installed at $python_path but version doesn't match (expected: $python_version)" -ForegroundColor Yellow
+      Write-Host "  Will install the expected version" -ForegroundColor Yellow
     }
     else {
       Write-Host "⚠ Python is installed at $python_path but version could not be determined" -ForegroundColor Yellow
