@@ -13,28 +13,28 @@
 [CmdletBinding()]
 param(
   [Parameter(Mandatory=$false)]
-  [string]$DownloadsPath = "c:\data\projects\strawberry\msvc_\downloads"
+  [string]$downloads_path = "c:\data\projects\strawberry\msvc_\downloads"
 )
 
 $ErrorActionPreference = "Stop"
 
 # Load version information
-$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
-. "$scriptPath\versions.ps1"
+$script_path = Split-Path -Parent $MyInvocation.MyCommand.Path
+. "$script_path\versions.ps1"
 
 # Import common functions
-Import-Module "$scriptPath\BuildFunctions.psm1" -Force
+Import-Module "$script_path\BuildFunctions.psm1" -Force
 
 Write-Host "Strawberry MSVC Dependencies Download Script" -ForegroundColor Green
-Write-Host "Downloads path: $DownloadsPath" -ForegroundColor Cyan
+Write-Host "Downloads path: $downloads_path" -ForegroundColor Cyan
 Write-Host ""
 
 # Setup
 Set-Location C:\
-if (-not (Test-Path $DownloadsPath)) {
-  New-Item -ItemType Directory -Path $DownloadsPath -Force | Out-Null
+if (-not (Test-Path $downloads_path)) {
+  New-Item -ItemType Directory -Path $downloads_path -Force | Out-Null
 }
-Set-Location $DownloadsPath
+Set-Location $downloads_path
 
 # Check for curl
 if (-not (Test-Command "curl")) {
@@ -44,7 +44,7 @@ if (-not (Test-Command "curl")) {
 # Install Git if needed
 if (-not (Test-Path "C:\Program Files\Git\bin\git.exe")) {
   Write-Host "Installing git..." -ForegroundColor Yellow
-  $gitInstaller = Join-Path $DownloadsPath "Git-$GIT_VERSION-64-bit.exe"
+  $gitInstaller = Join-Path $downloads_path "Git-$git_version-64-bit.exe"
   if (Test-Path $gitInstaller) {
     Start-Process -FilePath $gitInstaller -ArgumentList "/silent /norestart" -Wait -NoNewWindow
   }
@@ -61,6 +61,6 @@ if (-not (Test-Command "git")) {
 }
 
 # Use the common download function
-Invoke-DependencyDownload -DownloadsPath $DownloadsPath
+Invoke-DependencyDownload -DownloadsPath $downloads_path
 
 Write-Host "`nDownload completed!" -ForegroundColor Green

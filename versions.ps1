@@ -2,11 +2,11 @@
 # Version definitions for Strawberry MSVC dependencies
 # Reads versions from package-versions.txt
 
-$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
-$versionFile = Join-Path $scriptPath "package-versions.txt"
+$script_path = Split-Path -Parent $MyInvocation.MyCommand.Path
+$version_file = Join-Path $script_path "package-versions.txt"
 
-if (Test-Path $versionFile) {
-  Get-Content $versionFile | ForEach-Object {
+if (Test-Path $version_file) {
+  Get-Content $version_file | ForEach-Object {
     $line = $_.Trim()
     # Skip empty lines and comments
     if ($line -and -not $line.StartsWith('#')) {
@@ -15,29 +15,31 @@ if (Test-Path $versionFile) {
         $value = $matches[2].Trim()
         # Only set variable if value is not empty
         if ($value) {
-          # Set as global variable
-          Set-Variable -Name $name -Value $value -Scope Global
+          # Convert variable name to lowercase
+          $name_lower = $name.ToLower()
+          # Set as global variable with lowercase name
+          Set-Variable -Name $name_lower -Value $value -Scope Global
         }
       }
     }
   }
 }
 else {
-  Write-Error "Package versions file not found: $versionFile"
+  Write-Error "Package versions file not found: $version_file"
   exit 1
 }
 
 # Derived versions (calculated from base versions)
-if ($global:BOOST_VERSION) {
-  $global:BOOST_VERSION_UNDERSCORE = $global:BOOST_VERSION.Replace(".", "_")
+if ($global:boost_version) {
+  $global:boost_version_underscore = $global:boost_version.Replace(".", "_")
 }
-if ($global:EXPAT_VERSION) {
-  $global:EXPAT_VERSION_UNDERSCORE = $global:EXPAT_VERSION.Replace(".", "_")
+if ($global:expat_version) {
+  $global:expat_version_underscore = $global:expat_version.Replace(".", "_")
 }
-if ($global:STRAWBERRY_PERL_VERSION) {
-  $global:STRAWBERRY_PERL_VERSION_STRIPPED = $global:STRAWBERRY_PERL_VERSION.Replace(".", "")
+if ($global:strawberry_perl_version) {
+  $global:strawberry_perl_version_stripped = $global:strawberry_perl_version.Replace(".", "")
 }
-if ($global:CURL_VERSION) {
-  $global:CURL_VERSION_UNDERSCORE = $global:CURL_VERSION.Replace(".", "_")
+if ($global:curl_version) {
+  $global:curl_version_underscore = $global:curl_version.Replace(".", "_")
 }
 
