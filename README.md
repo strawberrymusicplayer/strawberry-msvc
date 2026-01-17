@@ -6,7 +6,33 @@ These instructions are provided as-is, they are primarily intended for developer
 
 We do not offer support to users for building Strawberry on Windows.
 
-Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary updated, so make sure you bump the versions in versions.bat before you run install.bat.
+Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary updated, so make sure you bump the versions in `versions.bat` / `versions.ps1` before you run `install.bat` / `install.ps1`.
+
+## Build Scripts
+
+This repository provides two sets of build scripts:
+
+### PowerShell Scripts (Recommended)
+- **`build.ps1`** - Main build script with structured functions and better error handling
+- **`download.ps1`** - Downloads dependencies and clones repositories
+- **`install.ps1`** - Installs build tools
+- **`versions.ps1`** - Version definitions for all dependencies
+- **`BuildFunctions.psm1`** - Common functions for CMake, Meson, and MSBuild
+
+**Advantages:**
+- Better error handling and reporting with try-catch blocks
+- Colored output for improved visibility
+- More maintainable and readable code
+- Common functions to avoid code duplication
+- Parameter validation
+
+### Batch Scripts (Legacy)
+- **`build.bat`** - Original batch build script
+- **`download.bat`** - Original download script
+- **`install.bat`** - Original install script
+- **`versions.bat`** - Original version definitions
+
+Both sets of scripts provide the same functionality. Use PowerShell scripts for better experience.
 
 ### Requirements
 
@@ -38,9 +64,24 @@ Download and install manually:
 
 ### Clone repositories and download tools/dependencies
 
+**Using PowerShell (recommended):**
+
+Open a `PowerShell` window and type:
+
+```powershell
+mkdir C:\data\projects\strawberry
+cd C:\data\projects\strawberry
+git clone https://github.com/strawberrymusicplayer/strawberry.git
+git clone https://github.com/strawberrymusicplayer/strawberry-msvc.git
+cd strawberry-msvc
+.\download.ps1
+```
+
+**Using Command Prompt (legacy):**
+
 Open a `Command Prompt` and type:
 
-```
+```cmd
 mkdir C:\data\projects\strawberry
 cd C:\data\projects\strawberry
 git clone https://github.com/strawberrymusicplayer/strawberry.git
@@ -124,18 +165,29 @@ To use prebuilds, download the following `tar.xz` files from Github [strawberry-
 - Set one debug or release in `PATH` environment variable:
     - For debug: `C:\strawberry_msvc_x86_64_debug\bin`, or:
     - For release: `C:\strawberry_msvc_x86_64_release\bin`
-- Start | `x64 Native Tools Command Prompt for VS 2026`:
-```
+- Start | `x64 Native Tools Command Prompt for VS 2026`
+
+**Using PowerShell (recommended):**
+
+```powershell
 cd C:\data\projects\strawberry\strawberry-msvc
+
+# For debug build:
+.\build.ps1
+
+# For release build:
+.\build.ps1 -BuildType release
 ```
 
-For debug build:
-```
+**Using Command Prompt (legacy):**
+
+```cmd
+cd C:\data\projects\strawberry\strawberry-msvc
+
+# For debug build:
 .\build.bat
-```
 
-For release build:
-```
+# For release build:
 .\build.bat release
 ```
 
