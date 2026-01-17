@@ -10,7 +10,7 @@
 .PARAMETER BuildType
   Build type: debug or release (default: debug)
 .EXAMPLE
-  .\build.ps1 -BuildType release
+  .\build.ps1 -build_type release
 #>
 
 [CmdletBinding()]
@@ -157,10 +157,10 @@ function Build-Yasm {
     Set-Location "yasm"
     & patch -p1 -N -i "$downloads_path\yasm-cmake.patch" 2>&1 | Out-Null
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @("-DBUILD_SHARED_LIBS=ON")
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
   } finally {
     Pop-Location
   }
@@ -179,10 +179,10 @@ function Build-Pkgconf {
         
     Set-Location $pkgDir.FullName
         
-    Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-      -BuildType $meson_build_type -InstallPrefix $prefix_path `
-      -PkgConfigPath "$prefix_path\lib\pkgconfig" `
-      -AdditionalArgs @("-Dtests=disabled")
+    Invoke-MesonBuild -source_path "." -build_path "build" `
+      -build_type $meson_build_type -install_prefix $prefix_path `
+      -pkg_config_path "$prefix_path\lib\pkgconfig" `
+      -additional_args @("-Dtests=disabled")
         
     Copy-Item "$prefix_path\bin\pkgconf.exe" "$prefix_path\bin\pkg-config.exe" -Force
   } finally {
@@ -201,10 +201,10 @@ function Build-GetoptWin {
         
     Set-Location "getopt-win-$getopt_win_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_SHARED_LIB=ON",
         "-DBUILD_STATIC_LIBS=OFF",
@@ -227,10 +227,10 @@ function Build-Zlib {
         
     Set-Location "zlib-$zlib_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_STATIC_LIBS=OFF"
       )
@@ -423,7 +423,7 @@ function Build-GnuTLS {
     Update-VSProject -ProjectPath "libgnutls.sln"
         
     Invoke-MSBuildProject -ProjectPath "libgnutls.sln" -Configuration "${CMAKE_BUILD_TYPE}DLL" `
-      -AdditionalArgs @("/p:ForceImportBeforeCppTargets=$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props")
+      -additional_args @("/p:ForceImportBeforeCppTargets=$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props")
         
     Copy-Item "..\..\..\msvc\lib\x64\gnutls$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\gnutls$lib_postfix.dll" "$prefix_path\bin\" -Force
@@ -472,9 +472,9 @@ function Build-LibPNG {
     Set-Location "libpng-$libpng_version"
     & patch -p1 -N -i "$downloads_path\libpng-pkgconf.patch" 2>&1 | Out-Null
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward
         
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\libpng16d.lib" "$prefix_path\lib\png16.lib" -Force
@@ -495,10 +495,10 @@ function Build-LibJPEG {
         
     Set-Location "libjpeg-turbo-$libjpeg_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DENABLE_SHARED=ON",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
@@ -519,10 +519,10 @@ function Build-PCRE2 {
         
     Set-Location "pcre2-$pcre2_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_STATIC_LIBS=OFF",
         "-DPCRE2_BUILD_PCRE2_16=ON",
@@ -548,10 +548,10 @@ function Build-BZip2 {
     Set-Location "bzip2-$bzip2_version"
     & patch -p1 -N -i "$downloads_path\bzip2-cmake.patch" 2>&1 | Out-Null
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build2" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
+    Invoke-CMakeBuild -source_path "." -build_path "build2" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
   } finally {
     Pop-Location
   }
@@ -568,10 +568,10 @@ function Build-XZ {
         
     Set-Location "xz-$xz_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_STATIC_LIBS=OFF",
         "-DBUILD_TESTING=OFF",
@@ -593,10 +593,10 @@ function Build-Brotli {
         
     Set-Location "brotli-$brotli_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build2" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @("-DBUILD_TESTING=OFF")
+    Invoke-CMakeBuild -source_path "." -build_path "build2" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_TESTING=OFF")
   } finally {
     Pop-Location
   }
@@ -640,7 +640,7 @@ function Build-ICU4C {
     Set-Location "icu\source\allinone"
         
     Invoke-MSBuildProject -ProjectPath "allinone.sln" -Configuration $build_type `
-      -Platform "x64" -AdditionalArgs @("/p:SkipUWP=true")
+      -Platform "x64" -additional_args @("/p:SkipUWP=true")
         
     Set-Location "..\..\"
         
@@ -683,10 +683,10 @@ function Build-Pixman {
         
     Set-Location "pixman-$pixman_version"
         
-    Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-      -BuildType $meson_build_type -InstallPrefix $prefix_path `
-      -PkgConfigPath "$prefix_path\lib\pkgconfig" `
-      -AdditionalArgs @("-Dgtk=disabled", "-Dlibpng=enabled")
+    Invoke-MesonBuild -source_path "." -build_path "build" `
+      -build_type $meson_build_type -install_prefix $prefix_path `
+      -pkg_config_path "$prefix_path\lib\pkgconfig" `
+      -additional_args @("-Dgtk=disabled", "-Dlibpng=enabled")
   } finally {
     Pop-Location
   }
@@ -703,10 +703,10 @@ function Build-Expat {
         
     Set-Location "expat-$expat_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DEXPAT_SHARED_LIBS=ON",
         "-DEXPAT_BUILD_DOCS=OFF",
         "-DEXPAT_BUILD_EXAMPLES=OFF",
@@ -761,10 +761,10 @@ function Build-LibXML2 {
         
     Set-Location "libxml2-v$libxml2_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DLIBXML2_WITH_PYTHON=OFF",
         "-DLIBXML2_WITH_ZLIB=ON",
@@ -793,10 +793,10 @@ function Build-NGHttp2 {
         
     Set-Location "nghttp2-$nghttp2_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_STATIC_LIBS=OFF"
       )
@@ -817,9 +817,9 @@ function Build-LibFFI {
         
     Set-Location "libffi"
         
-    Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-      -BuildType $meson_build_type -InstallPrefix $prefix_path `
-      -AdditionalArgs @("-Dpkg_config_path=$prefix_path\lib\pkgconfig")
+    Invoke-MesonBuild -source_path "." -build_path "build" `
+      -build_type $meson_build_type -install_prefix $prefix_path `
+      -additional_args @("-Dpkg_config_path=$prefix_path\lib\pkgconfig")
   } finally {
     Pop-Location
   }
@@ -836,10 +836,10 @@ function Build-DlfcnWin32 {
         
     Set-Location "dlfcn-win32-$dlfcn_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @("-DBUILD_SHARED_LIBS=ON")
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
   } finally {
     Pop-Location
   }
@@ -864,9 +864,9 @@ function Build-LibPSL {
       Set-Location "libpsl-$libpsl_version"
       & patch -p1 -N -i "$downloads_path\libpsl-time.patch" 2>&1 | Out-Null
             
-      Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-        -BuildType $meson_build_type -InstallPrefix $prefix_path `
-        -PkgConfigPath "$prefix_path\lib\pkgconfig"
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig"
     } finally {
       Pop-Location
     }
@@ -887,9 +887,9 @@ function Build-Orc {
         
     Set-Location "orc-$orc_version"
         
-    Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-      -BuildType $meson_build_type -InstallPrefix $prefix_path `
-      -PkgConfigPath "$prefix_path\lib\pkgconfig"
+    Invoke-MesonBuild -source_path "." -build_path "build" `
+      -build_type $meson_build_type -install_prefix $prefix_path `
+      -pkg_config_path "$prefix_path\lib\pkgconfig"
   } finally {
     Pop-Location
   }
@@ -941,9 +941,9 @@ function Build-Glib {
             
       Set-Location "glib-$glib_version"
             
-      Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-        -BuildType $meson_build_type -InstallPrefix $prefix_path `
-        -AdditionalArgs @(
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -additional_args @(
           "--includedir=$prefix_path\include",
           "--libdir=$prefix_path\lib",
           "-Dpkg_config_path=$prefix_path\lib\pkgconfig",
@@ -974,10 +974,10 @@ function Build-LibSoup {
             
       Set-Location "libsoup-$libsoup_version"
             
-      Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-        -BuildType $meson_build_type -InstallPrefix $prefix_path `
-        -PkgConfigPath "$prefix_path\lib\pkgconfig" `
-        -AdditionalArgs @(
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
           "-Dtests=false",
           "-Dvapi=disabled",
           "-Dgssapi=disabled",
@@ -1009,10 +1009,10 @@ function Build-GlibNetworking {
             
       Set-Location "glib-networking-$glib_networking_version"
             
-      Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-        -BuildType $meson_build_type -InstallPrefix $prefix_path `
-        -PkgConfigPath "$prefix_path\lib\pkgconfig" `
-        -AdditionalArgs @(
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
           "-Dgnutls=enabled",
           "-Dopenssl=enabled",
           "-Dgnome_proxy=disabled",
@@ -1037,10 +1037,10 @@ function Build-Freetype {
         
     Set-Location "freetype-$freetype_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DFT_DISABLE_HARFBUZZ=ON"
       )
@@ -1064,10 +1064,10 @@ function Build-Harfbuzz {
         
     Set-Location "harfbuzz-$harfbuzz_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @("-DBUILD_SHARED_LIBS=ON")
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
   } finally {
     Pop-Location
   }
@@ -1105,10 +1105,10 @@ function Build-FFmpeg {
             
       Set-Location "ffmpeg"
             
-      Invoke-MesonBuild -SourcePath "." -BuildPath "build" `
-        -BuildType $meson_build_type -InstallPrefix $prefix_path `
-        -PkgConfigPath "$prefix_path\lib\pkgconfig" `
-        -AdditionalArgs @(
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
           "-Dtests=disabled",
           "-Dgpl=enabled"
         )
@@ -1131,10 +1131,10 @@ function Build-Chromaprint {
         
     Set-Location "chromaprint-$chromaprint_version"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DFFMPEG_ROOT=$prefix_path",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
@@ -1166,10 +1166,10 @@ function Build-GStreamer {
         Set-Location "gstreamer-$gstreamer_version"
       }
             
-      Invoke-MesonBuild -SourcePath (Get-Location).Path -BuildPath "build" `
-        -BuildType $meson_build_type -InstallPrefix $prefix_path `
-        -PkgConfigPath "$prefix_path\lib\pkgconfig" `
-        -AdditionalArgs @(
+      Invoke-MesonBuild -source_path (Get-Location).Path -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
           "-Dexamples=disabled",
           "-Dtests=disabled",
           "-Dbenchmarks=disabled",
@@ -1207,10 +1207,10 @@ function Build-Qt {
       Set-Location "qtbase-everywhere-src-$qt_version"
     }
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator "Ninja" -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator "Ninja" -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DPKG_CONFIG_EXECUTABLE=$prefix_path_forward/bin/pkgconf.exe",
         "-DQT_BUILD_EXAMPLES=OFF",
@@ -1243,10 +1243,10 @@ function Build-Strawberry {
         
     Set-Location "strawberry"
         
-    Invoke-CMakeBuild -SourcePath "." -BuildPath "build" `
-      -Generator $cmake_generator -BuildType $cmake_build_type `
-      -InstallPrefix $prefix_path_forward `
-      -AdditionalArgs @(
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
         "-DCMAKE_PREFIX_PATH=$prefix_path_forward/lib/cmake",
         "-DARCH=x86_64",
         "-DENABLE_TRANSLATIONS=ON",
