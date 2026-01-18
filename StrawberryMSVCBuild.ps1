@@ -355,7 +355,7 @@ function Build-GMP {
     Set-Location "gmp\SMP"
 
     Update-VSProject -project_path "$smp_build_path\gmp\SMP\libgmp.vcxproj"
-    Invoke-MSBuildProject -project_path "$smp_build_path\gmp\SMP\libgmp.vcxproj" -configuration "${build_type}DLL"
+    Invoke-MSBuildProject -project_path "$smp_build_path\gmp\SMP\libgmp.vcxproj" -configuration "${cmake_build_type}DLL"
 
     Copy-Item "..\..\..\msvc\lib\x64\gmp$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\gmp$lib_postfix.dll" "$prefix_path\bin\" -Force
@@ -393,7 +393,7 @@ function Build-Nettle {
     Set-Location "nettle\SMP"
 
     Update-VSProject -project_path "libnettle.vcxproj"
-    Invoke-MSBuildProject -project_path "libnettle.vcxproj" -configuration "${build_type}DLL"
+    Invoke-MSBuildProject -project_path "libnettle.vcxproj" -configuration "${cmake_build_type}DLL"
 
     Copy-Item "..\..\..\msvc\lib\x64\nettle$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\nettle$lib_postfix.dll" "$prefix_path\bin\" -Force
@@ -404,7 +404,7 @@ function Build-Nettle {
     Copy-Item "..\..\..\msvc\include\nettle\*.h" "$prefix_path\include\nettle\" -Force
 
     Update-VSProject -project_path "libhogweed.vcxproj"
-    Invoke-MSBuildProject -project_path "libhogweed.vcxproj" -configuration "${build_type}DLL"
+    Invoke-MSBuildProject -project_path "libhogweed.vcxproj" -configuration "${cmake_build_type}DLL"
 
     Copy-Item "..\..\..\msvc\lib\x64\hogweed$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\hogweed$lib_postfix.dll" "$prefix_path\bin\" -Force
@@ -672,7 +672,7 @@ function Build-LibIconv {
 
     Set-Location "libiconv-for-Windows"
 
-    Invoke-MSBuildProject -project_path "libiconv.sln" -configuration $build_type
+    Invoke-MSBuildProject -project_path "libiconv.sln" -configuration $cmake_build_type
 
     Copy-Item "output\x64\$build_type\*.lib" "$prefix_path\lib\" -Force
     Copy-Item "output\x64\$build_type\*.dll" "$prefix_path\bin\" -Force
@@ -700,8 +700,8 @@ function Build-ICU4C {
 
     Set-Location "icu\source\allinone"
 
-    #& msbuild allinone.sln /property:Configuration="$build_type" /p:Platform="x64" /p:SkipUWP=true
-    Invoke-MSBuildProject -project_path "allinone.sln" -configuration $build_type -platform "x64" -additional_args @("/p:SkipUWP=true")
+    #& msbuild allinone.sln /property:Configuration="$cmake_build_type" /p:Platform="x64" /p:SkipUWP=true
+    Invoke-MSBuildProject -project_path "allinone.sln" -configuration $cmake_build_type -platform "x64" -additional_args @("/p:SkipUWP=true")
 
     Set-Location "..\..\"
 
