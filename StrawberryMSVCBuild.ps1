@@ -1869,13 +1869,23 @@ function Build-FFmpeg {
 
       Set-Location "ffmpeg"
 
-      Invoke-MesonBuild -source_path "." -build_path "build" `
-        -build_type $meson_build_type -install_prefix $prefix_path `
-        -pkg_config_path "$prefix_path\lib\pkgconfig" `
-        -additional_args @(
-          "-Dtests=disabled",
-          "-Dgpl=enabled"
-        )
+      # Set environment variables for iconv
+      $original_lib = $env:LIB
+      $env:LIB = "$prefix_path\lib"
+      
+      try {
+        Invoke-MesonBuild -source_path "." -build_path "build" `
+          -build_type $meson_build_type -install_prefix $prefix_path `
+          -pkg_config_path "$prefix_path\lib\pkgconfig" `
+          -additional_args @(
+            "-Dtests=disabled",
+            "-Dgpl=enabled",
+            "-Diconv=enabled"
+          )
+      }
+      finally {
+        $env:LIB = $original_lib
+      }
     }
     finally {
       Pop-Location
