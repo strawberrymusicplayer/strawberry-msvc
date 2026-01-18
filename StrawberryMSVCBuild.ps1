@@ -700,6 +700,7 @@ function Build-ICU4C {
 
     Set-Location "icu\source\allinone"
 
+    #& msbuild allinone.sln /property:Configuration="$build_type" /p:Platform="x64" /p:SkipUWP=true
     Invoke-MSBuildProject -project_path "allinone.sln" -configuration $build_type -platform "x64" -additional_args @("/p:SkipUWP=true")
 
     Set-Location "..\..\"
@@ -939,12 +940,11 @@ function Build-LibPSL {
     try {
       if (-not (Test-Path "libpsl-$libpsl_version")) {
         $tar_file = "$downloads_path\libpsl-$libpsl_version.tar.gz"
-      $relative_tar_path = Resolve-Path -Relative $tar_file
-      & tar -xf $relative_tar_path
+        $relative_tar_path = Resolve-Path -Relative $tar_file
+        & tar -xf $relative_tar_path
       }
 
       Set-Location "libpsl-$libpsl_version"
-      & patch -p1 -N -i "$downloads_path\libpsl-time.patch" 2>&1 | Out-Null
 
       Invoke-MesonBuild -source_path "." -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
