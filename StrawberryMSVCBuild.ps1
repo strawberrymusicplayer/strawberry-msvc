@@ -1576,11 +1576,18 @@ function Build-Speex {
 
     Push-Location $extract_dir.FullName
     try {
-      # Apply patch
+      # Download and apply patch
       $patch_file = "$downloads_path\speex-cmake.patch"
+      if (-not (Test-Path $patch_file)) {
+        Write-Host "Patch not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "patch-speex-cmake" -downloads_path $downloads_path
+      }
       if (Test-Path $patch_file) {
         Write-Host "Applying speex patch..." -ForegroundColor Cyan
         & patch -p1 -N -i $patch_file
+      }
+      else {
+        Write-Warning "Patch file not found at $patch_file, build may fail"
       }
 
       Invoke-CMakeBuild `
