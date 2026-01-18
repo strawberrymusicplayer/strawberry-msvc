@@ -102,6 +102,19 @@ $env:CL = "-MP"
 $env:PATH = "$env:PATH;$prefix_path\bin"
 $env:YASMPATH = "$prefix_path\bin"
 
+# Ensure Visual Studio x64 tools are used
+Write-Host "Checking Visual Studio environment..." -ForegroundColor Cyan
+$vs_path = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath 2>$null
+if ($vs_path) {
+  $vs_dev_shell = Join-Path $vs_path "Common7\Tools\Launch-VsDevShell.ps1"
+  if (Test-Path $vs_dev_shell) {
+    Write-Host "  Initializing Visual Studio x64 environment..." -ForegroundColor Cyan
+    # Import VS environment with x64 architecture
+    & $vs_dev_shell -Arch amd64 -HostArch amd64 -SkipAutomaticLocation
+    Write-Host "  Visual Studio x64 environment initialized" -ForegroundColor Green
+  }
+}
+
 # Check for required tools
 Write-Host "Checking requirements..." -ForegroundColor Cyan
 
@@ -1124,13 +1137,440 @@ function Build-Harfbuzz {
 }
 
 # Add more audio codec build functions (abbreviated for space)
-function Build-AudioCodecs {
-  Write-Host "Building audio codecs..." -ForegroundColor Yellow
+function Build-Flac {
+  Write-Host "Building flac" -ForegroundColor Yellow
 
-  # These would include: libogg, libvorbis, flac, wavpack, opus, opusfile,
-  # speex, mpg123, lame, twolame, fftw3, musepack, libopenmpt, libgme,
-  # fdk-aac, faad2, faac, etc.
-  # Implementation similar to above patterns
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\flac-$global:flac_version.tar.xz"
+    if (-not (Test-Path $tar_file)) {
+      throw "flac archive not found: $tar_file"
+    }
+
+    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+    $relative_tar_path = Resolve-Path -Relative $tar_file
+    & tar -xf $relative_tar_path
+    if ($LASTEXITCODE -ne 0) { throw "Failed to extract flac archive" }
+
+    $extract_dir = Get-ChildItem -Directory -Filter "flac-*" | Select-Object -First 1
+    if (-not $extract_dir) { throw "Extracted directory not found for flac" }
+
+    Push-Location $extract_dir.FullName
+    try {
+      Invoke-CMakeBuild `
+        -source_path "." `
+        -build_path "build2" `
+        -generator $cmake_generator `
+        -build_type $cmake_build_type `
+        -install_prefix $prefix_path_forward `
+        -additional_args @(
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DBUILD_DOCS=OFF",
+          "-DBUILD_EXAMPLES=OFF",
+          "-DINSTALL_MANPAGES=OFF",
+          "-DBUILD_TESTING=OFF",
+          "-DBUILD_PROGRAMS=OFF"
+        )
+
+      Write-Host "flac built successfully!" -ForegroundColor Green
+    } finally {
+      Pop-Location
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
+function Build-Wavpack {
+  Write-Host "Building wavpack" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\wavpack-$global:wavpack_version.tar.bz2"
+    if (-not (Test-Path $tar_file)) {
+      throw "wavpack archive not found: $tar_file"
+    }
+
+    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+    $relative_tar_path = Resolve-Path -Relative $tar_file
+    & tar -xf $relative_tar_path
+    if ($LASTEXITCODE -ne 0) { throw "Failed to extract wavpack archive" }
+
+    $extract_dir = Get-ChildItem -Directory -Filter "wavpack-*" | Select-Object -First 1
+    if (-not $extract_dir) { throw "Extracted directory not found for wavpack" }
+
+    Push-Location $extract_dir.FullName
+    try {
+      Invoke-CMakeBuild `
+        -source_path "." `
+        -build_path "build" `
+        -generator $cmake_generator `
+        -build_type $cmake_build_type `
+        -install_prefix $prefix_path_forward `
+        -additional_args @(
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DBUILD_TESTING=OFF",
+          "-DWAVPACK_BUILD_DOCS=OFF",
+          "-DWAVPACK_BUILD_PROGRAMS=OFF",
+          "-DWAVPACK_ENABLE_ASM=OFF",
+          "-DWAVPACK_ENABLE_LEGACY=OFF",
+          "-DWAVPACK_BUILD_WINAMP_PLUGIN=OFF",
+          "-DWAVPACK_BUILD_COOLEDIT_PLUGIN=OFF"
+        )
+
+      # Copy wavpackdll.lib to wavpack.lib
+      if (-not (Test-Path "$prefix_path\include\wavpack")) {
+        New-Item -ItemType Directory -Path "$prefix_path\include\wavpack" -Force | Out-Null
+      }
+      Copy-Item "$prefix_path\lib\wavpackdll.lib" "$prefix_path\lib\wavpack.lib" -Force
+
+      Write-Host "wavpack built successfully!" -ForegroundColor Green
+    } finally {
+      Pop-Location
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
+function Build-Opus {
+  Write-Host "Building opus" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\opus-$global:opus_version.tar.gz"
+    if (-not (Test-Path $tar_file)) {
+      throw "opus archive not found: $tar_file"
+    }
+
+    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+    $relative_tar_path = Resolve-Path -Relative $tar_file
+    & tar -xf $relative_tar_path
+    if ($LASTEXITCODE -ne 0) { throw "Failed to extract opus archive" }
+
+    $extract_dir = Get-ChildItem -Directory -Filter "opus-*" | Select-Object -First 1
+    if (-not $extract_dir) { throw "Extracted directory not found for opus" }
+
+    Push-Location $extract_dir.FullName
+    try {
+      # Remove problematic line from CMakeLists.txt
+      $cmake_file = "CMakeLists.txt"
+      $content = Get-Content $cmake_file | Where-Object { $_ -notmatch "include\(opus_buildtype\.cmake\)" }
+      $content | Set-Content $cmake_file
+
+      Invoke-CMakeBuild `
+        -source_path "." `
+        -build_path "build" `
+        -generator $cmake_generator `
+        -build_type $cmake_build_type `
+        -install_prefix $prefix_path_forward `
+        -additional_args @("-DBUILD_SHARED_LIBS=ON")
+
+      Write-Host "opus built successfully!" -ForegroundColor Green
+    } finally {
+      Pop-Location
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
+function Build-Opusfile {
+  Write-Host "Building opusfile" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\opusfile-$global:opusfile_version.tar.gz"
+    if (-not (Test-Path $tar_file)) {
+      throw "opusfile archive not found: $tar_file"
+    }
+
+    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+    $relative_tar_path = Resolve-Path -Relative $tar_file
+    & tar -xf $relative_tar_path
+    if ($LASTEXITCODE -ne 0) { throw "Failed to extract opusfile archive" }
+
+    $extract_dir = Get-ChildItem -Directory -Filter "opusfile-*" | Select-Object -First 1
+    if (-not $extract_dir) { throw "Extracted directory not found for opusfile" }
+
+    Push-Location $extract_dir.FullName
+    try {
+      # Apply patch
+      $patch_file = "$downloads_path\opusfile-cmake.patch"
+      if (Test-Path $patch_file) {
+        Write-Host "Applying opusfile patch..." -ForegroundColor Cyan
+        & patch -p1 -N -i $patch_file
+      }
+
+      Invoke-CMakeBuild `
+        -source_path "." `
+        -build_path "build" `
+        -generator $cmake_generator `
+        -build_type $cmake_build_type `
+        -install_prefix $prefix_path_forward `
+        -additional_args @(
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        )
+
+      Write-Host "opusfile built successfully!" -ForegroundColor Green
+    } finally {
+      Pop-Location
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
+function Build-Speex {
+  Write-Host "Building speex" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\speex-Speex-$global:speex_version.tar.gz"
+    if (-not (Test-Path $tar_file)) {
+      throw "speex archive not found: $tar_file"
+    }
+
+    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+    $relative_tar_path = Resolve-Path -Relative $tar_file
+    & tar -xf $relative_tar_path
+    if ($LASTEXITCODE -ne 0) { throw "Failed to extract speex archive" }
+
+    $extract_dir = Get-ChildItem -Directory -Filter "speex-Speex-*" | Select-Object -First 1
+    if (-not $extract_dir) { throw "Extracted directory not found for speex" }
+
+    Push-Location $extract_dir.FullName
+    try {
+      # Apply patch
+      $patch_file = "$downloads_path\speex-cmake.patch"
+      if (Test-Path $patch_file) {
+        Write-Host "Applying speex patch..." -ForegroundColor Cyan
+        & patch -p1 -N -i $patch_file
+      }
+
+      Invoke-CMakeBuild `
+        -source_path "." `
+        -build_path "build" `
+        -generator $cmake_generator `
+        -build_type $cmake_build_type `
+        -install_prefix $prefix_path_forward `
+        -additional_args @("-DBUILD_SHARED_LIBS=ON")
+
+      # Handle library naming for debug builds
+      if ($build_type -eq "debug") {
+        if (Test-Path "$prefix_path\lib\libspeexd.lib") {
+          Copy-Item "$prefix_path\lib\libspeexd.lib" "$prefix_path\lib\libspeex.lib" -Force
+        }
+        if (Test-Path "$prefix_path\bin\libspeexd.dll") {
+          Copy-Item "$prefix_path\bin\libspeexd.dll" "$prefix_path\bin\libspeex.dll" -Force
+        }
+      }
+
+      Write-Host "speex built successfully!" -ForegroundColor Green
+    } finally {
+      Pop-Location
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
+function Build-MPG123 {
+  Write-Host "Building mpg123" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\mpg123-$global:mpg123_version.tar.bz2"
+    if (-not (Test-Path $tar_file)) {
+      throw "mpg123 archive not found: $tar_file"
+    }
+
+    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+    $relative_tar_path = Resolve-Path -Relative $tar_file
+    & tar -xf $relative_tar_path
+    if ($LASTEXITCODE -ne 0) { throw "Failed to extract mpg123 archive" }
+
+    $extract_dir = Get-ChildItem -Directory -Filter "mpg123-*" | Select-Object -First 1
+    if (-not $extract_dir) { throw "Extracted directory not found for mpg123" }
+
+    Push-Location $extract_dir.FullName
+    try {
+      Invoke-CMakeBuild `
+        -source_path "ports/cmake" `
+        -build_path "build2" `
+        -generator $cmake_generator `
+        -build_type $cmake_build_type `
+        -install_prefix $prefix_path_forward `
+        -additional_args @(
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DBUILD_PROGRAMS=OFF",
+          "-DBUILD_LIBOUT123=OFF",
+          "-DYASM_ASSEMBLER=$prefix_path_forward/bin/vsyasm.exe"
+        )
+
+      Write-Host "mpg123 built successfully!" -ForegroundColor Green
+    } finally {
+      Pop-Location
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
+function Build-Lame {
+  Write-Host "Building lame" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\lame-$global:lame_version.tar.gz"
+    if (-not (Test-Path $tar_file)) {
+      throw "lame archive not found: $tar_file"
+    }
+
+    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+    $relative_tar_path = Resolve-Path -Relative $tar_file
+    & tar -xf $relative_tar_path
+    if ($LASTEXITCODE -ne 0) { throw "Failed to extract lame archive" }
+
+    $extract_dir = Get-ChildItem -Directory -Filter "lame-*" | Select-Object -First 1
+    if (-not $extract_dir) { throw "Extracted directory not found for lame" }
+
+    Push-Location $extract_dir.FullName
+    try {
+      # Fix Makefile.MSVC for x64
+      $makefile = "Makefile.MSVC"
+      if (Test-Path $makefile) {
+        (Get-Content $makefile) -replace "MACHINE = /machine:.*", "MACHINE = /machine:X64" | Set-Content $makefile
+      }
+
+      # Build with nmake
+      Write-Host "Building with nmake..." -ForegroundColor Cyan
+      & nmake -f Makefile.MSVC MSVCVER=Win64 libmp3lame.dll
+      if ($LASTEXITCODE -ne 0) { throw "nmake build failed" }
+
+      # Copy files
+      Copy-Item "include\*.h" "$prefix_path\include\" -Force
+      Copy-Item "output\libmp3lame*.lib" "$prefix_path\lib\" -Force
+      Copy-Item "output\libmp3lame*.dll" "$prefix_path\bin\" -Force
+
+      # Create pkgconfig file
+      $pc_dir = "$prefix_path\lib\pkgconfig"
+      if (-not (Test-Path $pc_dir)) {
+        New-Item -ItemType Directory -Path $pc_dir -Force | Out-Null
+      }
+
+      $pc_content = @"
+prefix=$prefix_path_forward
+exec_prefix=$prefix_path_forward
+libdir=$prefix_path_forward/lib
+includedir=$prefix_path_forward/include
+
+Name: lame
+Description: encoder that converts audio to the MP3 file format.
+URL: https://lame.sourceforge.io/
+Version: $global:lame_version
+Libs: -L`${libdir} -lmp3lame
+Cflags: -I`${includedir}
+"@
+      $pc_content | Out-File -FilePath "$pc_dir\mp3lame.pc" -Encoding ASCII
+
+      Write-Host "lame built successfully!" -ForegroundColor Green
+    } finally {
+      Pop-Location
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
+function Build-Twolame {
+  Write-Host "Building twolame" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\twolame-$global:twolame_version.tar.gz"
+    if (-not (Test-Path $tar_file)) {
+      throw "twolame archive not found: $tar_file"
+    }
+
+    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+    $relative_tar_path = Resolve-Path -Relative $tar_file
+    & tar -xf $relative_tar_path
+    if ($LASTEXITCODE -ne 0) { throw "Failed to extract twolame archive" }
+
+    $extract_dir = Get-ChildItem -Directory -Filter "twolame-*" | Select-Object -First 1
+    if (-not $extract_dir) { throw "Extracted directory not found for twolame" }
+
+    Push-Location $extract_dir.FullName
+    try {
+      # Apply patch
+      $patch_file = "$downloads_path\twolame.patch"
+      if (Test-Path $patch_file) {
+        Write-Host "Applying twolame patch..." -ForegroundColor Cyan
+        & patch -p1 -N -i $patch_file
+      }
+
+      Push-Location "win32"
+      try {
+        # Upgrade solution
+        Write-Host "Upgrading Visual Studio solution..." -ForegroundColor Cyan
+        & devenv.exe libtwolame_dll.sln /upgrade
+        Start-Sleep -Seconds 5
+
+        # Fix platform in solution files
+        $sln_file = "libtwolame_dll.sln"
+        $vcxproj_file = "libtwolame_dll.vcxproj"
+
+        if (Test-Path $sln_file) {
+          (Get-Content $sln_file) -replace "Win32", "x64" | Set-Content $sln_file
+        }
+        if (Test-Path $vcxproj_file) {
+          (Get-Content $vcxproj_file) -replace "Win32", "x64" | Set-Content $vcxproj_file
+          (Get-Content $vcxproj_file) -replace "MachineX86", "MachineX64" | Set-Content $vcxproj_file
+        }
+
+        # Build with MSBuild
+        Invoke-MSBuildProject `
+          -project_file "libtwolame_dll.sln" `
+          -configuration $build_type
+
+        # Copy files
+        Copy-Item "..\libtwolame\twolame.h" "$prefix_path\include\" -Force
+        Copy-Item "lib\*.lib" "$prefix_path\lib\" -Force
+        Copy-Item "lib\*.dll" "$prefix_path\bin\" -Force
+
+        # Create pkgconfig file
+        $pc_dir = "$prefix_path\lib\pkgconfig"
+        if (-not (Test-Path $pc_dir)) {
+          New-Item -ItemType Directory -Path $pc_dir -Force | Out-Null
+        }
+
+        $pc_content = @"
+prefix=$prefix_path_forward
+exec_prefix=$prefix_path_forward
+libdir=$prefix_path_forward/lib
+includedir=$prefix_path_forward/include
+
+Name: twolame
+Description: MPEG Audio Layer 2 encoder
+URL: http://www.twolame.org/
+Version: $global:twolame_version
+Libs: -L`${libdir} -ltwolame_dll
+Cflags: -I`${includedir}
+"@
+        $pc_content | Out-File -FilePath "$pc_dir\twolame.pc" -Encoding ASCII
+
+        Write-Host "twolame built successfully!" -ForegroundColor Green
+      } finally {
+        Pop-Location
+      }
+    } finally {
+      Pop-Location
+    }
+  } finally {
+    Pop-Location
+  }
 }
 
 function Build-FFmpeg {
@@ -1358,6 +1798,14 @@ try {
   if (-not (Test-Path "$prefix_path\lib\gio\modules\gioopenssl.lib")) { $buildQueue += "glib-networking" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\freetype2.pc")) { $buildQueue += "freetype" }
   if (-not (Test-Path "$prefix_path\lib\harfbuzz*.lib")) { $buildQueue += "harfbuzz" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\flac.pc")) { $buildQueue += "flac" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\wavpack.pc")) { $buildQueue += "wavpack" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\opus.pc")) { $buildQueue += "opus" }
+  if (-not (Test-Path "$prefix_path\bin\opusfile.dll")) { $buildQueue += "opusfile" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\speex.pc")) { $buildQueue += "speex" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\libmpg123.pc")) { $buildQueue += "mpg123" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\mp3lame.pc")) { $buildQueue += "lame" }
+  if (-not (Test-Path "$prefix_path\lib\libtwolame_dll.lib")) { $buildQueue += "twolame" }
   if (-not (Test-Path "$prefix_path\lib\avutil.lib")) { $buildQueue += "ffmpeg" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libchromaprint.pc")) { $buildQueue += "chromaprint" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-1.0.pc")) { $buildQueue += "gstreamer" }
@@ -1410,6 +1858,14 @@ try {
       "glib-networking" { Build-GlibNetworking }
       "freetype" { Build-Freetype }
       "harfbuzz" { Build-Harfbuzz }
+      "flac" { Build-Flac }
+      "wavpack" { Build-Wavpack }
+      "opus" { Build-Opus }
+      "opusfile" { Build-Opusfile }
+      "speex" { Build-Speex }
+      "mpg123" { Build-MPG123 }
+      "lame" { Build-Lame }
+      "twolame" { Build-Twolame }
       "ffmpeg" { Build-FFmpeg }
       "chromaprint" { Build-Chromaprint }
       "gstreamer" { Build-GStreamer }
