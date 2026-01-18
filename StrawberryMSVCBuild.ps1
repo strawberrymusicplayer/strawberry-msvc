@@ -1847,7 +1847,15 @@ function Build-FFmpeg {
         # Clone ffmpeg git repository if not present in downloads
         if (-not (Test-Path "$downloads_path\ffmpeg")) {
           Write-Host "Cloning ffmpeg git repository..." -ForegroundColor Yellow
-          Invoke-PackageDownload -package_name "ffmpeg" -downloads_path $downloads_path
+          # Get dependency URLs
+          $deps = Get-DependencyUrls
+          if ($deps.GitRepos.ContainsKey('ffmpeg')) {
+            $url = $deps.GitRepos['ffmpeg']
+            Sync-GitRepository -url $url -destination_path $downloads_path
+          }
+          else {
+            throw "FFmpeg git repository URL not found in dependency configuration"
+          }
         }
 
         New-Item -ItemType Directory -Path "ffmpeg" -Force | Out-Null
