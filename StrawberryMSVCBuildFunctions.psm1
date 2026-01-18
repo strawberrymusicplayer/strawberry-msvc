@@ -264,7 +264,12 @@ function Get-FileIfNotExists {
     [string]$destination_path
   )
 
+  # Handle SourceForge URLs that end with /download
   $file_name = Split-Path $url -Leaf
+  if ($file_name -eq 'download' -and $url -match '/([^/]+)/download$') {
+    $file_name = $matches[1]
+  }
+  
   $file_path = Join-Path $destination_path $file_name
 
   if (-not (Test-Path $file_path)) {
