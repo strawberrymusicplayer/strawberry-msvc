@@ -173,8 +173,17 @@ function Build-Pkgconf {
   try {
     $pkgDir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" -ErrorAction SilentlyContinue | Select-Object -First 1
     if (-not $pkgDir) {
-      & tar -xvf "$downloads_path\pkgconf-$pkgconf_version.tar.gz"
+      $tar_file = "$downloads_path\pkgconf-$pkgconf_version.tar.gz"
+      Write-Host "Extracting $tar_file" -ForegroundColor Cyan
+      & tar -xf "$tar_file"
+      if ($LASTEXITCODE -ne 0) {
+        throw "Failed to extract pkgconf archive"
+      }
       $pkgDir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" | Select-Object -First 1
+    }
+    
+    if (-not $pkgDir) {
+      throw "Failed to find extracted pkgconf directory"
     }
         
     Set-Location $pkgDir.FullName
@@ -196,7 +205,7 @@ function Build-GetoptWin {
   Push-Location $build_path
   try {
     if (-not (Test-Path "getopt-win-$getopt_win_version")) {
-      & tar -xvf "$downloads_path\getopt-win-$getopt_win_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\getopt-win-$getopt_win_version.tar.gz"
     }
         
     Set-Location "getopt-win-$getopt_win_version"
@@ -222,7 +231,7 @@ function Build-Zlib {
   Push-Location $build_path
   try {
     if (-not (Test-Path "zlib-$zlib_version")) {
-      & tar -xvf "$downloads_path\zlib-$zlib_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\zlib-$zlib_version.tar.gz"
     }
         
     Set-Location "zlib-$zlib_version"
@@ -252,7 +261,7 @@ function Build-OpenSSL {
   Push-Location $build_path
   try {
     if (-not (Test-Path "openssl-$openssl_version")) {
-      & tar -xvf "$downloads_path\openssl-$openssl_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\openssl-$openssl_version.tar.gz"
     }
         
     Set-Location "openssl-$openssl_version"
@@ -466,7 +475,7 @@ function Build-LibPNG {
   Push-Location $build_path
   try {
     if (-not (Test-Path "libpng-$libpng_version")) {
-      & tar -xvf "$downloads_path\libpng-$libpng_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\libpng-$libpng_version.tar.gz"
     }
         
     Set-Location "libpng-$libpng_version"
@@ -490,7 +499,7 @@ function Build-LibJPEG {
   Push-Location $build_path
   try {
     if (-not (Test-Path "libjpeg-turbo-$libjpeg_version")) {
-      & tar -xvf "$downloads_path\libjpeg-turbo-$libjpeg_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\libjpeg-turbo-$libjpeg_version.tar.gz"
     }
         
     Set-Location "libjpeg-turbo-$libjpeg_version"
@@ -514,7 +523,7 @@ function Build-PCRE2 {
   Push-Location $build_path
   try {
     if (-not (Test-Path "pcre2-$pcre2_version")) {
-      & tar -xvf "$downloads_path\pcre2-$pcre2_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\pcre2-$pcre2_version.tar.gz"
     }
         
     Set-Location "pcre2-$pcre2_version"
@@ -542,7 +551,7 @@ function Build-BZip2 {
   Push-Location $build_path
   try {
     if (-not (Test-Path "bzip2-$bzip2_version")) {
-      & tar -xvf "$downloads_path\bzip2-$bzip2_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\bzip2-$bzip2_version.tar.gz"
     }
         
     Set-Location "bzip2-$bzip2_version"
@@ -563,7 +572,7 @@ function Build-XZ {
   Push-Location $build_path
   try {
     if (-not (Test-Path "xz-$xz_version")) {
-      & tar -xvf "$downloads_path\xz-$xz_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\xz-$xz_version.tar.gz"
     }
         
     Set-Location "xz-$xz_version"
@@ -588,7 +597,7 @@ function Build-Brotli {
   Push-Location $build_path
   try {
     if (-not (Test-Path "brotli-$brotli_version")) {
-      & tar -xvf "$downloads_path\brotli-$brotli_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\brotli-$brotli_version.tar.gz"
     }
         
     Set-Location "brotli-$brotli_version"
@@ -634,7 +643,7 @@ function Build-ICU4C {
   Push-Location $build_path
   try {
     if (-not (Test-Path "icu")) {
-      & tar -xvf "$downloads_path\icu4c-$icu4c_version-sources.tgz"
+      & tar -xvf tar -xf "$downloads_path\icu4c-$icu4c_version-sources.tgz"
     }
         
     Set-Location "icu\source\allinone"
@@ -678,7 +687,7 @@ function Build-Pixman {
   Push-Location $build_path
   try {
     if (-not (Test-Path "pixman-$pixman_version")) {
-      & tar -xvf "$downloads_path\pixman-$pixman_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\pixman-$pixman_version.tar.gz"
     }
         
     Set-Location "pixman-$pixman_version"
@@ -698,7 +707,7 @@ function Build-Expat {
   Push-Location $build_path
   try {
     if (-not (Test-Path "expat-$expat_version")) {
-      & tar -xvf "$downloads_path\expat-$expat_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\expat-$expat_version.tar.gz"
     }
         
     Set-Location "expat-$expat_version"
@@ -726,7 +735,7 @@ function Build-Boost {
   Push-Location $build_path
   try {
     if (-not (Test-Path "boost_$boost_version_UNDERSCORE")) {
-      & tar -xvf "$downloads_path\boost_$boost_version_UNDERSCORE.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\boost_$boost_version_UNDERSCORE.tar.gz"
     }
         
     Set-Location "boost_$boost_version_UNDERSCORE"
@@ -756,7 +765,7 @@ function Build-LibXML2 {
   Push-Location $build_path
   try {
     if (-not (Test-Path "libxml2-v$libxml2_version")) {
-      & tar -xvf "$downloads_path\libxml2-v$libxml2_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\libxml2-v$libxml2_version.tar.gz"
     }
         
     Set-Location "libxml2-v$libxml2_version"
@@ -788,7 +797,7 @@ function Build-NGHttp2 {
   Push-Location $build_path
   try {
     if (-not (Test-Path "nghttp2-$nghttp2_version")) {
-      & tar -xvf "$downloads_path\nghttp2-$nghttp2_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\nghttp2-$nghttp2_version.tar.gz"
     }
         
     Set-Location "nghttp2-$nghttp2_version"
@@ -831,7 +840,7 @@ function Build-DlfcnWin32 {
   Push-Location $build_path
   try {
     if (-not (Test-Path "dlfcn-win32-$dlfcn_version")) {
-      & tar -xvf "$downloads_path\dlfcn-win32-$dlfcn_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\dlfcn-win32-$dlfcn_version.tar.gz"
     }
         
     Set-Location "dlfcn-win32-$dlfcn_version"
@@ -858,7 +867,7 @@ function Build-LibPSL {
     Push-Location $build_path
     try {
       if (-not (Test-Path "libpsl-$libpsl_version")) {
-        & tar -xvf "$downloads_path\libpsl-$libpsl_version.tar.gz"
+        & tar -xvf tar -xf "$downloads_path\libpsl-$libpsl_version.tar.gz"
       }
             
       Set-Location "libpsl-$libpsl_version"
@@ -901,7 +910,7 @@ function Build-SQLite {
   Push-Location $build_path
   try {
     if (-not (Test-Path "sqlite-autoconf-$sqlite_version")) {
-      & tar -xvf "$downloads_path\sqlite-autoconf-$sqlite_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\sqlite-autoconf-$sqlite_version.tar.gz"
     }
         
     Set-Location "sqlite-autoconf-$sqlite_version"
@@ -1032,7 +1041,7 @@ function Build-Freetype {
   Push-Location $build_path
   try {
     if (-not (Test-Path "freetype-$freetype_version")) {
-      & tar -xvf "$downloads_path\freetype-$freetype_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\freetype-$freetype_version.tar.gz"
     }
         
     Set-Location "freetype-$freetype_version"
@@ -1059,7 +1068,7 @@ function Build-Harfbuzz {
   Push-Location $build_path
   try {
     if (-not (Test-Path "harfbuzz-$harfbuzz_version")) {
-      & tar -xvf "$downloads_path\harfbuzz-$harfbuzz_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\harfbuzz-$harfbuzz_version.tar.gz"
     }
         
     Set-Location "harfbuzz-$harfbuzz_version"
@@ -1126,7 +1135,7 @@ function Build-Chromaprint {
   Push-Location $build_path
   try {
     if (-not (Test-Path "chromaprint-$chromaprint_version")) {
-      & tar -xvf "$downloads_path\chromaprint-$chromaprint_version.tar.gz"
+      & tar -xvf tar -xf "$downloads_path\chromaprint-$chromaprint_version.tar.gz"
     }
         
     Set-Location "chromaprint-$chromaprint_version"
