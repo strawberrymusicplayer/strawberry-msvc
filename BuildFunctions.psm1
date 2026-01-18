@@ -58,7 +58,7 @@ function Invoke-CMakeBuild {
     $configure_args += $additional_args
   }
     
-  & cmake @configureArgs
+  & cmake @configure_args
   if ($LASTEXITCODE -ne 0) {
     throw "CMake configuration failed"
   }
@@ -141,7 +141,7 @@ function Invoke-MesonBuild {
             
       $setup_args += $build_path
             
-      & meson @setupArgs
+      & meson @setup_args
       if ($LASTEXITCODE -ne 0) {
         throw "Meson setup failed"
       }
@@ -211,7 +211,7 @@ function Invoke-MSBuildProject {
     $build_args += $additional_args
   }
     
-  & msbuild @buildArgs
+  & msbuild @build_args
   if ($LASTEXITCODE -ne 0) {
     throw "MSBuild failed"
   }
