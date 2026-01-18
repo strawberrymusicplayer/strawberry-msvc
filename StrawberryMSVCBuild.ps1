@@ -1,4 +1,4 @@
-# build.ps1
+# StrawberryMSVCBuild.ps1
 # Strawberry MSVC dependencies build script
 # PowerShell version of build.bat
 
@@ -10,7 +10,7 @@
 .PARAMETER BuildType
   Build type: debug or release (default: debug)
 .EXAMPLE
-  .\build.ps1 -build_type release
+  .\StrawberryMSVCBuild.ps1 -build_type release
 #>
 
 [CmdletBinding()]
@@ -31,9 +31,9 @@ Write-Host ""
 # Import versions and build functions
 try {
   . "$PSScriptRoot\versions.ps1"
-  Import-Module "$PSScriptRoot\BuildFunctions.psm1" -Force
+  Import-Module "$PSScriptRoot\StrawberryMSVCBuildFunctions.psm1" -Force
 } catch {
-  Write-Error "Failed to import versions.ps1 or BuildFunctions.psm1: $_"
+  Write-Error "Failed to import versions.ps1 or StrawberryMSVCBuildFunctions.psm1: $_"
   exit 1
 }
 

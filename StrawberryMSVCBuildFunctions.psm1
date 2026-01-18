@@ -1,4 +1,4 @@
-# BuildFunctions.psm1
+# StrawberryMSVCBuildFunctions.psm1
 # Common functions for building dependencies with CMake, Meson, and MSBuild
 
 <#
@@ -473,7 +473,7 @@ Version: $version
 .DESCRIPTION
   Returns an object containing package URLs and Git repository URLs for all dependencies.
   URLs are organized in a hashtable with package names as keys.
-  This centralizes the download configuration so it can be used by both download.ps1 and build.ps1.
+  This centralizes the download configuration so it can be used by both StrawberryMSVCDownload.ps1 and StrawberryMSVCBuild.ps1.
 .EXAMPLE
   $deps = Get-DependencyUrls
   foreach ($package_name in $deps.PackageUrls.Keys) { ... }
@@ -484,7 +484,7 @@ function Get-DependencyUrls {
   param()
 
   # Note: Requires versions.ps1 to be loaded by the caller
-  # Both download.ps1 and build.ps1 already do this
+  # Both StrawberryMSVCDownload.ps1 and StrawberryMSVCBuild.ps1 already do this
 
   # Return hashtable mapping package names to download URLs
   $package_urls = @{

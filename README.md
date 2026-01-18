@@ -6,18 +6,18 @@ These instructions are provided as-is, they are primarily intended for developer
 
 We do not offer support to users for building Strawberry on Windows.
 
-Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary updated, so make sure you bump the versions in `versions.bat` / `versions.ps1` before you run `install.bat` / `install.ps1`.
+Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary updated, so make sure you bump the versions in `versions.bat` / `versions.ps1` before you run `install.bat` / `StrawberryMSVCInstallDependencies.ps1`.
 
 ## Build Scripts
 
 This repository provides two sets of build scripts:
 
 ### PowerShell Scripts (Recommended)
-- **`build.ps1`** - Main build script with structured functions and better error handling
-- **`download.ps1`** - Downloads dependencies and clones repositories
-- **`install.ps1`** - Installs build tools
+- **`StrawberryMSVCBuild.ps1`** - Main build script with structured functions and better error handling
+- **`StrawberryMSVCDownload.ps1`** - Downloads dependencies and clones repositories
+- **`StrawberryMSVCInstallDependencies.ps1`** - Installs build tools
 - **`versions.ps1`** - Version definitions for all dependencies
-- **`BuildFunctions.psm1`** - Common functions for CMake, Meson, and MSBuild
+- **`StrawberryMSVCBuildFunctions.psm1`** - Common functions for CMake, Meson, and MSBuild
 
 **Advantages:**
 - Better error handling and reporting with try-catch blocks
@@ -74,7 +74,7 @@ cd C:\data\projects\strawberry
 git clone https://github.com/strawberrymusicplayer/strawberry.git
 git clone https://github.com/strawberrymusicplayer/strawberry-msvc.git
 cd strawberry-msvc
-.\download.ps1
+.\StrawberryMSVCDownload.ps1
 ```
 
 **Using Command Prompt (legacy):**
@@ -173,10 +173,10 @@ To use prebuilds, download the following `tar.xz` files from Github [strawberry-
 cd C:\data\projects\strawberry\strawberry-msvc
 
 # For debug build:
-.\build.ps1
+.\StrawberryMSVCBuild.ps1
 
 # For release build:
-.\build.ps1 -BuildType release
+.\StrawberryMSVCBuild.ps1 -BuildType release
 ```
 
 **Using Command Prompt (legacy):**

@@ -23,7 +23,7 @@ $script_path = Split-Path -Parent $MyInvocation.MyCommand.Path
 . "$script_path\versions.ps1"
 
 # Import common functions
-Import-Module "$script_path\BuildFunctions.psm1" -Force
+Import-Module "$script_path\StrawberryMSVCBuildFunctions.psm1" -Force
 
 Write-Host "Strawberry MSVC Dependencies Download Script" -ForegroundColor Green
 Write-Host "Downloads path: $downloads_path" -ForegroundColor Cyan
