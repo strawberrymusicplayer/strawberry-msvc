@@ -1181,10 +1181,12 @@ function Build-GlibNetworking {
 
   $original_cflags = $env:CFLAGS
   $original_c_include_path = $env:C_INCLUDE_PATH
+  $original_lib = $env:LIB
 
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
     $env:C_INCLUDE_PATH = "$prefix_path\include"
+    $env:LIB = "$prefix_path\lib;$env:LIB"
 
     Push-Location $build_path
     try {
@@ -1217,6 +1219,7 @@ function Build-GlibNetworking {
   finally {
     $env:CFLAGS = $original_cflags
     $env:C_INCLUDE_PATH = $original_c_include_path
+    $env:LIB = $original_lib
   }
 }
 
