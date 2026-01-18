@@ -1844,6 +1844,12 @@ function Build-FFmpeg {
     Push-Location $build_path
     try {
       if (-not (Test-Path "ffmpeg")) {
+        # Clone ffmpeg git repository if not present in downloads
+        if (-not (Test-Path "$downloads_path\ffmpeg")) {
+          Write-Host "Cloning ffmpeg git repository..." -ForegroundColor Yellow
+          Invoke-PackageDownload -package_name "ffmpeg" -downloads_path $downloads_path
+        }
+
         New-Item -ItemType Directory -Path "ffmpeg" -Force | Out-Null
         Copy-Item "$downloads_path\ffmpeg\*" "ffmpeg\" -Recurse -Force
         Set-Location "ffmpeg"
