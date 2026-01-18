@@ -187,6 +187,10 @@ function Build-Pkgconf {
     $pkg_dir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" -ErrorAction SilentlyContinue | Select-Object -First 1
     if (-not $pkg_dir) {
       $tar_file = "$downloads_path\pkgconf-$pkgconf_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "pkgconf" -downloads_path $downloads_path
+      }
       Write-Host "Extracting $tar_file" -ForegroundColor Cyan
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
@@ -221,6 +225,10 @@ function Build-GetoptWin {
   try {
     if (-not (Test-Path "getopt-win-$getopt_win_version")) {
       $tar_file = "$downloads_path\getopt-win-$getopt_win_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "getopt-win" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -250,6 +258,10 @@ function Build-Zlib {
   try {
     if (-not (Test-Path "zlib-$zlib_version")) {
       $tar_file = "$downloads_path\zlib-$zlib_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "zlib" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -283,6 +295,10 @@ function Build-OpenSSL {
   try {
     if (-not (Test-Path "openssl-$openssl_version")) {
       $tar_file = "$downloads_path\openssl-$openssl_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "openssl" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -503,6 +519,10 @@ function Build-LibPNG {
   try {
     if (-not (Test-Path "libpng-$libpng_version")) {
       $tar_file = "$downloads_path\libpng-$libpng_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "libpng" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -530,6 +550,10 @@ function Build-LibJPEG {
   try {
     if (-not (Test-Path "libjpeg-turbo-$libjpeg_version")) {
       $tar_file = "$downloads_path\libjpeg-turbo-$libjpeg_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "libjpeg-turbo" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -557,6 +581,10 @@ function Build-PCRE2 {
   try {
     if (-not (Test-Path "pcre2-$pcre2_version")) {
       $tar_file = "$downloads_path\pcre2-$pcre2_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "pcre2" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -588,6 +616,10 @@ function Build-BZip2 {
   try {
     if (-not (Test-Path "bzip2-$bzip2_version")) {
       $tar_file = "$downloads_path\bzip2-$bzip2_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "bzip2" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -612,6 +644,10 @@ function Build-XZ {
   try {
     if (-not (Test-Path "xz-$xz_version")) {
       $tar_file = "$downloads_path\xz-$xz_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "xz" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -640,6 +676,10 @@ function Build-Brotli {
   try {
     if (-not (Test-Path "brotli-$brotli_version")) {
       $tar_file = "$downloads_path\brotli-$brotli_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "brotli" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -690,6 +730,10 @@ function Build-ICU4C {
   try {
     if (-not (Test-Path "icu")) {
       $tar_file = "$downloads_path\icu4c-$icu4c_version-sources.tgz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "icu4c" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -737,6 +781,10 @@ function Build-Pixman {
   try {
     if (-not (Test-Path "pixman-$pixman_version")) {
       $tar_file = "$downloads_path\pixman-$pixman_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "pixman" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -760,6 +808,10 @@ function Build-Expat {
   try {
     if (-not (Test-Path "expat-$expat_version")) {
       $tar_file = "$downloads_path\expat-$expat_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "expat" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -791,6 +843,10 @@ function Build-Boost {
   try {
     if (-not (Test-Path "boost_$boost_version_UNDERSCORE")) {
       $tar_file = "$downloads_path\boost_$boost_version_UNDERSCORE.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "boost" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -824,6 +880,10 @@ function Build-LibXML2 {
   try {
     if (-not (Test-Path "libxml2-v$libxml2_version")) {
       $tar_file = "$downloads_path\libxml2-v$libxml2_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "libxml2" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -859,6 +919,10 @@ function Build-NGHttp2 {
   try {
     if (-not (Test-Path "nghttp2-$nghttp2_version")) {
       $tar_file = "$downloads_path\nghttp2-$nghttp2_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "nghttp2" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -906,6 +970,10 @@ function Build-DlfcnWin32 {
   try {
     if (-not (Test-Path "dlfcn-win32-$dlfcn_version")) {
       $tar_file = "$downloads_path\dlfcn-win32-$dlfcn_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "dlfcn-win32" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -936,6 +1004,10 @@ function Build-LibPSL {
     try {
       if (-not (Test-Path "libpsl-$libpsl_version")) {
         $tar_file = "$downloads_path\libpsl-$libpsl_version.tar.gz"
+        if (-not (Test-Path $tar_file)) {
+          Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+          Invoke-PackageDownload -package_name "libpsl" -downloads_path $downloads_path
+        }
         $relative_tar_path = Resolve-Path -Relative $tar_file
         & tar -xf $relative_tar_path
       }
@@ -962,6 +1034,11 @@ function Build-Orc {
   Push-Location $build_path
   try {
     if (-not (Test-Path "orc-$orc_version")) {
+      $tar_file = "$downloads_path\orc-$orc_version.tar.xz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "orc" -downloads_path $downloads_path
+      }
       & 7z x "$downloads_path\orc-$orc_version.tar.xz" -so | & 7z x -aoa -si"orc-$orc_version.tar"
     }
 
@@ -983,6 +1060,10 @@ function Build-SQLite {
   try {
     if (-not (Test-Path "sqlite-autoconf-$sqlite_version")) {
       $tar_file = "$downloads_path\sqlite-autoconf-$sqlite_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "sqlite" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -1020,6 +1101,11 @@ function Build-Glib {
     Push-Location $build_path
     try {
       if (-not (Test-Path "glib-$glib_version")) {
+        $tar_file = "$downloads_path\glib-$glib_version.tar.xz"
+        if (-not (Test-Path $tar_file)) {
+          Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+          Invoke-PackageDownload -package_name "glib" -downloads_path $downloads_path
+        }
         & 7z x "$downloads_path\glib-$glib_version.tar.xz" -so | & 7z x -aoa -si"glib-$glib_version.tar"
       }
 
@@ -1055,6 +1141,11 @@ function Build-LibSoup {
     Push-Location $build_path
     try {
       if (-not (Test-Path "libsoup-$libsoup_version")) {
+        $tar_file = "$downloads_path\libsoup-$libsoup_version.tar.xz"
+        if (-not (Test-Path $tar_file)) {
+          Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+          Invoke-PackageDownload -package_name "libsoup" -downloads_path $downloads_path
+        }
         & 7z x "$downloads_path\libsoup-$libsoup_version.tar.xz" -so | & 7z x -aoa -si"libsoup-$libsoup_version.tar"
       }
 
@@ -1092,6 +1183,11 @@ function Build-GlibNetworking {
     Push-Location $build_path
     try {
       if (-not (Test-Path "glib-networking-$glib_networking_version")) {
+        $tar_file = "$downloads_path\glib-networking-$glib_networking_version.tar.xz"
+        if (-not (Test-Path $tar_file)) {
+          Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+          Invoke-PackageDownload -package_name "glib-networking" -downloads_path $downloads_path
+        }
         & 7z x "$downloads_path\glib-networking-$glib_networking_version.tar.xz" -so | & 7z x -aoa -si"glib-networking-$glib_networking_version.tar"
       }
 
@@ -1123,6 +1219,10 @@ function Build-Freetype {
   try {
     if (-not (Test-Path "freetype-$freetype_version")) {
       $tar_file = "$downloads_path\freetype-$freetype_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "freetype" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -1153,6 +1253,10 @@ function Build-Harfbuzz {
   try {
     if (-not (Test-Path "harfbuzz-$harfbuzz_version")) {
       $tar_file = "$downloads_path\harfbuzz-$harfbuzz_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "harfbuzz" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -1177,7 +1281,8 @@ function Build-Flac {
   try {
     $tar_file = "$downloads_path\flac-$global:flac_version.tar.xz"
     if (-not (Test-Path $tar_file)) {
-      throw "flac archive not found: $tar_file"
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "flac" -downloads_path $downloads_path
     }
 
     Write-Host "Extracting $tar_file" -ForegroundColor Cyan
@@ -1223,7 +1328,8 @@ function Build-Wavpack {
   try {
     $tar_file = "$downloads_path\wavpack-$global:wavpack_version.tar.bz2"
     if (-not (Test-Path $tar_file)) {
-      throw "wavpack archive not found: $tar_file"
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "wavpack" -downloads_path $downloads_path
     }
 
     Write-Host "Extracting $tar_file" -ForegroundColor Cyan
@@ -1277,7 +1383,8 @@ function Build-Opus {
   try {
     $tar_file = "$downloads_path\opus-$global:opus_version.tar.gz"
     if (-not (Test-Path $tar_file)) {
-      throw "opus archive not found: $tar_file"
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "opus" -downloads_path $downloads_path
     }
 
     Write-Host "Extracting $tar_file" -ForegroundColor Cyan
@@ -1321,7 +1428,8 @@ function Build-Opusfile {
   try {
     $tar_file = "$downloads_path\opusfile-$global:opusfile_version.tar.gz"
     if (-not (Test-Path $tar_file)) {
-      throw "opusfile archive not found: $tar_file"
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "opusfile" -downloads_path $downloads_path
     }
 
     Write-Host "Extracting $tar_file" -ForegroundColor Cyan
@@ -1370,7 +1478,8 @@ function Build-Speex {
   try {
     $tar_file = "$downloads_path\speex-Speex-$global:speex_version.tar.gz"
     if (-not (Test-Path $tar_file)) {
-      throw "speex archive not found: $tar_file"
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "speex" -downloads_path $downloads_path
     }
 
     Write-Host "Extracting $tar_file" -ForegroundColor Cyan
@@ -1426,7 +1535,8 @@ function Build-MPG123 {
   try {
     $tar_file = "$downloads_path\mpg123-$global:mpg123_version.tar.bz2"
     if (-not (Test-Path $tar_file)) {
-      throw "mpg123 archive not found: $tar_file"
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "mpg123" -downloads_path $downloads_path
     }
 
     Write-Host "Extracting $tar_file" -ForegroundColor Cyan
@@ -1470,7 +1580,8 @@ function Build-Lame {
   try {
     $tar_file = "$downloads_path\lame-$global:lame_version.tar.gz"
     if (-not (Test-Path $tar_file)) {
-      throw "lame archive not found: $tar_file"
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "lame" -downloads_path $downloads_path
     }
 
     Write-Host "Extracting $tar_file" -ForegroundColor Cyan
@@ -1538,7 +1649,8 @@ function Build-Twolame {
   try {
     $tar_file = "$downloads_path\twolame-$global:twolame_version.tar.gz"
     if (-not (Test-Path $tar_file)) {
-      throw "twolame archive not found: $tar_file"
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "twolame" -downloads_path $downloads_path
     }
 
     Write-Host "Extracting $tar_file" -ForegroundColor Cyan
@@ -1669,6 +1781,10 @@ function Build-Chromaprint {
   try {
     if (-not (Test-Path "chromaprint-$chromaprint_version")) {
       $tar_file = "$downloads_path\chromaprint-$chromaprint_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "chromaprint" -downloads_path $downloads_path
+      }
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
@@ -1707,6 +1823,11 @@ function Build-GStreamer {
       }
       else {
         if (-not (Test-Path "gstreamer-$gstreamer_version")) {
+          $tar_file = "$downloads_path\gstreamer-$gstreamer_version.tar.xz"
+          if (-not (Test-Path $tar_file)) {
+            Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+            Invoke-PackageDownload -package_name "gstreamer" -downloads_path $downloads_path
+          }
           & 7z x "$downloads_path\gstreamer-$gstreamer_version.tar.xz" -so | & 7z x -aoa -si"gstreamer-$gstreamer_version.tar"
         }
         Set-Location "gstreamer-$gstreamer_version"
@@ -1751,6 +1872,11 @@ function Build-Qt {
     }
     else {
       if (-not (Test-Path "qtbase-everywhere-src-$qt_version")) {
+        $tar_file = "$downloads_path\qtbase-everywhere-src-$qt_version.tar.xz"
+        if (-not (Test-Path $tar_file)) {
+          Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+          Invoke-PackageDownload -package_name "qtbase" -downloads_path $downloads_path
+        }
         & 7z x "$downloads_path\qtbase-everywhere-src-$qt_version.tar.xz" -so | & 7z x -aoa -si"qtbase-everywhere-src-$qt_version.tar"
       }
       Set-Location "qtbase-everywhere-src-$qt_version"
