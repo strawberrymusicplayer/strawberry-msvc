@@ -1520,11 +1520,17 @@ function Build-Opusfile {
 
     Push-Location $extract_dir.FullName
     try {
-      # Apply patch
+      # Download and apply patch
       $patch_file = "$downloads_path\opusfile-cmake.patch"
-      if (Test-Path $patch_file) {
-        Write-Host "Applying opusfile patch..." -ForegroundColor Cyan
-        & patch -p1 -N -i $patch_file
+      if (-not (Test-Path $patch_file)) {
+        Write-Host "Patch not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "patch-opusfile-cmake" -downloads_path $downloads_path
+      }
+
+      Write-Host "Applying opusfile patch..." -ForegroundColor Cyan
+      & patch -p1 -N -i $patch_file
+      if ($LASTEXITCODE -ne 0) {
+        Write-Host "Warning: Patch may have already been applied or failed" -ForegroundColor Yellow
       }
 
       Invoke-CMakeBuild `
