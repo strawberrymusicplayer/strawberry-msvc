@@ -430,8 +430,8 @@ function New-PkgConfigFile {
     [Parameter(Mandatory=$true)]
     [string]$prefix,
 
-    [Parameter(Mandatory=$true)]
-    [string]$libs,
+    [Parameter(Mandatory=$false)]
+    [string]$libs = "",
 
     [Parameter(Mandatory=$false)]
     [string]$cflags = "",
@@ -458,7 +458,9 @@ Version: $version
     $content += "`nRequires: $requires"
   }
 
-  $content += "`nLibs: -L`${libdir} $libs"
+  if ($libs) {
+    $content += "`nLibs: -L`${libdir} $libs"
+  }
 
   if ($cflags) {
     $content += "`nCflags: $cflags"
