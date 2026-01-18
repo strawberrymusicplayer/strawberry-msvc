@@ -16,7 +16,7 @@
 [CmdletBinding()]
 param(
   [Parameter(Mandatory=$false)]
-  [ValidateSet("debug", "release")]
+  [ValidateSet("debug", "release", "Debug", "Release")]
   [string]$build_type = "debug"
 )
 
@@ -38,17 +38,13 @@ catch {
   exit 1
 }
 
-# Set build configuration
-if ($build_type -eq "debug") {
-  $cmake_build_type = "Debug"
-  $meson_build_type = "debug"
-  $lib_postfix = "d"
-}
-elseif ($build_type -eq "release") {
-  $cmake_build_type = "Release"
-  $meson_build_type = "release"
-  $lib_postfix = ""
-}
+# Set build configuration - normalize input to lowercase for internal use
+$build_type = $build_type.ToLower()
+
+# Set build system specific configurations
+$cmake_build_type = if ($build_type -eq "debug") { "Debug" } else { "Release" }
+$meson_build_type = $build_type  # meson uses lowercase
+$lib_postfix = if ($build_type -eq "debug") { "d" } else { "" }
 
 # Set paths
 $downloads_path = "c:\data\projects\strawberry\msvc_\downloads"
