@@ -2299,6 +2299,265 @@ function Build-QtTools {
   }
 }
 
+function Build-QtGrpc {
+  Write-Host "Building qtgrpc" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if ($qt_dev -eq "ON") {
+      if (-not (Test-Path "qtgrpc")) {
+        New-Item -ItemType Directory -Path "qtgrpc" -Force | Out-Null
+        Copy-Item "$downloads_path\qtgrpc\*" "qtgrpc\" -Recurse -Force
+      }
+      Set-Location "qtgrpc"
+    }
+    else {
+      if (-not (Test-Path "qtgrpc-everywhere-src-$qt_version")) {
+        $tar_file = "$downloads_path\qtgrpc-everywhere-src-$qt_version.tar.xz"
+        if (-not (Test-Path $tar_file)) {
+          Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+          Invoke-PackageDownload -package_name "qtgrpc" -downloads_path $downloads_path
+        }
+        & 7z x -aos "$tar_file" -o"$downloads_path" | Out-Default
+        & 7z x -aos "$downloads_path\qtgrpc-everywhere-src-$qt_version.tar" | Out-Default
+      }
+      Set-Location "qtgrpc-everywhere-src-$qt_version"
+    }
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator "Ninja" -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DCMAKE_PREFIX_PATH=$prefix_path_forward/lib/cmake",
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DQT_BUILD_EXAMPLES=OFF",
+        "-DQT_BUILD_TESTS=OFF"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-QtSparkle {
+  Write-Host "Building qtsparkle" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "qtsparkle")) {
+      New-Item -ItemType Directory -Path "qtsparkle" -Force | Out-Null
+      Copy-Item "$downloads_path\qtsparkle\*" "qtsparkle\" -Recurse -Force
+    }
+
+    Set-Location "qtsparkle"
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_WITH_QT6=ON",
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DCMAKE_PREFIX_PATH=$prefix_path_forward/lib/cmake"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-KDSingleApplication {
+  Write-Host "Building KDSingleApplication" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "kdsingleapplication-$kdsingleapplication_version")) {
+      $tar_file = "$downloads_path\kdsingleapplication-$kdsingleapplication_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "kdsingleapplication" -downloads_path $downloads_path
+      }
+      tar -xf $tar_file
+    }
+
+    Set-Location "kdsingleapplication-$kdsingleapplication_version"
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DCMAKE_PREFIX_PATH=$prefix_path_forward/lib/cmake",
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DKDSingleApplication_QT6=ON"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Glew {
+  Write-Host "Building glew" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "glew-$glew_version")) {
+      $tar_file = "$downloads_path\glew-$glew_version.tgz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "glew" -downloads_path $downloads_path
+      }
+      tar -xf $tar_file
+    }
+
+    Set-Location "glew-$glew_version"
+
+    Invoke-CMakeBuild -source_path "build\cmake" -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-LibProjectm {
+  Write-Host "Building libprojectm" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "libprojectm-$libprojectm_version")) {
+      $tar_file = "$downloads_path\libprojectm-$libprojectm_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "libprojectm" -downloads_path $downloads_path
+      }
+      tar -xf $tar_file
+    }
+
+    Set-Location "libprojectm-$libprojectm_version"
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Gettext {
+  Write-Host "Installing gettext" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "gettext")) {
+      New-Item -ItemType Directory -Path "gettext" -Force | Out-Null
+    }
+
+    Set-Location "gettext"
+
+    $zip_file = "$downloads_path\gettext$gettext_version-iconv1.17-static-64.zip"
+    if (-not (Test-Path $zip_file)) {
+      Write-Host "Archive not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "gettext" -downloads_path $downloads_path
+    }
+
+    & 7z x -aoa $zip_file | Out-Default
+
+    Copy-Item "bin\*.exe" "$prefix_path\bin\" -Force
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-TinySvcmdns {
+  Write-Host "Building tinysvcmdns" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "tinysvcmdns")) {
+      New-Item -ItemType Directory -Path "tinysvcmdns" -Force | Out-Null
+      Copy-Item "$downloads_path\tinysvcmdns\*" "tinysvcmdns\" -Recurse -Force
+    }
+
+    Set-Location "tinysvcmdns"
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Peparse {
+  Write-Host "Building pe-parse" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "pe-parse-$peparse_version")) {
+      $tar_file = "$downloads_path\pe-parse-$peparse_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "peparse" -downloads_path $downloads_path
+      }
+      tar -xf $tar_file
+    }
+
+    Set-Location "pe-parse-$peparse_version"
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DBUILD_STATIC_LIBS=OFF",
+        "-DBUILD_COMMAND_LINE_TOOLS=OFF"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Peutil {
+  Write-Host "Building pe-util" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "pe-util")) {
+      New-Item -ItemType Directory -Path "pe-util" -Force | Out-Null
+      Copy-Item "$downloads_path\pe-util\*" "pe-util\" -Recurse -Force
+    }
+
+    Set-Location "pe-util"
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DBUILD_STATIC_LIBS=OFF",
+        "-DBUILD_COMMAND_LINE_TOOLS=OFF"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
 function Build-Strawberry {
   Write-Host "Building strawberry" -ForegroundColor Yellow
 
@@ -2393,6 +2652,15 @@ try {
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-libav-1.0.pc")) { $buildQueue += "gst-libav" }
   if (-not (Test-Path "$prefix_path\bin\qt-configure-module.bat")) { $buildQueue += "qt" }
   if (-not (Test-Path "$prefix_path\bin\linguist.exe")) { $buildQueue += "qttools" }
+  if (-not (Test-Path "$prefix_path\lib\cmake\QtGrpc\QtGrpcConfig.cmake")) { $buildQueue += "qtgrpc" }
+  if (-not (Test-Path "$prefix_path\lib\cmake\qtsparkle\qtsparkleConfig.cmake")) { $buildQueue += "qtsparkle" }
+  if (-not (Test-Path "$prefix_path\lib\cmake\KDSingleApplication-qt6\KDSingleApplication-qt6Config.cmake")) { $buildQueue += "kdsingleapplication" }
+  if (-not (Test-Path "$prefix_path\lib\glew32.lib")) { $buildQueue += "glew" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\libprojectM.pc")) { $buildQueue += "libprojectm" }
+  if (-not (Test-Path "$prefix_path\bin\msgfmt.exe")) { $buildQueue += "gettext" }
+  if (-not (Test-Path "$prefix_path\lib\libtinysvcmdns.dll")) { $buildQueue += "tinysvcmdns" }
+  if (-not (Test-Path "$prefix_path\lib\cmake\pe-parse\pe-parseConfig.cmake")) { $buildQueue += "peparse" }
+  if (-not (Test-Path "$prefix_path\lib\libpeutil.dll")) { $buildQueue += "peutil" }
   if (-not (Test-Path "$build_path\strawberry\build\strawberrysetup*.exe")) { $buildQueue += "strawberry" }
 
   if ($buildQueue.Count -eq 0) {
@@ -2459,6 +2727,15 @@ try {
       "gst-libav" { Build-GstLibav }
       "qt" { Build-Qt }
       "qttools" { Build-QtTools }
+      "qtgrpc" { Build-QtGrpc }
+      "qtsparkle" { Build-QtSparkle }
+      "kdsingleapplication" { Build-KDSingleApplication }
+      "glew" { Build-Glew }
+      "libprojectm" { Build-LibProjectm }
+      "gettext" { Build-Gettext }
+      "tinysvcmdns" { Build-TinySvcmdns }
+      "peparse" { Build-Peparse }
+      "peutil" { Build-Peutil }
       "strawberry" { Build-Strawberry }
       default {
         Write-Warning "Unknown component: $component (skipping)"
