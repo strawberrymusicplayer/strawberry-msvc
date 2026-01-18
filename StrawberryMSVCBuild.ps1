@@ -1039,7 +1039,7 @@ function Build-Orc {
         Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
         Invoke-PackageDownload -package_name "orc" -downloads_path $downloads_path
       }
-      & 7z x "$tar_file" -so | & 7z x -aoa -si"orc-$orc_version.tar"
+      & 7z x "$tar_file" -so | & 7z x -aoa -si -ttar
     }
 
     Set-Location "orc-$orc_version"
@@ -1106,7 +1106,7 @@ function Build-Glib {
           Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
           Invoke-PackageDownload -package_name "glib" -downloads_path $downloads_path
         }
-        & 7z x "$tar_file" -so | & 7z x -aoa -si"glib-$glib_version.tar"
+        & 7z x "$tar_file" -so | & 7z x -aoa -si -ttar
       }
 
       Set-Location "glib-$glib_version"
@@ -1146,7 +1146,7 @@ function Build-LibSoup {
           Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
           Invoke-PackageDownload -package_name "libsoup" -downloads_path $downloads_path
         }
-        & 7z x "$tar_file" -so | & 7z x -aoa -si"libsoup-$libsoup_version.tar"
+        & 7z x "$tar_file" -so | & 7z x -aoa -si -ttar
       }
 
       Set-Location "libsoup-$libsoup_version"
@@ -1188,7 +1188,7 @@ function Build-GlibNetworking {
           Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
           Invoke-PackageDownload -package_name "glib-networking" -downloads_path $downloads_path
         }
-        & 7z x "$tar_file" -so | & 7z x -aoa -si"glib-networking-$glib_networking_version.tar"
+        & 7z x "$tar_file" -so | & 7z x -aoa -si -ttar
       }
 
       Set-Location "glib-networking-$glib_networking_version"
@@ -1828,7 +1828,7 @@ function Build-GStreamer {
             Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
             Invoke-PackageDownload -package_name "gstreamer" -downloads_path $downloads_path
           }
-          & 7z x "$tar_file" -so | & 7z x -aoa -si"gstreamer-$gstreamer_version.tar"
+          & 7z x "$tar_file" -so | & 7z x -aoa -si -ttar
         }
         Set-Location "gstreamer-$gstreamer_version"
       }
@@ -1877,7 +1877,7 @@ function Build-Qt {
           Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
           Invoke-PackageDownload -package_name "qtbase" -downloads_path $downloads_path
         }
-        & 7z x "$tar_file" -so | & 7z x -aoa -si"qtbase-everywhere-src-$qt_version.tar"
+        & 7z x "$tar_file" -so | & 7z x -aoa -si -ttar
       }
       Set-Location "qtbase-everywhere-src-$qt_version"
     }
