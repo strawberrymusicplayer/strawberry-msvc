@@ -32,7 +32,8 @@ Write-Host ""
 try {
   . "$PSScriptRoot\versions.ps1"
   Import-Module "$PSScriptRoot\StrawberryMSVCBuildFunctions.psm1" -Force
-} catch {
+}
+catch {
   Write-Error "Failed to import versions.ps1 or StrawberryMSVCBuildFunctions.psm1: $_"
   exit 1
 }
@@ -42,7 +43,8 @@ if ($build_type -eq "debug") {
   $cmake_build_type = "Debug"
   $meson_build_type = "debug"
   $lib_postfix = "d"
-} elseif ($build_type -eq "release") {
+}
+elseif ($build_type -eq "release") {
   $cmake_build_type = "Release"
   $meson_build_type = "release"
   $lib_postfix = ""
@@ -82,7 +84,8 @@ try {
       Write-Host "  Created: $_" -ForegroundColor Green
     }
   }
-} catch {
+}
+catch {
   Write-Error "Failed to create directories: $_"
   exit 1
 }
@@ -288,7 +291,8 @@ function Build-OpenSSL {
 
     if ($build_type -eq "debug") {
       & perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="$prefix_path" --libdir=lib --openssldir="$prefix_path\ssl" --debug --with-zlib-include="$prefix_path\include" --with-zlib-lib="$prefix_path\lib\zlibd.lib"
-    } else {
+    }
+    else {
       & perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="$prefix_path" --libdir=lib --openssldir="$prefix_path\ssl" --release --with-zlib-include="$prefix_path\include" --with-zlib-lib="$prefix_path\lib\zlib.lib"
     }
 
@@ -1651,7 +1655,8 @@ function Build-GStreamer {
           New-Item -ItemType Directory -Path "gstreamer" -Force | Out-Null
           Copy-Item "$downloads_path\gstreamer\subprojects\gstreamer\*" "gstreamer\" -Recurse -Force
         }
-      } else {
+      }
+      else {
         if (-not (Test-Path "gstreamer-$gstreamer_version")) {
           & 7z x "$downloads_path\gstreamer-$gstreamer_version.tar.xz" -so | & 7z x -aoa -si"gstreamer-$gstreamer_version.tar"
         }
@@ -1692,7 +1697,8 @@ function Build-Qt {
         Copy-Item "$downloads_path\qtbase\*" "qtbase\" -Recurse -Force
       }
       Set-Location "qtbase"
-    } else {
+    }
+    else {
       if (-not (Test-Path "qtbase-everywhere-src-$qt_version")) {
         & 7z x "$downloads_path\qtbase-everywhere-src-$qt_version.tar.xz" -so | & 7z x -aoa -si"qtbase-everywhere-src-$qt_version.tar"
       }
@@ -1884,7 +1890,8 @@ try {
   Write-Host "Build completed successfully!" -ForegroundColor Green
   Write-Host "========================================" -ForegroundColor Green
 
-} catch {
+}
+catch {
   Write-Host ""
   Write-Host "========================================" -ForegroundColor Red
   Write-Host "Build failed!" -ForegroundColor Red
