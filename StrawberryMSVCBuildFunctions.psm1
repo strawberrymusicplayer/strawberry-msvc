@@ -681,13 +681,13 @@ function Invoke-PackageDownload {
     # Check if it's a regular download URL
     if ($deps.PackageUrls.ContainsKey($package_name)) {
       $url = $deps.PackageUrls[$package_name]
-      Get-FileIfNotExists -Url $url -DestinationPath $downloads_path
+      Get-FileIfNotExists -url $url -destination_path $downloads_path
       Write-Host "✓ Package $package_name is available" -ForegroundColor Green
     }
     # Check if it's a Git repository
     elseif ($deps.GitRepos.ContainsKey($package_name)) {
       $url = $deps.GitRepos[$package_name]
-      Sync-GitRepository -Url $url -DestinationPath $downloads_path
+      Sync-GitRepository -url $url -destination_path $downloads_path
       Write-Host "✓ Repository $package_name is available" -ForegroundColor Green
     }
     else {
