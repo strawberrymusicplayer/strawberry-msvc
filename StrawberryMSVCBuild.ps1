@@ -1263,7 +1263,7 @@ function Build-Harfbuzz {
   Push-Location $build_path
   try {
     if (-not (Test-Path "harfbuzz-$harfbuzz_version")) {
-      $tar_file = "$downloads_path\harfbuzz-$harfbuzz_version.tar.gz"
+      $tar_file = "$downloads_path\harfbuzz-$harfbuzz_version.tar.xz"
       if (-not (Test-Path $tar_file)) {
         Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
         Invoke-PackageDownload -package_name "harfbuzz" -downloads_path $downloads_path
