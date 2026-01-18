@@ -571,7 +571,7 @@ function Get-DependencyUrls {
     'glew' = "https://downloads.sourceforge.net/project/glew/glew/$glew_version/glew-$glew_version.tgz"
     'libprojectm' = "https://github.com/projectM-visualizer/projectm/releases/download/v$libprojectm_version/libprojectm-$libprojectm_version.tar.gz"
     'expat' = "https://github.com/libexpat/libexpat/releases/download/R_$expat_version_UNDERSCORE/expat-$expat_version.tar.gz"
-    'freetype' = "https://downloads.sourceforge.net/project/freetype/freetype2/$freetype_version/freetype-$freetype_version.tar.gz"
+    'freetype' = "https://sourceforge.net/projects/freetype/files/freetype2/$freetype_version/freetype-$freetype_version.tar.gz/download"
     'icu4c' = "https://github.com/unicode-org/icu/releases/download/release-$icu4c_version/icu4c-$icu4c_version-sources.tgz"
     'cairo' = "https://cairographics.org/releases/cairo-$cairo_version.tar.xz"
     'harfbuzz' = "https://github.com/harfbuzz/harfbuzz/releases/download/$harfbuzz_version/harfbuzz-$harfbuzz_version.tar.xz"
