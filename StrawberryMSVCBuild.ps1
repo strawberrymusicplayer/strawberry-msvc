@@ -1263,13 +1263,12 @@ function Build-Harfbuzz {
   Push-Location $build_path
   try {
     if (-not (Test-Path "harfbuzz-$harfbuzz_version")) {
-      $tar_file = "$downloads_path\harfbuzz-$harfbuzz_version.tar.xz"
-      if (-not (Test-Path $tar_file)) {
+      if (-not (Test-Path "$downloads_path\harfbuzz-$harfbuzz_version.tar.xz")) {
         Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
         Invoke-PackageDownload -package_name "harfbuzz" -downloads_path $downloads_path
       }
-      $relative_tar_path = Resolve-Path -Relative $tar_file
-      & tar -xf $relative_tar_path
+      & 7z x -aos "$downloads_path\harfbuzz-$harfbuzz_version.tar.xz" -o"$downloads_path" | Out-Default
+      & 7z x -aos "$downloads_path\harfbuzz-$harfbuzz_version.tar" | Out-Default
     }
 
     Set-Location "harfbuzz-$harfbuzz_version"
