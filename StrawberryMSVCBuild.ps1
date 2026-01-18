@@ -304,20 +304,20 @@ function Build-OpenSSL {
     Copy-Item "$prefix_path\lib\libcrypto.lib" "$prefix_path\lib\crypto.lib" -Force
 
     # Create pkg-config files
-    New-PkgConfigFile -Name "OpenSSL-libcrypto" -Description "OpenSSL cryptography library" `
-      -Version $openssl_version -Prefix $prefix_path_forward `
-      -Libs "-lcrypto" -Cflags "-DOPENSSL_LOAD_CONF -I`${includedir}" `
-      -OutputPath "$prefix_path\lib\pkgconfig\libcrypto.pc"
+    New-PkgConfigFile -name "OpenSSL-libcrypto" -description "OpenSSL cryptography library" `
+      -version $openssl_version -prefix $prefix_path_forward `
+      -libs "-lcrypto" -cflags "-DOPENSSL_LOAD_CONF -I`${includedir}" `
+      -output_path "$prefix_path\lib\pkgconfig\libcrypto.pc"
 
-    New-PkgConfigFile -Name "OpenSSL-libssl" -Description "Secure Sockets Layer and cryptography libraries" `
-      -Version $openssl_version -Prefix $prefix_path_forward `
-      -Libs "-lssl" -Cflags "-DOPENSSL_LOAD_CONF -I`${includedir}" `
-      -Requires "libcrypto" -OutputPath "$prefix_path\lib\pkgconfig\libssl.pc"
+    New-PkgConfigFile -name "OpenSSL-libssl" -description "Secure Sockets Layer and cryptography libraries" `
+      -version $openssl_version -prefix $prefix_path_forward `
+      -libs "-lssl" -cflags "-DOPENSSL_LOAD_CONF -I`${includedir}" `
+      -requires "libcrypto" -output_path "$prefix_path\lib\pkgconfig\libssl.pc"
 
-    New-PkgConfigFile -Name "OpenSSL" -Description "Secure Sockets Layer and cryptography libraries and tools" `
-      -Version $openssl_version -Prefix $prefix_path_forward `
-      -Libs "" -Requires "libssl libcrypto" `
-      -OutputPath "$prefix_path\lib\pkgconfig\openssl.pc"
+    New-PkgConfigFile -name "OpenSSL" -description "Secure Sockets Layer and cryptography libraries and tools" `
+      -version $openssl_version -prefix $prefix_path_forward `
+      -libs "" -requires "libssl libcrypto" `
+      -output_path "$prefix_path\lib\pkgconfig\openssl.pc"
   } finally {
     Pop-Location
   }
@@ -352,9 +352,9 @@ function Build-GMP {
     Copy-Item "..\..\..\msvc\bin\x64\gmp$lib_postfix.dll" "$prefix_path\bin\" -Force
     Copy-Item "..\..\..\msvc\include\gmp*.h" "$prefix_path\include\" -Force
 
-    New-PkgConfigFile -Name "gmp" -Description "gmp" -Version $gmp_version `
-      -Prefix $prefix_path_forward -Libs "-lgmp$lib_postfix" `
-      -Cflags "-I`${includedir}" -OutputPath "$prefix_path\lib\pkgconfig\gmp.pc"
+    New-PkgConfigFile -name "gmp" -description "gmp" -version $gmp_version `
+      -prefix $prefix_path_forward -libs "-lgmp$lib_postfix" `
+      -cflags "-I`${includedir}" -output_path "$prefix_path\lib\pkgconfig\gmp.pc"
   } finally {
     Pop-Location
   }
@@ -400,13 +400,13 @@ function Build-Nettle {
     Copy-Item "..\..\..\msvc\bin\x64\hogweed$lib_postfix.dll" "$prefix_path\bin\" -Force
     Copy-Item "..\..\..\msvc\include\nettle\*.h" "$prefix_path\include\nettle\" -Force
 
-    New-PkgConfigFile -Name "nettle" -Description "nettle" -Version $nettle_version `
-      -Prefix $prefix_path_forward -Libs "-lnettle$lib_postfix" `
-      -Cflags "-I`${includedir}" -OutputPath "$prefix_path\lib\pkgconfig\nettle.pc"
+    New-PkgConfigFile -name "nettle" -description "nettle" -version $nettle_version `
+      -prefix $prefix_path_forward -libs "-lnettle$lib_postfix" `
+      -cflags "-I`${includedir}" -output_path "$prefix_path\lib\pkgconfig\nettle.pc"
 
-    New-PkgConfigFile -Name "hogweed" -Description "hogweed" -Version $nettle_version `
-      -Prefix $prefix_path_forward -Libs "-lhogweed$lib_postfix" `
-      -Cflags "-I`${includedir}" -OutputPath "$prefix_path\lib\pkgconfig\hogweed.pc"
+    New-PkgConfigFile -name "hogweed" -description "hogweed" -version $nettle_version `
+      -prefix $prefix_path_forward -libs "-lhogweed$lib_postfix" `
+      -cflags "-I`${includedir}" -output_path "$prefix_path\lib\pkgconfig\hogweed.pc"
   } finally {
     Pop-Location
   }
@@ -481,9 +481,9 @@ function Build-GnuTLS {
     Copy-Item "..\..\..\msvc\lib\x64\gnutls.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\gnutls.dll" "$prefix_path\bin\" -Force
 
-    New-PkgConfigFile -Name "gnutls" -Description "gnutls" -Version $gnutls_version `
-      -Prefix $prefix_path_forward -Libs "-lgnutls" `
-      -Cflags "-I`${includedir}" -OutputPath "$prefix_path\lib\pkgconfig\gnutls.pc"
+    New-PkgConfigFile -name "gnutls" -description "gnutls" -version $gnutls_version `
+      -prefix $prefix_path_forward -libs "-lgnutls" `
+      -cflags "-I`${includedir}" -output_path "$prefix_path\lib\pkgconfig\gnutls.pc"
   } finally {
     Pop-Location
   }
@@ -696,20 +696,20 @@ function Build-ICU4C {
     Copy-Item "bin64\*.*" "$prefix_path\bin\" -Force
 
     # Create pkg-config files
-    New-PkgConfigFile -Name "icu-uc" -Description "International Components for Unicode: Common and Data libraries" `
-      -Version $icu4c_version -Prefix $prefix_path_forward `
-      -Libs "-licuuc$lib_postfix -licudt" -Cflags "-I`${includedir}" `
-      -OutputPath "$prefix_path\lib\pkgconfig\icu-uc.pc"
+    New-PkgConfigFile -name "icu-uc" -description "International Components for Unicode: Common and Data libraries" `
+      -version $icu4c_version -prefix $prefix_path_forward `
+      -libs "-licuuc$lib_postfix -licudt" -cflags "-I`${includedir}" `
+      -output_path "$prefix_path\lib\pkgconfig\icu-uc.pc"
 
-    New-PkgConfigFile -Name "icu-i18n" -Description "International Components for Unicode: Stream and I/O Library" `
-      -Version $icu4c_version -Prefix $prefix_path_forward `
-      -Libs "-licuin$lib_postfix" -Requires "icu-uc" `
-      -OutputPath "$prefix_path\lib\pkgconfig\icu-i18n.pc"
+    New-PkgConfigFile -name "icu-i18n" -description "International Components for Unicode: Stream and I/O Library" `
+      -version $icu4c_version -prefix $prefix_path_forward `
+      -libs "-licuin$lib_postfix" -requires "icu-uc" `
+      -output_path "$prefix_path\lib\pkgconfig\icu-i18n.pc"
 
-    New-PkgConfigFile -Name "icu-io" -Description "International Components for Unicode: Stream and I/O Library" `
-      -Version $icu4c_version -Prefix $prefix_path_forward `
-      -Libs "-licuio$lib_postfix" -Requires "icu-i18n" `
-      -OutputPath "$prefix_path\lib\pkgconfig\icu-io.pc"
+    New-PkgConfigFile -name "icu-io" -description "International Components for Unicode: Stream and I/O Library" `
+      -version $icu4c_version -prefix $prefix_path_forward `
+      -libs "-licuio$lib_postfix" -requires "icu-i18n" `
+      -output_path "$prefix_path\lib\pkgconfig\icu-io.pc"
   } finally {
     Pop-Location
   }
@@ -973,10 +973,10 @@ function Build-SQLite {
     Copy-Item "*.dll" "$prefix_path\bin\" -Force
     Copy-Item "*.exe" "$prefix_path\bin\" -Force
 
-    New-PkgConfigFile -Name "SQLite" -Description "SQL database engine" `
-      -Version "3.38.1" -Prefix $prefix_path_forward `
-      -Libs "-lsqlite3" -Cflags "-I`${includedir}" `
-      -OutputPath "$prefix_path\lib\pkgconfig\sqlite3.pc"
+    New-PkgConfigFile -name "SQLite" -description "SQL database engine" `
+      -version "3.38.1" -prefix $prefix_path_forward `
+      -libs "-lsqlite3" -cflags "-I`${includedir}" `
+      -output_path "$prefix_path\lib\pkgconfig\sqlite3.pc"
   } finally {
     Pop-Location
   }
