@@ -99,7 +99,7 @@ Write-Host "Setting up environment variables..." -ForegroundColor Cyan
 $env:PKG_CONFIG_EXECUTABLE = "$prefix_path\bin\pkgconf.exe"
 $env:PKG_CONFIG_PATH = "$prefix_path\lib\pkgconfig"
 $env:CL = "-MP"
-$env:PATH = "$prefix_path\bin;$env:PATH"
+$env:PATH = "$env:PATH;$prefix_path\bin"
 $env:YASMPATH = "$prefix_path\bin"
 
 # Check for required tools
@@ -125,7 +125,7 @@ foreach ($check in $tool_checks) {
   if (-not (Test-Command $check.Command)) {
     foreach ($path in $check.Paths) {
       if (Test-Path $path) {
-        $env:PATH = "$path;$env:PATH"
+        $env:PATH = "$env:PATH;$path"
         break
       }
     }
