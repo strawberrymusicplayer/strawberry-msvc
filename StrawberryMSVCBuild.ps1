@@ -1284,6 +1284,76 @@ function Build-Harfbuzz {
 }
 
 # Add more audio codec build functions (abbreviated for space)
+function Build-Ogg {
+  Write-Host "Building libogg" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\libogg-$global:libogg_version.tar.gz"
+    if (-not (Test-Path "libogg-$global:libogg_version")) {
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "ogg" -downloads_path $downloads_path
+      }
+      tar -xf $tar_file
+    }
+
+    Set-Location "libogg-$global:libogg_version"
+
+    Invoke-CMakeBuild `
+      -source_path "." `
+      -build_path "build" `
+      -generator $cmake_generator `
+      -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DINSTALL_DOCS=OFF",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+      )
+
+    Write-Host "libogg built successfully!" -ForegroundColor Green
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Vorbis {
+  Write-Host "Building libvorbis" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $tar_file = "$downloads_path\libvorbis-$global:libvorbis_version.tar.gz"
+    if (-not (Test-Path "libvorbis-$global:libvorbis_version")) {
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "vorbis" -downloads_path $downloads_path
+      }
+      tar -xf $tar_file
+    }
+
+    Set-Location "libvorbis-$global:libvorbis_version"
+
+    Invoke-CMakeBuild `
+      -source_path "." `
+      -build_path "build" `
+      -generator $cmake_generator `
+      -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DINSTALL_DOCS=OFF",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+      )
+
+    Write-Host "libvorbis built successfully!" -ForegroundColor Green
+  }
+  finally {
+    Pop-Location
+  }
+}
+
 function Build-Flac {
   Write-Host "Building flac" -ForegroundColor Yellow
 
@@ -2632,6 +2702,8 @@ try {
   if (-not (Test-Path "$prefix_path\lib\gio\modules\gioopenssl.lib")) { $buildQueue += "glib-networking" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\freetype2.pc")) { $buildQueue += "freetype" }
   if (-not (Test-Path "$prefix_path\lib\harfbuzz*.lib")) { $buildQueue += "harfbuzz" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\ogg.pc")) { $buildQueue += "ogg" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\vorbis.pc")) { $buildQueue += "vorbis" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\flac.pc")) { $buildQueue += "flac" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\wavpack.pc")) { $buildQueue += "wavpack" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\opus.pc")) { $buildQueue += "opus" }
@@ -2707,6 +2779,8 @@ try {
       "glib-networking" { Build-GlibNetworking }
       "freetype" { Build-Freetype }
       "harfbuzz" { Build-Harfbuzz }
+      "ogg" { Build-Ogg }
+      "vorbis" { Build-Vorbis }
       "flac" { Build-Flac }
       "wavpack" { Build-Wavpack }
       "opus" { Build-Opus }
