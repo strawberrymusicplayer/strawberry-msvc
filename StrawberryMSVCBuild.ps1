@@ -354,8 +354,8 @@ function Build-GMP {
 
     Set-Location "gmp\SMP"
 
-    Update-VSProject -ProjectPath "libgmp.vcxproj"
-    Invoke-MSBuildProject -ProjectPath "libgmp.vcxproj" -Configuration "${BuildType}DLL"
+    Update-VSProject -project_path "$smp_build_path\gmp\SMP\libgmp.vcxproj"
+    Invoke-MSBuildProject -project_path "$smp_build_path\gmp\SMP\libgmp.vcxproj" -configuration "${build_type}DLL"
 
     Copy-Item "..\..\..\msvc\lib\x64\gmp$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\gmp$lib_postfix.dll" "$prefix_path\bin\" -Force
@@ -392,8 +392,8 @@ function Build-Nettle {
 
     Set-Location "nettle\SMP"
 
-    Update-VSProject -ProjectPath "libnettle.vcxproj"
-    Invoke-MSBuildProject -ProjectPath "libnettle.vcxproj" -Configuration "${BuildType}DLL"
+    Update-VSProject -project_path "libnettle.vcxproj"
+    Invoke-MSBuildProject -project_path "libnettle.vcxproj" -configuration "${build_type}DLL"
 
     Copy-Item "..\..\..\msvc\lib\x64\nettle$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\nettle$lib_postfix.dll" "$prefix_path\bin\" -Force
@@ -403,8 +403,8 @@ function Build-Nettle {
     }
     Copy-Item "..\..\..\msvc\include\nettle\*.h" "$prefix_path\include\nettle\" -Force
 
-    Update-VSProject -ProjectPath "libhogweed.vcxproj"
-    Invoke-MSBuildProject -ProjectPath "libhogweed.vcxproj" -Configuration "${BuildType}DLL"
+    Update-VSProject -project_path "libhogweed.vcxproj"
+    Invoke-MSBuildProject -project_path "libhogweed.vcxproj" -configuration "${build_type}DLL"
 
     Copy-Item "..\..\..\msvc\lib\x64\hogweed$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\hogweed$lib_postfix.dll" "$prefix_path\bin\" -Force
@@ -460,10 +460,9 @@ function Build-GnuTLS {
 "@
     Set-Content -Path "$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props" -Value $props_content
 
-    Update-VSProject -ProjectPath "libgnutls.sln"
+    Update-VSProject -project_path "libgnutls.sln"
 
-    Invoke-MSBuildProject -ProjectPath "libgnutls.sln" -Configuration "${CMAKE_BUILD_TYPE}DLL" `
-      -additional_args @("/p:ForceImportBeforeCppTargets=$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props")
+    Invoke-MSBuildProject -project_path "libgnutls.sln" -configuration "${CMAKE_BUILD_TYPE}DLL" -additional_args @("/p:ForceImportBeforeCppTargets=$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props")
 
     Copy-Item "..\..\..\msvc\lib\x64\gnutls$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\gnutls$lib_postfix.dll" "$prefix_path\bin\" -Force
@@ -474,18 +473,18 @@ function Build-GnuTLS {
     Copy-Item "..\..\..\msvc\include\gnutls\*.h" "$prefix_path\include\gnutls\" -Force
 
     # Workaround: Build static deps version
-    & "project_get_dependencies.bat"
+    & ".\project_get_dependencies.bat"
 
-    Update-VSProject -ProjectPath "..\..\gmp\SMP\libgmp.vcxproj"
-    Update-VSProject -ProjectPath "..\..\zlib\SMP\libzlib.vcxproj"
-    Update-VSProject -ProjectPath "..\..\nettle\SMP\libnettle.vcxproj"
-    Update-VSProject -ProjectPath "..\..\nettle\SMP\libhogweed.vcxproj"
+    Update-VSProject -project_path "..\..\gmp\SMP\libgmp.vcxproj"
+    Update-VSProject -project_path "..\..\zlib\SMP\libzlib.vcxproj"
+    Update-VSProject -project_path "..\..\nettle\SMP\libnettle.vcxproj"
+    Update-VSProject -project_path "..\..\nettle\SMP\libhogweed.vcxproj"
 
-    Invoke-MSBuildProject -ProjectPath "..\..\gmp\SMP\libgmp.vcxproj" -Configuration "Release"
-    Invoke-MSBuildProject -ProjectPath "..\..\zlib\SMP\libzlib.vcxproj" -Configuration "Release"
-    Invoke-MSBuildProject -ProjectPath "..\..\nettle\SMP\libnettle.vcxproj" -Configuration "Release"
-    Invoke-MSBuildProject -ProjectPath "..\..\nettle\SMP\libhogweed.vcxproj" -Configuration "Release"
-    Invoke-MSBuildProject -ProjectPath "libgnutls.vcxproj" -Configuration "ReleaseDLLStaticDeps"
+    Invoke-MSBuildProject -project_path "..\..\gmp\SMP\libgmp.vcxproj" -configuration "Release"
+    Invoke-MSBuildProject -project_path "..\..\zlib\SMP\libzlib.vcxproj" -configuration "Release"
+    Invoke-MSBuildProject -project_path "..\..\nettle\SMP\libnettle.vcxproj" -configuration "Release"
+    Invoke-MSBuildProject -project_path "..\..\nettle\SMP\libhogweed.vcxproj" -configuration "Release"
+    Invoke-MSBuildProject -project_path "libgnutls.vcxproj" -configuration "ReleaseDLLStaticDeps"
 
     Remove-Item "$prefix_path\lib\gnutls$lib_postfix.lib" -Force
     Remove-Item "$prefix_path\bin\gnutls$lib_postfix.dll" -Force
@@ -673,7 +672,7 @@ function Build-LibIconv {
 
     Set-Location "libiconv-for-Windows"
 
-    Invoke-MSBuildProject -ProjectPath "libiconv.sln" -Configuration $build_type
+    Invoke-MSBuildProject -project_path "libiconv.sln" -configuration $build_type
 
     Copy-Item "output\x64\$build_type\*.lib" "$prefix_path\lib\" -Force
     Copy-Item "output\x64\$build_type\*.dll" "$prefix_path\bin\" -Force
@@ -701,8 +700,7 @@ function Build-ICU4C {
 
     Set-Location "icu\source\allinone"
 
-    Invoke-MSBuildProject -ProjectPath "allinone.sln" -Configuration $build_type `
-      -Platform "x64" -additional_args @("/p:SkipUWP=true")
+    Invoke-MSBuildProject -project_path "allinone.sln" -configuration $build_type -platform "x64" -additional_args @("/p:SkipUWP=true")
 
     Set-Location "..\..\"
 
