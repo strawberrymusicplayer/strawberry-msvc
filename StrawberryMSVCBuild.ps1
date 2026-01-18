@@ -1115,6 +1115,7 @@ function Build-Glib {
 
       Invoke-MesonBuild -source_path "." -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
+        -allow_wrap_downloads $true `
         -additional_args @(
           "--includedir=$prefix_path\include",
           "--libdir=$prefix_path\lib",

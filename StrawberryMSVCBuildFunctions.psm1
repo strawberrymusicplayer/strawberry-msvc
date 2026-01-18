@@ -115,6 +115,9 @@ function Invoke-MesonBuild {
     [string]$pkg_config_path,
 
     [Parameter(Mandatory=$false)]
+    [bool]$allow_wrap_downloads = $false,
+
+    [Parameter(Mandatory=$false)]
     [string[]]$additional_args = @()
   )
 
@@ -127,9 +130,12 @@ function Invoke-MesonBuild {
         "setup",
         "--buildtype=$build_type",
         "--default-library=shared",
-        "--prefix=$install_prefix",
-        "--wrap-mode=nodownload"
+        "--prefix=$install_prefix"
       )
+
+      if (-not $allow_wrap_downloads) {
+        $setup_args += "--wrap-mode=nodownload"
+      }
 
       if ($pkg_config_path) {
         $setup_args += "--pkg-config-path=$pkg_config_path"
