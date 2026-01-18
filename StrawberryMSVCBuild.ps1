@@ -1870,6 +1870,333 @@ function Build-GStreamer {
   }
 }
 
+function Build-GstPluginsBase {
+  Write-Host "Building gst-plugins-base" -ForegroundColor Yellow
+
+  $original_cflags = $env:CFLAGS
+
+  try {
+    $env:CFLAGS = "-I$prefix_path_forward/include -I$prefix_path_forward/include/opus"
+
+    Push-Location $build_path
+    try {
+      if ($gst_dev -eq "ON") {
+        if (-not (Test-Path "gst-plugins-base")) {
+          New-Item -ItemType Directory -Path "gst-plugins-base" -Force | Out-Null
+          Copy-Item "$downloads_path\gstreamer\subprojects\gst-plugins-base\*" "gst-plugins-base\" -Recurse -Force
+        }
+        Set-Location "gst-plugins-base"
+      }
+      else {
+        if (-not (Test-Path "gst-plugins-base-$gstreamer_version")) {
+          $tar_file = "$downloads_path\gst-plugins-base-$gstreamer_version.tar.xz"
+          if (-not (Test-Path $tar_file)) {
+            Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+            Invoke-PackageDownload -package_name "gst-plugins-base" -downloads_path $downloads_path
+          }
+          & 7z x -aos "$tar_file" -o"$downloads_path" | Out-Default
+          & 7z x -aos "$downloads_path\gst-plugins-base-$gstreamer_version.tar" | Out-Default
+        }
+        Set-Location "gst-plugins-base-$gstreamer_version"
+      }
+
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
+          "-Dexamples=disabled",
+          "-Dtests=disabled",
+          "-Dtools=enabled",
+          "-Dintrospection=disabled",
+          "-Dnls=disabled",
+          "-Dorc=enabled",
+          "-Ddoc=disabled",
+          "-Dadder=enabled",
+          "-Dapp=enabled",
+          "-Daudioconvert=enabled",
+          "-Daudiomixer=enabled",
+          "-Daudiorate=enabled",
+          "-Daudioresample=enabled",
+          "-Daudiotestsrc=enabled",
+          "-Ddsd=enabled",
+          "-Dencoding=enabled",
+          "-Dgio=enabled",
+          "-Dgio-typefinder=enabled",
+          "-Dpbtypes=enabled",
+          "-Dplayback=enabled",
+          "-Dtcp=enabled",
+          "-Dtypefind=enabled",
+          "-Dvolume=enabled",
+          "-Dogg=enabled",
+          "-Dopus=enabled",
+          "-Dvorbis=enabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
+  }
+  finally {
+    $env:CFLAGS = $original_cflags
+  }
+}
+
+function Build-GstPluginsGood {
+  Write-Host "Building gst-plugins-good" -ForegroundColor Yellow
+
+  $original_cflags = $env:CFLAGS
+
+  try {
+    $env:CFLAGS = "-I$prefix_path_forward/include"
+
+    Push-Location $build_path
+    try {
+      if ($gst_dev -eq "ON") {
+        if (-not (Test-Path "gst-plugins-good")) {
+          New-Item -ItemType Directory -Path "gst-plugins-good" -Force | Out-Null
+          Copy-Item "$downloads_path\gstreamer\subprojects\gst-plugins-good\*" "gst-plugins-good\" -Recurse -Force
+        }
+        Set-Location "gst-plugins-good"
+      }
+      else {
+        if (-not (Test-Path "gst-plugins-good-$gstreamer_version")) {
+          $tar_file = "$downloads_path\gst-plugins-good-$gstreamer_version.tar.xz"
+          if (-not (Test-Path $tar_file)) {
+            Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+            Invoke-PackageDownload -package_name "gst-plugins-good" -downloads_path $downloads_path
+          }
+          & 7z x -aos "$tar_file" -o"$downloads_path" | Out-Default
+          & 7z x -aos "$downloads_path\gst-plugins-good-$gstreamer_version.tar" | Out-Default
+        }
+        Set-Location "gst-plugins-good-$gstreamer_version"
+      }
+
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
+          "-Dexamples=disabled",
+          "-Dtests=disabled",
+          "-Dnls=disabled",
+          "-Dorc=enabled",
+          "-Dasm=enabled",
+          "-Ddoc=disabled",
+          "-Dapetag=enabled",
+          "-Daudiofx=enabled",
+          "-Daudioparsers=enabled",
+          "-Dautodetect=enabled",
+          "-Dequalizer=enabled",
+          "-Dicydemux=enabled",
+          "-Did3demux=enabled",
+          "-Disomp4=enabled",
+          "-Dreplaygain=enabled",
+          "-Drtp=enabled",
+          "-Drtsp=enabled",
+          "-Dspectrum=enabled",
+          "-Dudp=enabled",
+          "-Dwavenc=enabled",
+          "-Dwavparse=enabled",
+          "-Dxingmux=enabled",
+          "-Dadaptivedemux2=enabled",
+          "-Ddirectsound=enabled",
+          "-Dflac=enabled",
+          "-Dlame=enabled",
+          "-Dmpg123=enabled",
+          "-Dspeex=enabled",
+          "-Dtaglib=enabled",
+          "-Dtwolame=enabled",
+          "-Dwaveform=enabled",
+          "-Dwavpack=enabled",
+          "-Dsoup=enabled",
+          "-Dhls-crypto=openssl"
+        )
+    }
+    finally {
+      Pop-Location
+    }
+  }
+  finally {
+    $env:CFLAGS = $original_cflags
+  }
+}
+
+function Build-GstPluginsBad {
+  Write-Host "Building gst-plugins-bad" -ForegroundColor Yellow
+
+  $original_cflags = $env:CFLAGS
+
+  try {
+    $env:CFLAGS = "-I$prefix_path_forward/include -I$prefix_path_forward/include/opus"
+
+    Push-Location $build_path
+    try {
+      if ($gst_dev -eq "ON") {
+        if (-not (Test-Path "gst-plugins-bad")) {
+          New-Item -ItemType Directory -Path "gst-plugins-bad" -Force | Out-Null
+          Copy-Item "$downloads_path\gstreamer\subprojects\gst-plugins-bad\*" "gst-plugins-bad\" -Recurse -Force
+        }
+        Set-Location "gst-plugins-bad"
+        & patch -p1 -N -i "$downloads_path\gst-plugins-bad-meson-dependency.patch"
+      }
+      else {
+        if (-not (Test-Path "gst-plugins-bad-$gstreamer_version")) {
+          $tar_file = "$downloads_path\gst-plugins-bad-$gstreamer_version.tar.xz"
+          if (-not (Test-Path $tar_file)) {
+            Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+            Invoke-PackageDownload -package_name "gst-plugins-bad" -downloads_path $downloads_path
+          }
+          & 7z x -aos "$tar_file" -o"$downloads_path" | Out-Default
+          & 7z x -aos "$downloads_path\gst-plugins-bad-$gstreamer_version.tar" | Out-Default
+        }
+        Set-Location "gst-plugins-bad-$gstreamer_version"
+        & patch -p1 -N -i "$downloads_path\gst-plugins-bad-meson-dependency.patch"
+      }
+
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
+          "-Dexamples=disabled",
+          "-Dtools=enabled",
+          "-Dtests=disabled",
+          "-Dintrospection=disabled",
+          "-Dnls=disabled",
+          "-Dorc=enabled",
+          "-Dgpl=enabled",
+          "-Daiff=enabled",
+          "-Dasfmux=enabled",
+          "-Did3tag=enabled",
+          "-Dmpegdemux=enabled",
+          "-Dmpegpsmux=enabled",
+          "-Dmpegtsdemux=enabled",
+          "-Dmpegtsmux=enabled",
+          "-Dremovesilence=enabled",
+          "-Daes=enabled",
+          "-Dasio=enabled",
+          "-Dbluez=enabled",
+          "-Dbs2b=enabled",
+          "-Dchromaprint=enabled",
+          "-Ddash=enabled",
+          "-Ddirectsound=enabled",
+          "-Dfaac=enabled",
+          "-Dfaad=enabled",
+          "-Dfdkaac=enabled",
+          "-Dgme=enabled",
+          "-Dmusepack=enabled",
+          "-Dopenmpt=enabled",
+          "-Dopus=enabled",
+          "-Dwasapi=enabled",
+          "-Dwasapi2=enabled",
+          "-Dhls=enabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
+  }
+  finally {
+    $env:CFLAGS = $original_cflags
+  }
+}
+
+function Build-GstPluginsUgly {
+  Write-Host "Building gst-plugins-ugly" -ForegroundColor Yellow
+
+  $original_cflags = $env:CFLAGS
+
+  try {
+    $env:CFLAGS = "-I$prefix_path_forward/include"
+
+    Push-Location $build_path
+    try {
+      if ($gst_dev -eq "ON") {
+        if (-not (Test-Path "gst-plugins-ugly")) {
+          New-Item -ItemType Directory -Path "gst-plugins-ugly" -Force | Out-Null
+          Copy-Item "$downloads_path\gstreamer\subprojects\gst-plugins-ugly\*" "gst-plugins-ugly\" -Recurse -Force
+        }
+        Set-Location "gst-plugins-ugly"
+      }
+      else {
+        if (-not (Test-Path "gst-plugins-ugly-$gstreamer_version")) {
+          $tar_file = "$downloads_path\gst-plugins-ugly-$gstreamer_version.tar.xz"
+          if (-not (Test-Path $tar_file)) {
+            Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+            Invoke-PackageDownload -package_name "gst-plugins-ugly" -downloads_path $downloads_path
+          }
+          & 7z x -aos "$tar_file" -o"$downloads_path" | Out-Default
+          & 7z x -aos "$downloads_path\gst-plugins-ugly-$gstreamer_version.tar" | Out-Default
+        }
+        Set-Location "gst-plugins-ugly-$gstreamer_version"
+      }
+
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
+          "-Dnls=disabled",
+          "-Dorc=enabled",
+          "-Dtests=disabled",
+          "-Ddoc=disabled",
+          "-Dgpl=enabled",
+          "-Dasfdemux=enabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
+  }
+  finally {
+    $env:CFLAGS = $original_cflags
+  }
+}
+
+function Build-GstLibav {
+  Write-Host "Building gst-libav" -ForegroundColor Yellow
+
+  $original_cflags = $env:CFLAGS
+
+  try {
+    $env:CFLAGS = "-I$prefix_path_forward/include"
+
+    Push-Location $build_path
+    try {
+      if ($gst_dev -eq "ON") {
+        if (-not (Test-Path "gst-libav")) {
+          New-Item -ItemType Directory -Path "gst-libav" -Force | Out-Null
+          Copy-Item "$downloads_path\gstreamer\subprojects\gst-libav\*" "gst-libav\" -Recurse -Force
+        }
+        Set-Location "gst-libav"
+      }
+      else {
+        if (-not (Test-Path "gst-libav-$gstreamer_version")) {
+          $tar_file = "$downloads_path\gst-libav-$gstreamer_version.tar.xz"
+          if (-not (Test-Path $tar_file)) {
+            Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+            Invoke-PackageDownload -package_name "gst-libav" -downloads_path $downloads_path
+          }
+          & 7z x -aos "$tar_file" -o"$downloads_path" | Out-Default
+          & 7z x -aos "$downloads_path\gst-libav-$gstreamer_version.tar" | Out-Default
+        }
+        Set-Location "gst-libav-$gstreamer_version"
+      }
+
+      Invoke-MesonBuild -source_path "." -build_path "build" `
+        -build_type $meson_build_type -install_prefix $prefix_path `
+        -pkg_config_path "$prefix_path\lib\pkgconfig" `
+        -additional_args @(
+          "-Dtests=disabled",
+          "-Ddoc=disabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
+  }
+  finally {
+    $env:CFLAGS = $original_cflags
+  }
+}
+
 function Build-Qt {
   Write-Host "Building qtbase" -ForegroundColor Yellow
 
@@ -1913,6 +2240,59 @@ function Build-Qt {
         "-DFEATURE_system_harfbuzz=ON",
         "-DFEATURE_system_sqlite=ON",
         "-DICU_ROOT=$prefix_path_forward"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-QtTools {
+  Write-Host "Building qttools" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if ($qt_dev -eq "ON") {
+      if (-not (Test-Path "qttools")) {
+        New-Item -ItemType Directory -Path "qttools" -Force | Out-Null
+        Copy-Item "$downloads_path\qttools\*" "qttools\" -Recurse -Force
+      }
+      Set-Location "qttools"
+    }
+    else {
+      if (-not (Test-Path "qttools-everywhere-src-$qt_version")) {
+        $tar_file = "$downloads_path\qttools-everywhere-src-$qt_version.tar.xz"
+        if (-not (Test-Path $tar_file)) {
+          Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+          Invoke-PackageDownload -package_name "qttools" -downloads_path $downloads_path
+        }
+        & 7z x -aos "$tar_file" -o"$downloads_path" | Out-Default
+        & 7z x -aos "$downloads_path\qttools-everywhere-src-$qt_version.tar" | Out-Default
+      }
+      Set-Location "qttools-everywhere-src-$qt_version"
+    }
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator "Ninja" -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DCMAKE_PREFIX_PATH=$prefix_path_forward/lib/cmake",
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DBUILD_STATIC_LIBS=OFF",
+        "-DQT_BUILD_EXAMPLES=OFF",
+        "-DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF",
+        "-DQT_BUILD_TOOLS_WHEN_CROSSCOMPILING=ON",
+        "-DFEATURE_assistant=OFF",
+        "-DFEATURE_designer=OFF",
+        "-DFEATURE_distancefieldgenerator=OFF",
+        "-DFEATURE_kmap2qmap=OFF",
+        "-DFEATURE_pixeltool=OFF",
+        "-DFEATURE_qdbus=OFF",
+        "-DFEATURE_qev=OFF",
+        "-DFEATURE_qtattributionsscanner=OFF",
+        "-DFEATURE_qtdiag=OFF",
+        "-DFEATURE_qtplugininfo=OFF",
+        "-DFEATURE_linguist=ON"
       )
   }
   finally {
@@ -2007,7 +2387,13 @@ try {
   if (-not (Test-Path "$prefix_path\lib\avutil.lib")) { $buildQueue += "ffmpeg" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libchromaprint.pc")) { $buildQueue += "chromaprint" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-1.0.pc")) { $buildQueue += "gstreamer" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-base-1.0.pc")) { $buildQueue += "gst-plugins-base" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-plugins-good-1.0.pc")) { $buildQueue += "gst-plugins-good" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc")) { $buildQueue += "gst-plugins-bad" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-plugins-ugly-1.0.pc")) { $buildQueue += "gst-plugins-ugly" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-libav-1.0.pc")) { $buildQueue += "gst-libav" }
   if (-not (Test-Path "$prefix_path\bin\qt-configure-module.bat")) { $buildQueue += "qt" }
+  if (-not (Test-Path "$prefix_path\bin\linguist.exe")) { $buildQueue += "qttools" }
   if (-not (Test-Path "$build_path\strawberry\build\strawberrysetup*.exe")) { $buildQueue += "strawberry" }
 
   if ($buildQueue.Count -eq 0) {
@@ -2067,7 +2453,13 @@ try {
       "ffmpeg" { Build-FFmpeg }
       "chromaprint" { Build-Chromaprint }
       "gstreamer" { Build-GStreamer }
+      "gst-plugins-base" { Build-GstPluginsBase }
+      "gst-plugins-good" { Build-GstPluginsGood }
+      "gst-plugins-bad" { Build-GstPluginsBad }
+      "gst-plugins-ugly" { Build-GstPluginsUgly }
+      "gst-libav" { Build-GstLibav }
       "qt" { Build-Qt }
+      "qttools" { Build-QtTools }
       "strawberry" { Build-Strawberry }
       default {
         Write-Warning "Unknown component: $component (skipping)"
