@@ -129,7 +129,7 @@ foreach ($check in $tool_checks) {
         break
       }
     }
-        
+
     if (-not (Test-Command $check.Command)) {
       Write-Error $check.Message
       exit 1
@@ -146,17 +146,17 @@ Write-Host ""
 
 function Build-Yasm {
   Write-Host "Building yasm" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "yasm")) {
       New-Item -ItemType Directory -Path "yasm" -Force | Out-Null
       Copy-Item "$downloads_path\yasm\*" "yasm\" -Recurse -Force
     }
-        
+
     Set-Location "yasm"
     & patch -p1 -N -i "$downloads_path\yasm-cmake.patch" 2>&1 | Out-Null
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -168,7 +168,7 @@ function Build-Yasm {
 
 function Build-Pkgconf {
   Write-Host "Building pkgconf" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     $pkgDir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" -ErrorAction SilentlyContinue | Select-Object -First 1
@@ -182,18 +182,18 @@ function Build-Pkgconf {
       }
       $pkgDir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" | Select-Object -First 1
     }
-    
+
     if (-not $pkgDir) {
       throw "Failed to find extracted pkgconf directory"
     }
-        
+
     Set-Location $pkgDir.FullName
-        
+
     Invoke-MesonBuild -source_path "." -build_path "build" `
       -build_type $meson_build_type -install_prefix $prefix_path `
       -pkg_config_path "$prefix_path\lib\pkgconfig" `
       -additional_args @("-Dtests=disabled")
-        
+
     Copy-Item "$prefix_path\bin\pkgconf.exe" "$prefix_path\bin\pkg-config.exe" -Force
   } finally {
     Pop-Location
@@ -202,7 +202,7 @@ function Build-Pkgconf {
 
 function Build-GetoptWin {
   Write-Host "Building getopt-win" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "getopt-win-$getopt_win_version")) {
@@ -210,9 +210,9 @@ function Build-GetoptWin {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "getopt-win-$getopt_win_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -230,7 +230,7 @@ function Build-GetoptWin {
 
 function Build-Zlib {
   Write-Host "Building zlib" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "zlib-$zlib_version")) {
@@ -238,9 +238,9 @@ function Build-Zlib {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "zlib-$zlib_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -248,12 +248,12 @@ function Build-Zlib {
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_STATIC_LIBS=OFF"
       )
-        
+
     Copy-Item "$prefix_path\share\pkgconfig\zlib.pc" "$prefix_path\lib\pkgconfig\" -Force
     (Get-Content "$prefix_path\lib\pkgconfig\zlib.pc") -replace '-lz', "-lzlib$lib_postfix" | Set-Content "$prefix_path\lib\pkgconfig\zlib.pc"
-        
+
     Copy-Item "$prefix_path\lib\zlib$lib_postfix.lib" "$prefix_path\lib\z.lib" -Force
-        
+
     Remove-Item "$prefix_path\lib\zlibstatic*.lib" -ErrorAction SilentlyContinue
   } finally {
     Pop-Location
@@ -262,7 +262,7 @@ function Build-Zlib {
 
 function Build-OpenSSL {
   Write-Host "Building openssl" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "openssl-$openssl_version")) {
@@ -270,37 +270,37 @@ function Build-OpenSSL {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "openssl-$openssl_version"
-        
+
     if ($build_type -eq "debug") {
       & perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="$prefix_path" --libdir=lib --openssldir="$prefix_path\ssl" --debug --with-zlib-include="$prefix_path\include" --with-zlib-lib="$prefix_path\lib\zlibd.lib"
     } else {
       & perl Configure VC-WIN64A shared zlib no-capieng no-tests --prefix="$prefix_path" --libdir=lib --openssldir="$prefix_path\ssl" --release --with-zlib-include="$prefix_path\include" --with-zlib-lib="$prefix_path\lib\zlib.lib"
     }
-        
+
     if ($LASTEXITCODE -ne 0) { throw "OpenSSL configure failed" }
-        
+
     & nmake
     if ($LASTEXITCODE -ne 0) { throw "OpenSSL build failed" }
-        
+
     & nmake install_sw
     if ($LASTEXITCODE -ne 0) { throw "OpenSSL install failed" }
-        
+
     Copy-Item "$prefix_path\lib\libssl.lib" "$prefix_path\lib\ssl.lib" -Force
     Copy-Item "$prefix_path\lib\libcrypto.lib" "$prefix_path\lib\crypto.lib" -Force
-        
+
     # Create pkg-config files
     New-PkgConfigFile -Name "OpenSSL-libcrypto" -Description "OpenSSL cryptography library" `
       -Version $openssl_version -Prefix $prefix_path_forward `
       -Libs "-lcrypto" -Cflags "-DOPENSSL_LOAD_CONF -I`${includedir}" `
       -OutputPath "$prefix_path\lib\pkgconfig\libcrypto.pc"
-        
+
     New-PkgConfigFile -Name "OpenSSL-libssl" -Description "Secure Sockets Layer and cryptography libraries" `
       -Version $openssl_version -Prefix $prefix_path_forward `
       -Libs "-lssl" -Cflags "-DOPENSSL_LOAD_CONF -I`${includedir}" `
       -Requires "libcrypto" -OutputPath "$prefix_path\lib\pkgconfig\libssl.pc"
-        
+
     New-PkgConfigFile -Name "OpenSSL" -Description "Secure Sockets Layer and cryptography libraries and tools" `
       -Version $openssl_version -Prefix $prefix_path_forward `
       -Libs "" -Requires "libssl libcrypto" `
@@ -312,16 +312,16 @@ function Build-OpenSSL {
 
 function Build-GMP {
   Write-Host "Installing gmp" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     $smpBuildPath = "$build_path\ShiftMediaProject\build"
     if (-not (Test-Path $smpBuildPath)) {
       New-Item -ItemType Directory -Path $smpBuildPath -Force | Out-Null
     }
-        
+
     Set-Location $smpBuildPath
-        
+
     if (-not (Test-Path "gmp")) {
       New-Item -ItemType Directory -Path "gmp" -Force | Out-Null
       Set-Location "gmp"
@@ -329,16 +329,16 @@ function Build-GMP {
       & git checkout $gmp_version
       Set-Location ..
     }
-        
+
     Set-Location "gmp\SMP"
-        
+
     Update-VSProject -ProjectPath "libgmp.vcxproj"
     Invoke-MSBuildProject -ProjectPath "libgmp.vcxproj" -Configuration "${BuildType}DLL"
-        
+
     Copy-Item "..\..\..\msvc\lib\x64\gmp$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\gmp$lib_postfix.dll" "$prefix_path\bin\" -Force
     Copy-Item "..\..\..\msvc\include\gmp*.h" "$prefix_path\include\" -Force
-        
+
     New-PkgConfigFile -Name "gmp" -Description "gmp" -Version $gmp_version `
       -Prefix $prefix_path_forward -Libs "-lgmp$lib_postfix" `
       -Cflags "-I`${includedir}" -OutputPath "$prefix_path\lib\pkgconfig\gmp.pc"
@@ -349,16 +349,16 @@ function Build-GMP {
 
 function Build-Nettle {
   Write-Host "Installing nettle" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     $smpBuildPath = "$build_path\ShiftMediaProject\build"
     if (-not (Test-Path $smpBuildPath)) {
       New-Item -ItemType Directory -Path $smpBuildPath -Force | Out-Null
     }
-        
+
     Set-Location $smpBuildPath
-        
+
     if (-not (Test-Path "nettle")) {
       New-Item -ItemType Directory -Path "nettle" -Force | Out-Null
       Set-Location "nettle"
@@ -366,31 +366,31 @@ function Build-Nettle {
       & git checkout "nettle_$nettle_version"
       Set-Location ..
     }
-        
+
     Set-Location "nettle\SMP"
-        
+
     Update-VSProject -ProjectPath "libnettle.vcxproj"
     Invoke-MSBuildProject -ProjectPath "libnettle.vcxproj" -Configuration "${BuildType}DLL"
-        
+
     Copy-Item "..\..\..\msvc\lib\x64\nettle$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\nettle$lib_postfix.dll" "$prefix_path\bin\" -Force
-        
+
     if (-not (Test-Path "$prefix_path\include\nettle")) {
       New-Item -ItemType Directory -Path "$prefix_path\include\nettle" -Force | Out-Null
     }
     Copy-Item "..\..\..\msvc\include\nettle\*.h" "$prefix_path\include\nettle\" -Force
-        
+
     Update-VSProject -ProjectPath "libhogweed.vcxproj"
     Invoke-MSBuildProject -ProjectPath "libhogweed.vcxproj" -Configuration "${BuildType}DLL"
-        
+
     Copy-Item "..\..\..\msvc\lib\x64\hogweed$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\hogweed$lib_postfix.dll" "$prefix_path\bin\" -Force
     Copy-Item "..\..\..\msvc\include\nettle\*.h" "$prefix_path\include\nettle\" -Force
-        
+
     New-PkgConfigFile -Name "nettle" -Description "nettle" -Version $nettle_version `
       -Prefix $prefix_path_forward -Libs "-lnettle$lib_postfix" `
       -Cflags "-I`${includedir}" -OutputPath "$prefix_path\lib\pkgconfig\nettle.pc"
-        
+
     New-PkgConfigFile -Name "hogweed" -Description "hogweed" -Version $nettle_version `
       -Prefix $prefix_path_forward -Libs "-lhogweed$lib_postfix" `
       -Cflags "-I`${includedir}" -OutputPath "$prefix_path\lib\pkgconfig\hogweed.pc"
@@ -401,16 +401,16 @@ function Build-Nettle {
 
 function Build-GnuTLS {
   Write-Host "Installing gnutls" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     $smpBuildPath = "$build_path\ShiftMediaProject\build"
     if (-not (Test-Path $smpBuildPath)) {
       New-Item -ItemType Directory -Path $smpBuildPath -Force | Out-Null
     }
-        
+
     Set-Location $smpBuildPath
-        
+
     if (-not (Test-Path "gnutls")) {
       New-Item -ItemType Directory -Path "gnutls" -Force | Out-Null
       Set-Location "gnutls"
@@ -418,9 +418,9 @@ function Build-GnuTLS {
       & git checkout $gnutls_version
       Set-Location ..
     }
-        
+
     Set-Location "gnutls\SMP"
-        
+
     # Create inject_zlib.props
     $propsContent = @"
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -435,39 +435,39 @@ function Build-GnuTLS {
 </Project>
 "@
     Set-Content -Path "$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props" -Value $propsContent
-        
+
     Update-VSProject -ProjectPath "libgnutls.sln"
-        
+
     Invoke-MSBuildProject -ProjectPath "libgnutls.sln" -Configuration "${CMAKE_BUILD_TYPE}DLL" `
       -additional_args @("/p:ForceImportBeforeCppTargets=$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props")
-        
+
     Copy-Item "..\..\..\msvc\lib\x64\gnutls$lib_postfix.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\gnutls$lib_postfix.dll" "$prefix_path\bin\" -Force
-        
+
     if (-not (Test-Path "$prefix_path\include\gnutls")) {
       New-Item -ItemType Directory -Path "$prefix_path\include\gnutls" -Force | Out-Null
     }
     Copy-Item "..\..\..\msvc\include\gnutls\*.h" "$prefix_path\include\gnutls\" -Force
-        
+
     # Workaround: Build static deps version
     & "project_get_dependencies.bat"
-        
+
     Update-VSProject -ProjectPath "..\..\gmp\SMP\libgmp.vcxproj"
     Update-VSProject -ProjectPath "..\..\zlib\SMP\libzlib.vcxproj"
     Update-VSProject -ProjectPath "..\..\nettle\SMP\libnettle.vcxproj"
     Update-VSProject -ProjectPath "..\..\nettle\SMP\libhogweed.vcxproj"
-        
+
     Invoke-MSBuildProject -ProjectPath "..\..\gmp\SMP\libgmp.vcxproj" -Configuration "Release"
     Invoke-MSBuildProject -ProjectPath "..\..\zlib\SMP\libzlib.vcxproj" -Configuration "Release"
     Invoke-MSBuildProject -ProjectPath "..\..\nettle\SMP\libnettle.vcxproj" -Configuration "Release"
     Invoke-MSBuildProject -ProjectPath "..\..\nettle\SMP\libhogweed.vcxproj" -Configuration "Release"
     Invoke-MSBuildProject -ProjectPath "libgnutls.vcxproj" -Configuration "ReleaseDLLStaticDeps"
-        
+
     Remove-Item "$prefix_path\lib\gnutls$lib_postfix.lib" -Force
     Remove-Item "$prefix_path\bin\gnutls$lib_postfix.dll" -Force
     Copy-Item "..\..\..\msvc\lib\x64\gnutls.lib" "$prefix_path\lib\" -Force
     Copy-Item "..\..\..\msvc\bin\x64\gnutls.dll" "$prefix_path\bin\" -Force
-        
+
     New-PkgConfigFile -Name "gnutls" -Description "gnutls" -Version $gnutls_version `
       -Prefix $prefix_path_forward -Libs "-lgnutls" `
       -Cflags "-I`${includedir}" -OutputPath "$prefix_path\lib\pkgconfig\gnutls.pc"
@@ -478,7 +478,7 @@ function Build-GnuTLS {
 
 function Build-LibPNG {
   Write-Host "Building libpng" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "libpng-$libpng_version")) {
@@ -486,14 +486,14 @@ function Build-LibPNG {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "libpng-$libpng_version"
     & patch -p1 -N -i "$downloads_path\libpng-pkgconf.patch" 2>&1 | Out-Null
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward
-        
+
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\libpng16d.lib" "$prefix_path\lib\png16.lib" -Force
     }
@@ -504,7 +504,7 @@ function Build-LibPNG {
 
 function Build-LibJPEG {
   Write-Host "Building libjpeg" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "libjpeg-turbo-$libjpeg_version")) {
@@ -512,9 +512,9 @@ function Build-LibJPEG {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "libjpeg-turbo-$libjpeg_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -530,7 +530,7 @@ function Build-LibJPEG {
 
 function Build-PCRE2 {
   Write-Host "Building pcre2" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "pcre2-$pcre2_version")) {
@@ -538,9 +538,9 @@ function Build-PCRE2 {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "pcre2-$pcre2_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -560,7 +560,7 @@ function Build-PCRE2 {
 
 function Build-BZip2 {
   Write-Host "Building bzip2" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "bzip2-$bzip2_version")) {
@@ -568,10 +568,10 @@ function Build-BZip2 {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "bzip2-$bzip2_version"
     & patch -p1 -N -i "$downloads_path\bzip2-cmake.patch" 2>&1 | Out-Null
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build2" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -583,7 +583,7 @@ function Build-BZip2 {
 
 function Build-XZ {
   Write-Host "Building xz" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "xz-$xz_version")) {
@@ -591,9 +591,9 @@ function Build-XZ {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "xz-$xz_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -610,7 +610,7 @@ function Build-XZ {
 
 function Build-Brotli {
   Write-Host "Building brotli" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "brotli-$brotli_version")) {
@@ -618,9 +618,9 @@ function Build-Brotli {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "brotli-$brotli_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build2" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -632,22 +632,22 @@ function Build-Brotli {
 
 function Build-LibIconv {
   Write-Host "Building libiconv" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "libiconv-for-Windows")) {
       New-Item -ItemType Directory -Path "libiconv-for-Windows" -Force | Out-Null
       Copy-Item "$downloads_path\libiconv-for-Windows\*" "libiconv-for-Windows\" -Recurse -Force
     }
-        
+
     Set-Location "libiconv-for-Windows"
-        
+
     Invoke-MSBuildProject -ProjectPath "libiconv.sln" -Configuration $build_type
-        
+
     Copy-Item "output\x64\$build_type\*.lib" "$prefix_path\lib\" -Force
     Copy-Item "output\x64\$build_type\*.dll" "$prefix_path\bin\" -Force
     Copy-Item "include\*.h" "$prefix_path\include\" -Force
-        
+
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\libiconvD.lib" "$prefix_path\lib\libiconv.lib" -Force
     }
@@ -658,7 +658,7 @@ function Build-LibIconv {
 
 function Build-ICU4C {
   Write-Host "Building icu4c" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "icu")) {
@@ -666,33 +666,33 @@ function Build-ICU4C {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "icu\source\allinone"
-        
+
     Invoke-MSBuildProject -ProjectPath "allinone.sln" -Configuration $build_type `
       -Platform "x64" -additional_args @("/p:SkipUWP=true")
-        
+
     Set-Location "..\..\"
-        
+
     if (-not (Test-Path "$prefix_path\include\unicode")) {
       New-Item -ItemType Directory -Path "$prefix_path\include\unicode" -Force | Out-Null
     }
-        
+
     Copy-Item "include\unicode\*.h" "$prefix_path\include\unicode\" -Force
     Copy-Item "lib64\*.*" "$prefix_path\lib\" -Force
     Copy-Item "bin64\*.*" "$prefix_path\bin\" -Force
-        
+
     # Create pkg-config files
     New-PkgConfigFile -Name "icu-uc" -Description "International Components for Unicode: Common and Data libraries" `
       -Version $icu4c_version -Prefix $prefix_path_forward `
       -Libs "-licuuc$lib_postfix -licudt" -Cflags "-I`${includedir}" `
       -OutputPath "$prefix_path\lib\pkgconfig\icu-uc.pc"
-        
+
     New-PkgConfigFile -Name "icu-i18n" -Description "International Components for Unicode: Stream and I/O Library" `
       -Version $icu4c_version -Prefix $prefix_path_forward `
       -Libs "-licuin$lib_postfix" -Requires "icu-uc" `
       -OutputPath "$prefix_path\lib\pkgconfig\icu-i18n.pc"
-        
+
     New-PkgConfigFile -Name "icu-io" -Description "International Components for Unicode: Stream and I/O Library" `
       -Version $icu4c_version -Prefix $prefix_path_forward `
       -Libs "-licuio$lib_postfix" -Requires "icu-i18n" `
@@ -704,7 +704,7 @@ function Build-ICU4C {
 
 function Build-Pixman {
   Write-Host "Building pixman" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "pixman-$pixman_version")) {
@@ -712,9 +712,9 @@ function Build-Pixman {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "pixman-$pixman_version"
-        
+
     Invoke-MesonBuild -source_path "." -build_path "build" `
       -build_type $meson_build_type -install_prefix $prefix_path `
       -pkg_config_path "$prefix_path\lib\pkgconfig" `
@@ -726,7 +726,7 @@ function Build-Pixman {
 
 function Build-Expat {
   Write-Host "Building expat" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "expat-$expat_version")) {
@@ -734,9 +734,9 @@ function Build-Expat {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "expat-$expat_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -756,7 +756,7 @@ function Build-Expat {
 
 function Build-Boost {
   Write-Host "Building boost" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "boost_$boost_version_UNDERSCORE")) {
@@ -764,17 +764,17 @@ function Build-Boost {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "boost_$boost_version_UNDERSCORE"
-        
+
     if (Test-Path "b2.exe") { Remove-Item "b2.exe" -Force }
     if (Test-Path "bjam.exe") { Remove-Item "bjam.exe" -Force }
     if (Test-Path "stage") { Remove-Item "stage" -Recurse -Force }
-        
+
     Write-Host "Running bootstrap.bat" -ForegroundColor Cyan
     & .\bootstrap.bat msvc
     if ($LASTEXITCODE -ne 0) { throw "Boost bootstrap failed" }
-        
+
     Write-Host "Running b2.exe" -ForegroundColor Cyan
     & .\b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" `
       --prefix="$prefix_path" --exec-prefix="$prefix_path\bin" --libdir="$prefix_path\lib" `
@@ -788,7 +788,7 @@ function Build-Boost {
 
 function Build-LibXML2 {
   Write-Host "Building libxml2" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "libxml2-v$libxml2_version")) {
@@ -796,9 +796,9 @@ function Build-LibXML2 {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "libxml2-v$libxml2_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -811,7 +811,7 @@ function Build-LibXML2 {
         "-DLIBXML2_WITH_ICU=ON",
         "-DICU_ROOT=$prefix_path_forward"
       )
-        
+
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\libxml2d.lib" "$prefix_path\lib\libxml2.lib" -Force
     }
@@ -822,7 +822,7 @@ function Build-LibXML2 {
 
 function Build-NGHttp2 {
   Write-Host "Building nghttp2" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "nghttp2-$nghttp2_version")) {
@@ -830,9 +830,9 @@ function Build-NGHttp2 {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "nghttp2-$nghttp2_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -847,16 +847,16 @@ function Build-NGHttp2 {
 
 function Build-LibFFI {
   Write-Host "Building libffi" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "libffi")) {
       New-Item -ItemType Directory -Path "libffi" -Force | Out-Null
       Copy-Item "$downloads_path\libffi\*" "libffi\" -Recurse -Force
     }
-        
+
     Set-Location "libffi"
-        
+
     Invoke-MesonBuild -source_path "." -build_path "build" `
       -build_type $meson_build_type -install_prefix $prefix_path `
       -additional_args @("-Dpkg_config_path=$prefix_path\lib\pkgconfig")
@@ -867,7 +867,7 @@ function Build-LibFFI {
 
 function Build-DlfcnWin32 {
   Write-Host "Building dlfcn-win32" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "dlfcn-win32-$dlfcn_version")) {
@@ -875,9 +875,9 @@ function Build-DlfcnWin32 {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "dlfcn-win32-$dlfcn_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -889,14 +889,14 @@ function Build-DlfcnWin32 {
 
 function Build-LibPSL {
   Write-Host "Building libpsl" -ForegroundColor Yellow
-    
+
   $originalCFLAGS = $env:CFLAGS
   $originalLDFLAGS = $env:LDFLAGS
-    
+
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
     $env:LDFLAGS = "-L$prefix_path\lib"
-        
+
     Push-Location $build_path
     try {
       if (-not (Test-Path "libpsl-$libpsl_version")) {
@@ -904,10 +904,10 @@ function Build-LibPSL {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
       }
-            
+
       Set-Location "libpsl-$libpsl_version"
       & patch -p1 -N -i "$downloads_path\libpsl-time.patch" 2>&1 | Out-Null
-            
+
       Invoke-MesonBuild -source_path "." -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
         -pkg_config_path "$prefix_path\lib\pkgconfig"
@@ -922,15 +922,15 @@ function Build-LibPSL {
 
 function Build-Orc {
   Write-Host "Building orc" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "orc-$orc_version")) {
       & 7z x "$downloads_path\orc-$orc_version.tar.xz" -so | & 7z x -aoa -si"orc-$orc_version.tar"
     }
-        
+
     Set-Location "orc-$orc_version"
-        
+
     Invoke-MesonBuild -source_path "." -build_path "build" `
       -build_type $meson_build_type -install_prefix $prefix_path `
       -pkg_config_path "$prefix_path\lib\pkgconfig"
@@ -941,7 +941,7 @@ function Build-Orc {
 
 function Build-SQLite {
   Write-Host "Building sqlite" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "sqlite-autoconf-$sqlite_version")) {
@@ -949,17 +949,17 @@ function Build-SQLite {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "sqlite-autoconf-$sqlite_version"
-        
+
     & cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll
     & cl shell.c sqlite3.c -Fe:sqlite3.exe
-        
+
     Copy-Item "*.h" "$prefix_path\include\" -Force
     Copy-Item "*.lib" "$prefix_path\lib\" -Force
     Copy-Item "*.dll" "$prefix_path\bin\" -Force
     Copy-Item "*.exe" "$prefix_path\bin\" -Force
-        
+
     New-PkgConfigFile -Name "SQLite" -Description "SQL database engine" `
       -Version "3.38.1" -Prefix $prefix_path_forward `
       -Libs "-lsqlite3" -Cflags "-I`${includedir}" `
@@ -971,22 +971,22 @@ function Build-SQLite {
 
 function Build-Glib {
   Write-Host "Building glib" -ForegroundColor Yellow
-    
+
   $originalCFLAGS = $env:CFLAGS
   $originalLDFLAGS = $env:LDFLAGS
-    
+
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
     $env:LDFLAGS = "-L$prefix_path\lib"
-        
+
     Push-Location $build_path
     try {
       if (-not (Test-Path "glib-$glib_version")) {
         & 7z x "$downloads_path\glib-$glib_version.tar.xz" -so | & 7z x -aoa -si"glib-$glib_version.tar"
       }
-            
+
       Set-Location "glib-$glib_version"
-            
+
       Invoke-MesonBuild -source_path "." -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
         -additional_args @(
@@ -1006,20 +1006,20 @@ function Build-Glib {
 
 function Build-LibSoup {
   Write-Host "Building libsoup" -ForegroundColor Yellow
-    
+
   $originalCFLAGS = $env:CFLAGS
-    
+
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
-        
+
     Push-Location $build_path
     try {
       if (-not (Test-Path "libsoup-$libsoup_version")) {
         & 7z x "$downloads_path\libsoup-$libsoup_version.tar.xz" -so | & 7z x -aoa -si"libsoup-$libsoup_version.tar"
       }
-            
+
       Set-Location "libsoup-$libsoup_version"
-            
+
       Invoke-MesonBuild -source_path "." -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
         -pkg_config_path "$prefix_path\lib\pkgconfig" `
@@ -1041,20 +1041,20 @@ function Build-LibSoup {
 
 function Build-GlibNetworking {
   Write-Host "Building glib-networking" -ForegroundColor Yellow
-    
+
   $originalCFLAGS = $env:CFLAGS
-    
+
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
-        
+
     Push-Location $build_path
     try {
       if (-not (Test-Path "glib-networking-$glib_networking_version")) {
         & 7z x "$downloads_path\glib-networking-$glib_networking_version.tar.xz" -so | & 7z x -aoa -si"glib-networking-$glib_networking_version.tar"
       }
-            
+
       Set-Location "glib-networking-$glib_networking_version"
-            
+
       Invoke-MesonBuild -source_path "." -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
         -pkg_config_path "$prefix_path\lib\pkgconfig" `
@@ -1074,7 +1074,7 @@ function Build-GlibNetworking {
 
 function Build-Freetype {
   Write-Host "Building freetype without harfbuzz" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "freetype-$freetype_version")) {
@@ -1082,9 +1082,9 @@ function Build-Freetype {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "freetype-$freetype_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -1092,7 +1092,7 @@ function Build-Freetype {
         "-DBUILD_SHARED_LIBS=ON",
         "-DFT_DISABLE_HARFBUZZ=ON"
       )
-        
+
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\freetyped.lib" "$prefix_path\lib\freetype.lib" -Force
     }
@@ -1103,7 +1103,7 @@ function Build-Freetype {
 
 function Build-Harfbuzz {
   Write-Host "Building harfbuzz" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "harfbuzz-$harfbuzz_version")) {
@@ -1111,9 +1111,9 @@ function Build-Harfbuzz {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "harfbuzz-$harfbuzz_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -1126,7 +1126,7 @@ function Build-Harfbuzz {
 # Add more audio codec build functions (abbreviated for space)
 function Build-AudioCodecs {
   Write-Host "Building audio codecs..." -ForegroundColor Yellow
-    
+
   # These would include: libogg, libvorbis, flac, wavpack, opus, opusfile,
   # speex, mpg123, lame, twolame, fftw3, musepack, libopenmpt, libgme,
   # fdk-aac, faad2, faac, etc.
@@ -1135,12 +1135,12 @@ function Build-AudioCodecs {
 
 function Build-FFmpeg {
   Write-Host "Building ffmpeg" -ForegroundColor Yellow
-    
+
   $originalCFLAGS = $env:CFLAGS
-    
+
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
-        
+
     Push-Location $build_path
     try {
       if (-not (Test-Path "ffmpeg")) {
@@ -1152,9 +1152,9 @@ function Build-FFmpeg {
         & git pull --rebase
         Set-Location ..
       }
-            
+
       Set-Location "ffmpeg"
-            
+
       Invoke-MesonBuild -source_path "." -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
         -pkg_config_path "$prefix_path\lib\pkgconfig" `
@@ -1172,7 +1172,7 @@ function Build-FFmpeg {
 
 function Build-Chromaprint {
   Write-Host "Building chromaprint" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "chromaprint-$chromaprint_version")) {
@@ -1180,9 +1180,9 @@ function Build-Chromaprint {
       $relative_tar_path = Resolve-Path -Relative $tar_file
       & tar -xf $relative_tar_path
     }
-        
+
     Set-Location "chromaprint-$chromaprint_version"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -1198,12 +1198,12 @@ function Build-Chromaprint {
 
 function Build-GStreamer {
   Write-Host "Building GStreamer" -ForegroundColor Yellow
-    
+
   $originalCFLAGS = $env:CFLAGS
-    
+
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
-        
+
     Push-Location $build_path
     try {
       if ($gst_dev -eq "ON") {
@@ -1217,7 +1217,7 @@ function Build-GStreamer {
         }
         Set-Location "gstreamer-$gstreamer_version"
       }
-            
+
       Invoke-MesonBuild -source_path (Get-Location).Path -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
         -pkg_config_path "$prefix_path\lib\pkgconfig" `
@@ -1243,7 +1243,7 @@ function Build-GStreamer {
 
 function Build-Qt {
   Write-Host "Building qtbase" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if ($qt_dev -eq "ON") {
@@ -1258,7 +1258,7 @@ function Build-Qt {
       }
       Set-Location "qtbase-everywhere-src-$qt_version"
     }
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator "Ninja" -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -1285,16 +1285,16 @@ function Build-Qt {
 
 function Build-Strawberry {
   Write-Host "Building strawberry" -ForegroundColor Yellow
-    
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "strawberry")) {
       New-Item -ItemType Directory -Path "strawberry" -Force | Out-Null
       Copy-Item "$downloads_path\strawberry\*" "strawberry\" -Recurse -Force
     }
-        
+
     Set-Location "strawberry"
-        
+
     Invoke-CMakeBuild -source_path "." -build_path "build" `
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
@@ -1309,7 +1309,7 @@ function Build-Strawberry {
         "-DENABLE_MTP=OFF",
         "-DENABLE_GPOD=OFF"
       )
-        
+
     Write-Host "Strawberry built successfully!" -ForegroundColor Green
   } finally {
     Pop-Location
@@ -1326,7 +1326,7 @@ Write-Host ""
 try {
   # Check what needs to be built
   $buildQueue = @()
-    
+
   if (-not (Test-Path "$prefix_path\bin\yasm.exe")) { $buildQueue += "yasm" }
   if (-not (Test-Path "$prefix_path\bin\pkgconf.exe")) { $buildQueue += "pkgconf" }
   if (-not (Test-Path "$prefix_path\lib\getopt.lib")) { $buildQueue += "getopt-win" }
@@ -1363,21 +1363,21 @@ try {
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-1.0.pc")) { $buildQueue += "gstreamer" }
   if (-not (Test-Path "$prefix_path\bin\qt-configure-module.bat")) { $buildQueue += "qt" }
   if (-not (Test-Path "$build_path\strawberry\build\strawberrysetup*.exe")) { $buildQueue += "strawberry" }
-    
+
   if ($buildQueue.Count -eq 0) {
     Write-Host "All dependencies already built!" -ForegroundColor Green
     exit 0
   }
-    
+
   Write-Host "Build queue: $($buildQueue -join ', ')" -ForegroundColor Cyan
   Write-Host ""
-    
+
   # Build each component
   foreach ($component in $buildQueue) {
     Write-Host "========================================" -ForegroundColor Magenta
     Write-Host "Building: $component" -ForegroundColor Magenta
     Write-Host "========================================" -ForegroundColor Magenta
-        
+
     switch ($component) {
       "yasm" { Build-Yasm }
       "pkgconf" { Build-Pkgconf }
@@ -1419,15 +1419,15 @@ try {
         Write-Warning "Unknown component: $component (skipping)"
       }
     }
-        
+
     Write-Host "Completed: $component" -ForegroundColor Green
     Write-Host ""
   }
-    
+
   Write-Host "========================================" -ForegroundColor Green
   Write-Host "Build completed successfully!" -ForegroundColor Green
   Write-Host "========================================" -ForegroundColor Green
-    
+
 } catch {
   Write-Host ""
   Write-Host "========================================" -ForegroundColor Red

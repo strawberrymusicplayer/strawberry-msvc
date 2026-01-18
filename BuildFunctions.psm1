@@ -22,29 +22,29 @@ function Invoke-CMakeBuild {
   param(
     [Parameter(Mandatory=$true)]
     [string]$source_path,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$build_path,
-        
+
     [Parameter(Mandatory=$false)]
     [string]$generator = "Ninja",
-        
+
     [Parameter(Mandatory=$true)]
     [string]$build_type,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$install_prefix,
-        
+
     [Parameter(Mandatory=$false)]
     [string[]]$additional_args = @()
   )
-    
+
   Write-Host "Building with CMake: $source_path" -ForegroundColor Cyan
-    
+
   if (-not (Test-Path $build_path)) {
     New-Item -ItemType Directory -Path $build_path -Force | Out-Null
   }
-    
+
   $configure_args = @(
     "--log-level=DEBUG",
     "-S", $source_path,
@@ -53,23 +53,23 @@ function Invoke-CMakeBuild {
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DCMAKE_INSTALL_PREFIX=$install_prefix"
   )
-    
+
   if ($additional_args) {
     $configure_args += $additional_args
   }
-    
+
   & cmake @configure_args
   if ($LASTEXITCODE -ne 0) {
     throw "CMake configuration failed"
   }
-    
+
   Push-Location $build_path
   try {
     & cmake --build .
     if ($LASTEXITCODE -ne 0) {
       throw "CMake build failed"
     }
-        
+
     & cmake --install .
     if ($LASTEXITCODE -ne 0) {
       throw "CMake install failed"
@@ -101,25 +101,25 @@ function Invoke-MesonBuild {
   param(
     [Parameter(Mandatory=$true)]
     [string]$source_path,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$build_path,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$build_type,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$install_prefix,
-        
+
     [Parameter(Mandatory=$false)]
     [string]$pkg_config_path,
-        
+
     [Parameter(Mandatory=$false)]
     [string[]]$additional_args = @()
   )
-    
+
   Write-Host "Building with Meson: $source_path" -ForegroundColor Cyan
-    
+
   Push-Location $source_path
   try {
     if (-not (Test-Path "$build_path\build.ninja")) {
@@ -130,30 +130,30 @@ function Invoke-MesonBuild {
         "--prefix=$install_prefix",
         "--wrap-mode=nodownload"
       )
-            
+
       if ($pkg_config_path) {
         $setup_args += "--pkg-config-path=$pkg_config_path"
       }
-            
+
       if ($additional_args) {
         $setup_args += $additional_args
       }
-            
+
       $setup_args += $build_path
-            
+
       & meson @setup_args
       if ($LASTEXITCODE -ne 0) {
         throw "Meson setup failed"
       }
     }
-        
+
     Push-Location $build_path
     try {
       & ninja
       if ($LASTEXITCODE -ne 0) {
         throw "Ninja build failed"
       }
-            
+
       & ninja install
       if ($LASTEXITCODE -ne 0) {
         throw "Ninja install failed"
@@ -185,32 +185,32 @@ function Invoke-MSBuildProject {
   param(
     [Parameter(Mandatory=$true)]
     [string]$project_path,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$configuration,
-        
+
     [Parameter(Mandatory=$false)]
     [string]$platform = "x64",
-        
+
     [Parameter(Mandatory=$false)]
     [string[]]$additional_args = @()
   )
-    
+
   Write-Host "Building with MSBuild: $project_path" -ForegroundColor Cyan
-    
+
   $build_args = @(
     $project_path,
     "/p:Configuration=$configuration"
   )
-    
+
   if ($platform) {
     $build_args += "/p:Platform=$platform"
   }
-    
+
   if ($additional_args) {
     $build_args += $additional_args
   }
-    
+
   & msbuild @build_args
   if ($LASTEXITCODE -ne 0) {
     throw "MSBuild failed"
@@ -229,14 +229,14 @@ function Update-VSProject {
     [Parameter(Mandatory=$true)]
     [string]$project_path
   )
-    
+
   Write-Host "Upgrading Visual Studio project: $project_path" -ForegroundColor Cyan
-    
+
   $devenv_path = & "${env:ProgramFiles}\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.com" 2>&1
   if ($LASTEXITCODE -ne 0) {
     $devenv_path = & "${env:ProgramFiles}\Microsoft Visual Studio\2026\Community\Common7\IDE\devenv.com" 2>&1
   }
-    
+
   Start-Process -FilePath "devenv.exe" -ArgumentList "$project_path /upgrade" -Wait -NoNewWindow
 }
 
@@ -253,14 +253,14 @@ function Get-FileIfNotExists {
   param(
     [Parameter(Mandatory=$true)]
     [string]$url,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$destination_path
   )
-    
+
   $file_name = Split-Path $url -Leaf
   $file_path = Join-Path $destination_path $file_name
-    
+
   if (-not (Test-Path $file_path)) {
     Write-Host "Downloading $file_name" -ForegroundColor Yellow
     try {
@@ -286,14 +286,14 @@ function Sync-GitRepository {
   param(
     [Parameter(Mandatory=$true)]
     [string]$url,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$destination_path
   )
-    
+
   $repo_name = Split-Path $url -Leaf
   $repo_path = Join-Path $destination_path $repo_name
-    
+
   if (Test-Path $repo_path) {
     Write-Host "Updating repository $url" -ForegroundColor Yellow
     Push-Location $repo_path
@@ -329,15 +329,15 @@ function Expand-Archive7Zip {
   param(
     [Parameter(Mandatory=$true)]
     [string]$archive_path,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$destination_path
   )
-    
+
   if (-not (Test-Path $archive_path)) {
     throw "Archive not found: $archive_path"
   }
-    
+
   & 7z x -aoa $archive_path -o"$destination_path"
   if ($LASTEXITCODE -ne 0) {
     throw "Failed to extract archive: $archive_path"
@@ -356,7 +356,7 @@ function Test-Command {
     [Parameter(Mandatory=$true)]
     [string]$command
   )
-    
+
   $null = Get-Command $command -ErrorAction SilentlyContinue
   return $?
 }
@@ -376,19 +376,19 @@ function Assert-Command {
   param(
     [Parameter(Mandatory=$true)]
     [string]$command,
-        
+
     [Parameter(Mandatory=$false)]
     [string]$path,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$error_message
   )
-    
+
   if (-not (Test-Command $command)) {
     if ($path -and (Test-Path $path)) {
       $env:PATH = "$path;$env:PATH"
     }
-        
+
     if (-not (Test-Command $command)) {
       throw $error_message
     }
@@ -420,29 +420,29 @@ function New-PkgConfigFile {
   param(
     [Parameter(Mandatory=$true)]
     [string]$name,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$description,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$version,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$prefix,
-        
+
     [Parameter(Mandatory=$true)]
     [string]$libs,
-        
+
     [Parameter(Mandatory=$false)]
     [string]$cflags = "",
-        
+
     [Parameter(Mandatory=$false)]
     [string]$requires = "",
-        
+
     [Parameter(Mandatory=$true)]
     [string]$output_path
   )
-    
+
   $content = @"
 prefix=$prefix
 exec_prefix=`${prefix}
@@ -453,17 +453,17 @@ Name: $name
 Description: $description
 Version: $version
 "@
-    
+
   if ($requires) {
     $content += "`nRequires: $requires"
   }
-    
+
   $content += "`nLibs: -L`${libdir} $libs"
-    
+
   if ($cflags) {
     $content += "`nCflags: $cflags"
   }
-    
+
   Set-Content -Path $output_path -Value $content -Encoding ASCII
 }
 
@@ -482,10 +482,10 @@ Version: $version
 function Get-DependencyUrls {
   [CmdletBinding()]
   param()
-  
+
   # Note: Requires versions.ps1 to be loaded by the caller
   # Both download.ps1 and build.ps1 already do this
-  
+
   # Return hashtable mapping package names to download URLs
   $package_urls = @{
     'ccache' = "https://github.com/ccache/ccache/releases/download/v$ccache_version/ccache-$ccache_version.tar.gz"
@@ -590,7 +590,7 @@ function Get-DependencyUrls {
     'patch-yasm-cmake' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/yasm-cmake.patch"
     'patch-libgme-pkgconf' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libgme-pkgconf.patch"
   }
-  
+
   $git_repos = @{
     'qtbase-git' = "https://code.qt.io/qt/qtbase"
     'qttools-git' = "https://code.qt.io/qt/qttools"
@@ -611,7 +611,7 @@ function Get-DependencyUrls {
     'pe-util' = "https://github.com/gsauthof/pe-util"
     'strawberry' = "https://github.com/strawberrymusicplayer/strawberry"
   }
-  
+
   return [PSCustomObject]@{
     PackageUrls = $package_urls
     GitRepos = $git_repos
@@ -632,9 +632,9 @@ function Get-PackageUrl {
     [Parameter(Mandatory=$true)]
     [string]$package_name
   )
-  
+
   $deps = Get-DependencyUrls
-  
+
   if ($deps.PackageUrls.ContainsKey($package_name)) {
     return $deps.PackageUrls[$package_name]
   }
@@ -661,21 +661,21 @@ function Invoke-PackageDownload {
   param(
     [Parameter(Mandatory=$true)]
     [string]$package_name,
-    
+
     [Parameter(Mandatory=$true)]
     [string]$downloads_path
   )
-  
+
   Write-Host "Checking package: $package_name" -ForegroundColor Cyan
-  
+
   # Ensure downloads directory exists
   if (-not (Test-Path $downloads_path)) {
     New-Item -ItemType Directory -Path $downloads_path -Force | Out-Null
   }
-  
+
   try {
     $deps = Get-DependencyUrls
-    
+
     # Check if it's a regular download URL
     if ($deps.PackageUrls.ContainsKey($package_name)) {
       $url = $deps.PackageUrls[$package_name]
@@ -712,17 +712,17 @@ function Invoke-DependencyDownload {
     [Parameter(Mandatory=$true)]
     [string]$downloads_path
   )
-  
+
   Write-Host "Downloading dependencies to: $downloads_path" -ForegroundColor Cyan
-  
+
   # Ensure downloads directory exists
   if (-not (Test-Path $downloads_path)) {
     New-Item -ItemType Directory -Path $downloads_path -Force | Out-Null
   }
-  
+
   # Get dependency URLs
   $deps = Get-DependencyUrls
-  
+
   # Download files
   Write-Host "`nDownloading dependency files..." -ForegroundColor Green
   foreach ($package_name in $deps.PackageUrls.Keys) {
@@ -734,7 +734,7 @@ function Invoke-DependencyDownload {
       Write-Warning "Failed to download $package_name : $_"
     }
   }
-  
+
   # Clone/update Git repositories
   Write-Host "`nCloning/updating Git repositories..." -ForegroundColor Green
   foreach ($repo_name in $deps.GitRepos.Keys) {
@@ -746,7 +746,7 @@ function Invoke-DependencyDownload {
       Write-Warning "Failed to sync repository $repo_name : $_"
     }
   }
-  
+
   Write-Host "`nDependency download completed!" -ForegroundColor Green
 }
 

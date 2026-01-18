@@ -27,7 +27,7 @@ Write-Host ""
 
 function Test-Command {
   param([string]$Command)
-    
+
   $null = Get-Command $Command -ErrorAction SilentlyContinue
   return $?
 }
@@ -37,7 +37,7 @@ function Get-ToolVersion {
     [string]$tool_path,
     [string]$version_arg = "--version"
   )
-    
+
   try {
     $output = & $tool_path $version_arg 2>&1 | Out-String
     return $output.Trim()
@@ -52,7 +52,7 @@ function Test-ToolVersionMatch {
     [string]$installed_version,
     [string]$expected_version
   )
-    
+
   # Extract version numbers using regex
   if ($installed_version -match '(\d+(?:\.\d+)+)') {
     $installed_ver = $matches[1]
@@ -60,7 +60,7 @@ function Test-ToolVersionMatch {
   else {
     return $false
   }
-    
+
   # Compare versions
   return $installed_ver -like "$expected_version*"
 }
@@ -72,7 +72,7 @@ function Test-ToolInstalled {
     [string]$expected_version = $null,
     [string]$version_arg = "--version"
   )
-    
+
   if (Test-Path $path) {
     if ($expected_version) {
       # Check version if expected version is provided
@@ -110,14 +110,14 @@ function Install-Tool {
     [string[]]$arguments,
     [string]$name
   )
-    
+
   Write-Host "Installing $name..." -ForegroundColor Yellow
-    
+
   if (-not (Test-Path $installer_path)) {
     Write-Error "Installer not found: $installer_path"
     return $false
   }
-    
+
   try {
     Start-Process -FilePath $installer_path -ArgumentList $arguments -Wait -NoNewWindow
     Write-Host "✓ $name installed successfully" -ForegroundColor Green
@@ -199,21 +199,21 @@ if (-not $python_installed) {
 # Check and install Win Flex Bison
 if (-not (Test-ToolInstalled -Path "C:\win_flex_bison\win_bison.exe" -Name "Win Flex Bison")) {
   Write-Host "Installing Win Flex Bison..." -ForegroundColor Yellow
-    
+
   Set-Location C:\
   if (-not (Test-Path "win_flex_bison")) {
     New-Item -ItemType Directory -Path "win_flex_bison" -Force | Out-Null
   }
   Set-Location "win_flex_bison"
-    
+
   # Ensure 7z is in PATH
   if (-not (Test-Command "7z")) {
     $env:PATH = "C:\Program Files\7-Zip;$env:PATH"
   }
-    
+
   $archive = Join-Path $downloads_path "win_flex_bison-$winflexbison_version.zip"
   & "C:\Program Files\7-Zip\7z.exe" x -aoa $archive
-    
+
   if ($LASTEXITCODE -eq 0) {
     Write-Host "✓ Win Flex Bison installed successfully" -ForegroundColor Green
   }
@@ -222,18 +222,18 @@ if (-not (Test-ToolInstalled -Path "C:\win_flex_bison\win_bison.exe" -Name "Win 
 # Check and install VSYASM
 if (-not (Test-ToolInstalled -Path "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\yasm.exe" -Name "VSYASM")) {
   Write-Host "Installing VSYASM..." -ForegroundColor Yellow
-    
+
   $vsyasm_dir = Join-Path $downloads_path "vsyasm"
   if (-not (Test-Path $vsyasm_dir)) {
     New-Item -ItemType Directory -Path $vsyasm_dir -Force | Out-Null
   }
-    
+
   Set-Location $vsyasm_dir
-    
+
   $vsyasm_archive = Join-Path $downloads_path "VSYASM\vsyasm.zip"
   if (Test-Path $vsyasm_archive) {
     & "C:\Program Files\7-Zip\7z.exe" x -aoa $vsyasm_archive
-        
+
     $install_script = Join-Path $vsyasm_dir "install_script.bat"
     if (Test-Path $install_script) {
       Start-Process -FilePath "cmd.exe" -ArgumentList "/c", $install_script -Wait -NoNewWindow
@@ -266,7 +266,7 @@ $tools = @(
 foreach ($tool in $tools) {
   # Temporarily add path to check
   $original_path = $env:PATH
-    
+
   if ($tool.Paths) {
     # Python has multiple possible paths
     $found = $false
@@ -285,14 +285,14 @@ foreach ($tool in $tools) {
   }
   else {
     $env:PATH = "$($tool.Path);$env:PATH"
-        
+
     if (Test-Command $tool.Command) {
       Write-Host "✓ $($tool.Name) is available" -ForegroundColor Green
     }
     else {
       Write-Host "✗ $($tool.Name) is NOT available" -ForegroundColor Red
     }
-        
+
     $env:PATH = $original_path
   }
 }
