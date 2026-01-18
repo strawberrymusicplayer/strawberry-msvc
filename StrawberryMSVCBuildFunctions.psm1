@@ -264,12 +264,31 @@ function Get-FileIfNotExists {
   if (-not (Test-Path $file_path)) {
     Write-Host "Downloading $file_name" -ForegroundColor Yellow
     try {
-      Invoke-WebRequest -Uri $url -OutFile $file_path -UseBasicParsing
+      Invoke-WebRequest -Uri $url -OutFile $file_path -UseBasicParsing -MaximumRedirection 5
+      
+      # Verify file was downloaded and has content
+      if (-not (Test-Path $file_path)) {
+        throw "Downloaded file not found at $file_path"
+      }
+      
+      $file_size = (Get-Item $file_path).Length
+      if ($file_size -eq 0) {
+        Remove-Item $file_path -Force
+        throw "Downloaded file is empty (0 bytes)"
+      }
+      
+      Write-Host "Downloaded $file_name ($file_size bytes)" -ForegroundColor Green
     }
     catch {
+      if (Test-Path $file_path) {
+        Remove-Item $file_path -Force
+      }
       Write-Error "Failed to download $url : $_"
       throw
     }
+  }
+  else {
+    Write-Host "Using cached $file_name" -ForegroundColor Cyan
   }
 }
 
