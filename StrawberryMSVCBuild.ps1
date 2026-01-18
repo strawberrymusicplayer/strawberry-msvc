@@ -1756,9 +1756,16 @@ function Build-Twolame {
     try {
       # Apply patch
       $patch_file = "$downloads_path\twolame.patch"
+      if (-not (Test-Path $patch_file)) {
+        Write-Host "Patch file not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "patch-twolame" -downloads_path $downloads_path
+      }
       if (Test-Path $patch_file) {
         Write-Host "Applying twolame patch..." -ForegroundColor Cyan
         & patch -p1 -N -i $patch_file
+      }
+      else {
+        Write-Host "WARNING: Could not find twolame.patch, build may fail" -ForegroundColor Yellow
       }
 
       Push-Location "win32"
@@ -1782,7 +1789,7 @@ function Build-Twolame {
 
         # Build with MSBuild
         Invoke-MSBuildProject `
-          -project_file "libtwolame_dll.sln" `
+          -project_path "libtwolame_dll.sln" `
           -configuration $build_type
 
         # Copy files
