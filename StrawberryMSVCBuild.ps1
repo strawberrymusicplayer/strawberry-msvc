@@ -177,7 +177,8 @@ function Build-Yasm {
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
       -additional_args @("-DBUILD_SHARED_LIBS=ON")
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -211,7 +212,8 @@ function Build-Pkgconf {
       -additional_args @("-Dtests=disabled")
 
     Copy-Item "$prefix_path\bin\pkgconf.exe" "$prefix_path\bin\pkg-config.exe" -Force
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -239,7 +241,8 @@ function Build-GetoptWin {
         "-DBUILD_STATIC_LIB=OFF",
         "-DBUILD_TESTING=OFF"
       )
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -271,7 +274,8 @@ function Build-Zlib {
     Copy-Item "$prefix_path\lib\zlib$lib_postfix.lib" "$prefix_path\lib\z.lib" -Force
 
     Remove-Item "$prefix_path\lib\zlibstatic*.lib" -ErrorAction SilentlyContinue
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -322,7 +326,8 @@ function Build-OpenSSL {
       -version $openssl_version -prefix $prefix_path_forward `
       -libs "" -requires "libssl libcrypto" `
       -output_path "$prefix_path\lib\pkgconfig\openssl.pc"
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -359,7 +364,8 @@ function Build-GMP {
     New-PkgConfigFile -name "gmp" -description "gmp" -version $gmp_version `
       -prefix $prefix_path_forward -libs "-lgmp$lib_postfix" `
       -cflags "-I`${includedir}" -output_path "$prefix_path\lib\pkgconfig\gmp.pc"
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -411,7 +417,8 @@ function Build-Nettle {
     New-PkgConfigFile -name "hogweed" -description "hogweed" -version $nettle_version `
       -prefix $prefix_path_forward -libs "-lhogweed$lib_postfix" `
       -cflags "-I`${includedir}" -output_path "$prefix_path\lib\pkgconfig\hogweed.pc"
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -488,7 +495,8 @@ function Build-GnuTLS {
     New-PkgConfigFile -name "gnutls" -description "gnutls" -version $gnutls_version `
       -prefix $prefix_path_forward -libs "-lgnutls" `
       -cflags "-I`${includedir}" -output_path "$prefix_path\lib\pkgconfig\gnutls.pc"
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -514,7 +522,8 @@ function Build-LibPNG {
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\libpng16d.lib" "$prefix_path\lib\png16.lib" -Force
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -540,7 +549,8 @@ function Build-LibJPEG {
         "-DENABLE_SHARED=ON",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
       )
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -570,7 +580,8 @@ function Build-PCRE2 {
         "-DPCRE2_BUILD_TESTS=OFF",
         "-DPCRE2_SUPPORT_UNICODE=ON"
       )
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -593,7 +604,8 @@ function Build-BZip2 {
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
       -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -620,7 +632,8 @@ function Build-XZ {
         "-DBUILD_TESTING=OFF",
         "-DXZ_NLS=OFF"
       )
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -642,7 +655,8 @@ function Build-Brotli {
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
       -additional_args @("-DBUILD_TESTING=OFF")
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -668,7 +682,8 @@ function Build-LibIconv {
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\libiconvD.lib" "$prefix_path\lib\libiconv.lib" -Force
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -714,7 +729,8 @@ function Build-ICU4C {
       -version $icu4c_version -prefix $prefix_path_forward `
       -libs "-licuio$lib_postfix" -requires "icu-i18n" `
       -output_path "$prefix_path\lib\pkgconfig\icu-io.pc"
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -736,7 +752,8 @@ function Build-Pixman {
       -build_type $meson_build_type -install_prefix $prefix_path `
       -pkg_config_path "$prefix_path\lib\pkgconfig" `
       -additional_args @("-Dgtk=disabled", "-Dlibpng=enabled")
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -766,7 +783,8 @@ function Build-Expat {
         "-DEXPAT_BUILD_TOOLS=OFF",
         "-DEXPAT_BUILD_PKGCONFIG=ON"
       )
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -798,7 +816,8 @@ function Build-Boost {
       --includedir="$prefix_path\include" --with-headers toolset=msvc architecture=x86 `
       address-model=64 link=shared runtime-link=shared threadapi=win32 threading=multi `
       variant=$build_type install
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -832,7 +851,8 @@ function Build-LibXML2 {
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\libxml2d.lib" "$prefix_path\lib\libxml2.lib" -Force
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -857,7 +877,8 @@ function Build-NGHttp2 {
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_STATIC_LIBS=OFF"
       )
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -877,7 +898,8 @@ function Build-LibFFI {
     Invoke-MesonBuild -source_path "." -build_path "build" `
       -build_type $meson_build_type -install_prefix $prefix_path `
       -additional_args @("-Dpkg_config_path=$prefix_path\lib\pkgconfig")
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -899,7 +921,8 @@ function Build-DlfcnWin32 {
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
       -additional_args @("-DBUILD_SHARED_LIBS=ON")
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -928,10 +951,12 @@ function Build-LibPSL {
       Invoke-MesonBuild -source_path "." -build_path "build" `
         -build_type $meson_build_type -install_prefix $prefix_path `
         -pkg_config_path "$prefix_path\lib\pkgconfig"
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     $env:CFLAGS = $original_cflags
     $env:LDFLAGS = $original_ldflags
   }
@@ -951,7 +976,8 @@ function Build-Orc {
     Invoke-MesonBuild -source_path "." -build_path "build" `
       -build_type $meson_build_type -install_prefix $prefix_path `
       -pkg_config_path "$prefix_path\lib\pkgconfig"
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -981,7 +1007,8 @@ function Build-SQLite {
       -version "3.38.1" -prefix $prefix_path_forward `
       -libs "-lsqlite3" -cflags "-I`${includedir}" `
       -output_path "$prefix_path\lib\pkgconfig\sqlite3.pc"
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1012,10 +1039,12 @@ function Build-Glib {
           "-Dpkg_config_path=$prefix_path\lib\pkgconfig",
           "-Dtests=false"
         )
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     $env:CFLAGS = $original_cflags
     $env:LDFLAGS = $original_ldflags
   }
@@ -1048,10 +1077,12 @@ function Build-LibSoup {
           "-Dsysprof=disabled",
           "-Dtls_check=false"
         )
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     $env:CFLAGS = $original_cflags
   }
 }
@@ -1081,10 +1112,12 @@ function Build-GlibNetworking {
           "-Dgnome_proxy=disabled",
           "-Dlibproxy=disabled"
         )
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     $env:CFLAGS = $original_cflags
   }
 }
@@ -1113,7 +1146,8 @@ function Build-Freetype {
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\freetyped.lib" "$prefix_path\lib\freetype.lib" -Force
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1135,7 +1169,8 @@ function Build-Harfbuzz {
       -generator $cmake_generator -build_type $cmake_build_type `
       -install_prefix $prefix_path_forward `
       -additional_args @("-DBUILD_SHARED_LIBS=ON")
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1177,10 +1212,12 @@ function Build-Flac {
         )
 
       Write-Host "flac built successfully!" -ForegroundColor Green
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1229,10 +1266,12 @@ function Build-Wavpack {
       Copy-Item "$prefix_path\lib\wavpackdll.lib" "$prefix_path\lib\wavpack.lib" -Force
 
       Write-Host "wavpack built successfully!" -ForegroundColor Green
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1271,10 +1310,12 @@ function Build-Opus {
         -additional_args @("-DBUILD_SHARED_LIBS=ON")
 
       Write-Host "opus built successfully!" -ForegroundColor Green
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1318,10 +1359,12 @@ function Build-Opusfile {
         )
 
       Write-Host "opusfile built successfully!" -ForegroundColor Green
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1372,10 +1415,12 @@ function Build-Speex {
       }
 
       Write-Host "speex built successfully!" -ForegroundColor Green
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1414,10 +1459,12 @@ function Build-MPG123 {
         )
 
       Write-Host "mpg123 built successfully!" -ForegroundColor Green
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1480,10 +1527,12 @@ Cflags: -I`${includedir}
       $pc_content | Out-File -FilePath "$pc_dir\mp3lame.pc" -Encoding ASCII
 
       Write-Host "lame built successfully!" -ForegroundColor Green
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1566,13 +1615,16 @@ Cflags: -I`${includedir}
         $pc_content | Out-File -FilePath "$pc_dir\twolame.pc" -Encoding ASCII
 
         Write-Host "twolame built successfully!" -ForegroundColor Green
-      } finally {
+      }
+      finally {
         Pop-Location
       }
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1606,10 +1658,12 @@ function Build-FFmpeg {
           "-Dtests=disabled",
           "-Dgpl=enabled"
         )
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     $env:CFLAGS = $original_cflags
   }
 }
@@ -1635,7 +1689,8 @@ function Build-Chromaprint {
         "-DFFMPEG_ROOT=$prefix_path",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
       )
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1678,10 +1733,12 @@ function Build-GStreamer {
           "-Dgst_parse=true",
           "-Dregistry=true"
         )
-    } finally {
+    }
+    finally {
       Pop-Location
     }
-  } finally {
+  }
+  finally {
     $env:CFLAGS = $original_cflags
   }
 }
@@ -1724,7 +1781,8 @@ function Build-Qt {
         "-DFEATURE_system_sqlite=ON",
         "-DICU_ROOT=$prefix_path_forward"
       )
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
@@ -1757,7 +1815,8 @@ function Build-Strawberry {
       )
 
     Write-Host "Strawberry built successfully!" -ForegroundColor Green
-  } finally {
+  }
+  finally {
     Pop-Location
   }
 }
