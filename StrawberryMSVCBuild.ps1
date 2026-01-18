@@ -1180,9 +1180,11 @@ function Build-GlibNetworking {
   Write-Host "Building glib-networking" -ForegroundColor Yellow
 
   $original_cflags = $env:CFLAGS
+  $original_c_include_path = $env:C_INCLUDE_PATH
 
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
+    $env:C_INCLUDE_PATH = "$prefix_path\include"
 
     Push-Location $build_path
     try {
@@ -1214,6 +1216,7 @@ function Build-GlibNetworking {
   }
   finally {
     $env:CFLAGS = $original_cflags
+    $env:C_INCLUDE_PATH = $original_c_include_path
   }
 }
 
