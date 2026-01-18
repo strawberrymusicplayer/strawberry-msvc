@@ -1289,21 +1289,19 @@ function Build-Flac {
 
   Push-Location $build_path
   try {
-    $tar_file = "$downloads_path\flac-$global:flac_version.tar.xz"
-    if (-not (Test-Path $tar_file)) {
-      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
-      Invoke-PackageDownload -package_name "flac" -downloads_path $downloads_path
+    if (-not (Test-Path "flac-${global:flac_version}")) {
+      if (-not (Test-Path "$downloads_path\flac-${global:flac_version}.tar.xz")) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "flac" -downloads_path $downloads_path
+      }
+      & 7z x -aos "$downloads_path\flac-${global:flac_version}.tar.xz" -o"$downloads_path" | Out-Default
+      & 7z x -aos "$downloads_path\flac-${global:flac_version}.tar" | Out-Default
     }
 
-    Write-Host "Extracting $tar_file" -ForegroundColor Cyan
-    $relative_tar_path = Resolve-Path -Relative $tar_file
-    & tar -xf $relative_tar_path
-    if ($LASTEXITCODE -ne 0) { throw "Failed to extract flac archive" }
+    $extract_dir = "flac-${global:flac_version}"
+    if (-not (Test-Path $extract_dir)) { throw "Extracted directory not found for flac" }
 
-    $extract_dir = Get-ChildItem -Directory -Filter "flac-*" | Select-Object -First 1
-    if (-not $extract_dir) { throw "Extracted directory not found for flac" }
-
-    Push-Location $extract_dir.FullName
+    Push-Location $extract_dir
     try {
       Invoke-CMakeBuild `
         -source_path "." `
