@@ -131,7 +131,7 @@ $tool_checks = @(
   @{ Command = "7z"; Paths = @("C:\Program Files\7-Zip"); Message = "Missing 7z. Download 7-Zip from https://www.7-zip.org/download.html" }
   @{ Command = "cmake"; Paths = @("C:\Program Files\CMake\bin"); Message = "Missing cmake. Download from https://cmake.org/" }
   @{ Command = "meson"; Paths = @("C:\Program Files\Meson"); Message = "Missing meson. Download from https://mesonbuild.com/" }
-  @{ Command = "nmake"; Paths = @(); Message = "Missing nmake. Install Visual Studio 2022" }
+  @{ Command = "nmake"; Paths = @(); Message = "Missing nmake. Install Visual Studio 2022 or 2026" }
 )
 
 foreach ($check in $tool_checks) {
@@ -184,8 +184,8 @@ function Build-Pkgconf {
 
   Push-Location $build_path
   try {
-    $pkgDir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" -ErrorAction SilentlyContinue | Select-Object -First 1
-    if (-not $pkgDir) {
+    $pkg_dir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $pkg_dir) {
       $tar_file = "$downloads_path\pkgconf-$pkgconf_version.tar.gz"
       Write-Host "Extracting $tar_file" -ForegroundColor Cyan
       $relative_tar_path = Resolve-Path -Relative $tar_file
@@ -193,14 +193,14 @@ function Build-Pkgconf {
       if ($LASTEXITCODE -ne 0) {
         throw "Failed to extract pkgconf archive"
       }
-      $pkgDir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" | Select-Object -First 1
+      $pkg_dir = Get-ChildItem -Directory -Filter "pkgconf-pkgconf-$pkgconf_version" | Select-Object -First 1
     }
 
-    if (-not $pkgDir) {
+    if (-not $pkg_dir) {
       throw "Failed to find extracted pkgconf directory"
     }
 
-    Set-Location $pkgDir.FullName
+    Set-Location $pkg_dir.FullName
 
     Invoke-MesonBuild -source_path "." -build_path "build" `
       -build_type $meson_build_type -install_prefix $prefix_path `
@@ -328,12 +328,12 @@ function Build-GMP {
 
   Push-Location $build_path
   try {
-    $smpBuildPath = "$build_path\ShiftMediaProject\build"
-    if (-not (Test-Path $smpBuildPath)) {
-      New-Item -ItemType Directory -Path $smpBuildPath -Force | Out-Null
+    $smp_build_path = "$build_path\ShiftMediaProject\build"
+    if (-not (Test-Path $smp_build_path)) {
+      New-Item -ItemType Directory -Path $smp_build_path -Force | Out-Null
     }
 
-    Set-Location $smpBuildPath
+    Set-Location $smp_build_path
 
     if (-not (Test-Path "gmp")) {
       New-Item -ItemType Directory -Path "gmp" -Force | Out-Null
@@ -365,12 +365,12 @@ function Build-Nettle {
 
   Push-Location $build_path
   try {
-    $smpBuildPath = "$build_path\ShiftMediaProject\build"
-    if (-not (Test-Path $smpBuildPath)) {
-      New-Item -ItemType Directory -Path $smpBuildPath -Force | Out-Null
+    $smp_build_path = "$build_path\ShiftMediaProject\build"
+    if (-not (Test-Path $smp_build_path)) {
+      New-Item -ItemType Directory -Path $smp_build_path -Force | Out-Null
     }
 
-    Set-Location $smpBuildPath
+    Set-Location $smp_build_path
 
     if (-not (Test-Path "nettle")) {
       New-Item -ItemType Directory -Path "nettle" -Force | Out-Null
@@ -417,12 +417,12 @@ function Build-GnuTLS {
 
   Push-Location $build_path
   try {
-    $smpBuildPath = "$build_path\ShiftMediaProject\build"
-    if (-not (Test-Path $smpBuildPath)) {
-      New-Item -ItemType Directory -Path $smpBuildPath -Force | Out-Null
+    $smp_build_path = "$build_path\ShiftMediaProject\build"
+    if (-not (Test-Path $smp_build_path)) {
+      New-Item -ItemType Directory -Path $smp_build_path -Force | Out-Null
     }
 
-    Set-Location $smpBuildPath
+    Set-Location $smp_build_path
 
     if (-not (Test-Path "gnutls")) {
       New-Item -ItemType Directory -Path "gnutls" -Force | Out-Null
@@ -435,7 +435,7 @@ function Build-GnuTLS {
     Set-Location "gnutls\SMP"
 
     # Create inject_zlib.props
-    $propsContent = @"
+    $props_content = @"
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemDefinitionGroup>
   <ClCompile>
@@ -447,7 +447,7 @@ function Build-GnuTLS {
   </ItemDefinitionGroup>
 </Project>
 "@
-    Set-Content -Path "$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props" -Value $propsContent
+    Set-Content -Path "$build_path\ShiftMediaProject\build\gnutls\SMP\inject_zlib.props" -Value $props_content
 
     Update-VSProject -ProjectPath "libgnutls.sln"
 
@@ -903,8 +903,8 @@ function Build-DlfcnWin32 {
 function Build-LibPSL {
   Write-Host "Building libpsl" -ForegroundColor Yellow
 
-  $originalCFLAGS = $env:CFLAGS
-  $originalLDFLAGS = $env:LDFLAGS
+  $original_cflags = $env:CFLAGS
+  $original_ldflags = $env:LDFLAGS
 
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
@@ -928,8 +928,8 @@ function Build-LibPSL {
       Pop-Location
     }
   } finally {
-    $env:CFLAGS = $originalCFLAGS
-    $env:LDFLAGS = $originalLDFLAGS
+    $env:CFLAGS = $original_cflags
+    $env:LDFLAGS = $original_ldflags
   }
 }
 
@@ -985,8 +985,8 @@ function Build-SQLite {
 function Build-Glib {
   Write-Host "Building glib" -ForegroundColor Yellow
 
-  $originalCFLAGS = $env:CFLAGS
-  $originalLDFLAGS = $env:LDFLAGS
+  $original_cflags = $env:CFLAGS
+  $original_ldflags = $env:LDFLAGS
 
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
@@ -1012,15 +1012,15 @@ function Build-Glib {
       Pop-Location
     }
   } finally {
-    $env:CFLAGS = $originalCFLAGS
-    $env:LDFLAGS = $originalLDFLAGS
+    $env:CFLAGS = $original_cflags
+    $env:LDFLAGS = $original_ldflags
   }
 }
 
 function Build-LibSoup {
   Write-Host "Building libsoup" -ForegroundColor Yellow
 
-  $originalCFLAGS = $env:CFLAGS
+  $original_cflags = $env:CFLAGS
 
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
@@ -1048,14 +1048,14 @@ function Build-LibSoup {
       Pop-Location
     }
   } finally {
-    $env:CFLAGS = $originalCFLAGS
+    $env:CFLAGS = $original_cflags
   }
 }
 
 function Build-GlibNetworking {
   Write-Host "Building glib-networking" -ForegroundColor Yellow
 
-  $originalCFLAGS = $env:CFLAGS
+  $original_cflags = $env:CFLAGS
 
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
@@ -1081,7 +1081,7 @@ function Build-GlibNetworking {
       Pop-Location
     }
   } finally {
-    $env:CFLAGS = $originalCFLAGS
+    $env:CFLAGS = $original_cflags
   }
 }
 
@@ -1576,7 +1576,7 @@ Cflags: -I`${includedir}
 function Build-FFmpeg {
   Write-Host "Building ffmpeg" -ForegroundColor Yellow
 
-  $originalCFLAGS = $env:CFLAGS
+  $original_cflags = $env:CFLAGS
 
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
@@ -1606,7 +1606,7 @@ function Build-FFmpeg {
       Pop-Location
     }
   } finally {
-    $env:CFLAGS = $originalCFLAGS
+    $env:CFLAGS = $original_cflags
   }
 }
 
@@ -1639,7 +1639,7 @@ function Build-Chromaprint {
 function Build-GStreamer {
   Write-Host "Building GStreamer" -ForegroundColor Yellow
 
-  $originalCFLAGS = $env:CFLAGS
+  $original_cflags = $env:CFLAGS
 
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include"
@@ -1677,7 +1677,7 @@ function Build-GStreamer {
       Pop-Location
     }
   } finally {
-    $env:CFLAGS = $originalCFLAGS
+    $env:CFLAGS = $original_cflags
   }
 }
 
