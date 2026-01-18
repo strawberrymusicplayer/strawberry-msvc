@@ -275,6 +275,9 @@ function Get-FileIfNotExists {
   if (-not (Test-Path $file_path)) {
     Write-Host "Downloading $file_name" -ForegroundColor Yellow
     try {
+      # Enable TLS 1.2 for secure connections
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      
       Invoke-WebRequest -Uri $url -OutFile $file_path -UseBasicParsing -MaximumRedirection 5 -UserAgent "Wget"
       
       # Verify file was downloaded and has content
