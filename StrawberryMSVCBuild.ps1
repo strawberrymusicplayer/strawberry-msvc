@@ -1293,7 +1293,7 @@ function Build-Ogg {
     if (-not (Test-Path "libogg-$global:libogg_version")) {
       if (-not (Test-Path $tar_file)) {
         Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
-        Invoke-PackageDownload -package_name "ogg" -downloads_path $downloads_path
+        Invoke-PackageDownload -package_name "libogg" -downloads_path $downloads_path
       }
       tar -xf $tar_file
     }
@@ -1328,7 +1328,7 @@ function Build-Vorbis {
     if (-not (Test-Path "libvorbis-$global:libvorbis_version")) {
       if (-not (Test-Path $tar_file)) {
         Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
-        Invoke-PackageDownload -package_name "vorbis" -downloads_path $downloads_path
+        Invoke-PackageDownload -package_name "libvorbis" -downloads_path $downloads_path
       }
       tar -xf $tar_file
     }
