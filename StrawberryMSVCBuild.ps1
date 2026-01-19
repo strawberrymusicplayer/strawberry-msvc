@@ -1860,6 +1860,57 @@ Cflags: -I`${includedir}
   }
 }
 
+function Build-LibOpenmpt {
+  Write-Host "Building libopenmpt" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    $zip_file = "$downloads_path\libopenmpt-$global:libopenmpt_version+release.msvc.zip"
+    if (-not (Test-Path $zip_file)) {
+      Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "libopenmpt" -downloads_path $downloads_path
+    }
+
+    if (-not (Test-Path "libopenmpt")) {
+      Write-Host "Extracting $zip_file" -ForegroundColor Cyan
+      New-Item -ItemType Directory -Path "libopenmpt" -Force | Out-Null
+      Push-Location "libopenmpt"
+      try {
+        & 7z x $zip_file
+        if ($LASTEXITCODE -ne 0) { throw "Failed to extract libopenmpt archive" }
+      }
+      finally {
+        Pop-Location
+      }
+    }
+
+    Set-Location "libopenmpt"
+
+    # Apply patch
+    $patch_file = "$downloads_path\libopenmpt-cmake.patch"
+    if (-not (Test-Path $patch_file)) {
+      Write-Host "Patch file not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "patch-libopenmpt-cmake" -downloads_path $downloads_path
+    }
+    if (Test-Path $patch_file) {
+      Write-Host "Applying libopenmpt-cmake patch..." -ForegroundColor Cyan
+      & patch -p1 -N -i $patch_file
+    }
+    else {
+      Write-Host "WARNING: Could not find libopenmpt-cmake.patch, build may fail" -ForegroundColor Yellow
+    }
+
+    Invoke-CMakeBuild -source_path "." -build_path "build2" `
+      -build_type $cmake_build_type -install_prefix $prefix_path `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
+
+    Write-Host "libopenmpt built successfully!" -ForegroundColor Green
+  }
+  finally {
+    Pop-Location
+  }
+}
+
 function Build-FFmpeg {
   Write-Host "Building ffmpeg" -ForegroundColor Yellow
 
@@ -2794,6 +2845,7 @@ try {
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libmpg123.pc")) { $buildQueue += "mpg123" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\mp3lame.pc")) { $buildQueue += "lame" }
   if (-not (Test-Path "$prefix_path\lib\libtwolame_dll.lib")) { $buildQueue += "twolame" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\libopenmpt.pc")) { $buildQueue += "libopenmpt" }
   if (-not (Test-Path "$prefix_path\lib\avutil.lib")) { $buildQueue += "ffmpeg" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libchromaprint.pc")) { $buildQueue += "chromaprint" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-1.0.pc")) { $buildQueue += "gstreamer" }
@@ -2872,6 +2924,7 @@ try {
       "mpg123" { Build-MPG123 }
       "lame" { Build-Lame }
       "twolame" { Build-Twolame }
+      "libopenmpt" { Build-LibOpenmpt }
       "ffmpeg" { Build-FFmpeg }
       "chromaprint" { Build-Chromaprint }
       "gstreamer" { Build-GStreamer }
