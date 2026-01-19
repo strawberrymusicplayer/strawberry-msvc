@@ -2783,6 +2783,502 @@ function Build-Peutil {
   }
 }
 
+function Build-Fftw3 {
+  Write-Host "Building fftw3" -ForegroundColor Yellow
+
+  $fftw_zip = if ($build_type -eq "debug") { "fftw-debug" }
+              else { "fftw-release" }
+
+  $tar_file = "fftw-$fftw_version-x64-$build_type.zip"
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name $fftw_zip -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "fftw")) {
+      New-Item -ItemType Directory -Path "fftw" -Force | Out-Null
+    }
+
+    Set-Location "fftw"
+    & 7z x "$downloads_path\$tar_file" -y
+    if ($LASTEXITCODE -ne 0) { throw "7z extraction failed" }
+
+    # Generate .lib file from .def
+    & lib /machine:x64 /def:libfftw3-3.def
+    if ($LASTEXITCODE -ne 0) { throw "lib.exe failed to create import library" }
+
+    # Copy files to prefix
+    Copy-Item "libfftw3-3.dll" "$prefix_path\bin\" -Force
+    Copy-Item "libfftw3-3.lib" "$prefix_path\lib\" -Force
+    Copy-Item "fftw3.h" "$prefix_path\include\" -Force
+
+    # Create pkg-config file
+    New-PkgConfigFile -name "fftw3" -description "discrete Fourier transform (DFT)" `
+      -url "https://www.fftw.org/" -version $fftw_version `
+      -libs "-lfftw3-3" -prefix_path $prefix_path_forward
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Musepack {
+  Write-Host "Building musepack" -ForegroundColor Yellow
+
+  $tar_file = "musepack_src_r$musepack_version.tar.gz"
+  $extract_dir = "musepack_src_r$musepack_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "musepack" -downloads_path $downloads_path
+  }
+
+  # Download patch if needed
+  $patch_file = "$downloads_path\musepack-fixes.patch"
+  if (-not (Test-Path $patch_file)) {
+    Write-Host "Downloading musepack-fixes.patch..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "patch-musepack-fixes" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    # Apply patch
+    if (Test-Path $patch_file) {
+      & patch -p1 -N -i $patch_file
+    }
+    else {
+      Write-Warning "musepack-fixes.patch not found, build may fail"
+    }
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DSHARED=ON",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+      )
+
+    # Copy additional files
+    Copy-Item "build\libmpcdec\*.lib" "$prefix_path\lib\" -Force -ErrorAction SilentlyContinue
+    Copy-Item "build\libmpcdec\*.dll" "$prefix_path\bin\" -Force -ErrorAction SilentlyContinue
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-LibGme {
+  Write-Host "Building libgme" -ForegroundColor Yellow
+
+  $tar_file = "libgme-$libgme_version-src.tar.gz"
+  $extract_dir = "game-music-emu-$libgme_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "libgme" -downloads_path $downloads_path
+  }
+
+  # Download patch if needed
+  $patch_file = "$downloads_path\libgme-pkgconf.patch"
+  if (-not (Test-Path $patch_file)) {
+    Write-Host "Downloading libgme-pkgconf.patch..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "patch-libgme-pkgconf" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    # Apply patch
+    if (Test-Path $patch_file) {
+      & patch -p1 -N -i $patch_file
+    }
+    else {
+      Write-Warning "libgme-pkgconf.patch not found, pkg-config file may be missing"
+    }
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-FdkAac {
+  Write-Host "Building fdk-aac" -ForegroundColor Yellow
+
+  $tar_file = "fdk-aac-$fdk_aac_version.tar.gz"
+  $extract_dir = "fdk-aac-$fdk_aac_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "fdk-aac" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Faad2 {
+  Write-Host "Building faad2" -ForegroundColor Yellow
+
+  $tar_file = "faad2-$faad2_version.tar.gz"
+  $extract_dir = "knik0-faad2-*"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "faad2" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    # Remove old extract if exists
+    Get-ChildItem -Directory -Filter "knik0-faad2-*" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+
+    & tar -xzf "$downloads_path\$tar_file"
+    if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+
+    $actual_dir = (Get-ChildItem -Directory -Filter "knik0-faad2-*" | Select-Object -First 1).Name
+    Set-Location $actual_dir
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Faac {
+  Write-Host "Building faac" -ForegroundColor Yellow
+
+  $tar_file = "faac-$faac_version.tar.gz"
+  $extract_dir = "faac-faac-$faac_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "faac" -downloads_path $downloads_path
+  }
+
+  # Download patch if needed
+  $patch_file = "$downloads_path\faac-msvc.patch"
+  if (-not (Test-Path $patch_file)) {
+    Write-Host "Downloading faac-msvc.patch..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "patch-faac-msvc" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    # Apply patch
+    if (Test-Path $patch_file) {
+      & patch -p1 -N -i $patch_file
+    }
+    else {
+      Write-Warning "faac-msvc.patch not found, build may fail"
+    }
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-UtfCpp {
+  Write-Host "Building utfcpp (header-only)" -ForegroundColor Yellow
+
+  $tar_file = "utfcpp-$utfcpp_version.tar.gz"
+  $extract_dir = "utfcpp-$utfcpp_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "utfcpp" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    # Copy header files
+    if (-not (Test-Path "$prefix_path\include\utf8cpp")) {
+      New-Item -ItemType Directory -Path "$prefix_path\include\utf8cpp" -Force | Out-Null
+    }
+    Copy-Item "source\*.h" "$prefix_path\include\utf8cpp\" -Force -Recurse
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-LibBs2b {
+  Write-Host "Building libbs2b" -ForegroundColor Yellow
+
+  $tar_file = "libbs2b-$libbs2b_version.tar.bz2"
+  $extract_dir = "libbs2b-$libbs2b_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "libbs2b" -downloads_path $downloads_path
+  }
+
+  # Download patch if needed
+  $patch_file = "$downloads_path\libbs2b-msvc.patch"
+  if (-not (Test-Path $patch_file)) {
+    Write-Host "Downloading libbs2b-msvc.patch..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "patch-libbs2b-msvc" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      # Extract .tar.bz2 using 7z two-step
+      & 7z x "$downloads_path\$tar_file" -o"$build_path" -y
+      if ($LASTEXITCODE -ne 0) { throw "7z decompression failed" }
+      $tar_only = $tar_file -replace '\.bz2$', ''
+      & 7z x "$build_path\$tar_only" -o"$build_path" -y
+      if ($LASTEXITCODE -ne 0) { throw "7z tar extraction failed" }
+      Remove-Item "$build_path\$tar_only" -Force -ErrorAction SilentlyContinue
+    }
+
+    Set-Location $extract_dir
+
+    # Apply patch
+    if (Test-Path $patch_file) {
+      & patch -p1 -N -i $patch_file
+    }
+    else {
+      Write-Warning "libbs2b-msvc.patch not found, build may fail"
+    }
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-LibEbur128 {
+  Write-Host "Building libebur128" -ForegroundColor Yellow
+
+  $tar_file = "libebur128-$libebur128_version.tar.gz"
+  $extract_dir = "libebur128-$libebur128_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "libebur128" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-GstPluginsRs {
+  Write-Host "Building gst-plugins-rs (Rust GStreamer plugins)" -ForegroundColor Yellow
+
+  if (-not (Test-Path "$downloads_path\gst-plugins-rs")) {
+    Write-Host "Cloning gst-plugins-rs git repository..." -ForegroundColor Yellow
+    $dep_urls = Get-DependencyUrls
+    if ($dep_urls.GitRepos.ContainsKey('gst-plugins-rs')) {
+      $git_url = $dep_urls.GitRepos['gst-plugins-rs']
+      Sync-GitRepository -url $git_url -destination_path $downloads_path
+    }
+    else {
+      throw "gst-plugins-rs git repository URL not found in dependency configuration"
+    }
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "gst-plugins-rs")) {
+      New-Item -ItemType Directory -Path "gst-plugins-rs" -Force | Out-Null
+      Copy-Item "$downloads_path\gst-plugins-rs\*" "gst-plugins-rs\" -Recurse -Force
+    }
+
+    Set-Location "gst-plugins-rs"
+
+    # Build with Cargo and Meson
+    Invoke-MesonBuild -source_path "." -build_path "build" `
+      -build_type $meson_build_type -prefix_path $prefix_path_forward `
+      -additional_args @(
+        "--libdir=lib",
+        "-Ddoc=disabled"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-AbseilCpp {
+  Write-Host "Building abseil-cpp" -ForegroundColor Yellow
+
+  $tar_file = "abseil-cpp-$abseil_version.tar.gz"
+  $extract_dir = "abseil-cpp-$abseil_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "abseil-cpp" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DABSL_BUILD_TESTING=OFF",
+        "-DABSL_USE_EXTERNAL_GOOGLETEST=OFF"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-Protobuf {
+  Write-Host "Building protobuf" -ForegroundColor Yellow
+
+  $tar_file = "protobuf-$protobuf_version.tar.gz"
+  $extract_dir = "protobuf-$protobuf_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "protobuf" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DBUILD_SHARED_LIBS=ON",
+        "-Dprotobuf_BUILD_TESTS=OFF",
+        "-Dprotobuf_ABSL_PROVIDER=package"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+function Build-RapidJson {
+  Write-Host "Building rapidjson (header-only)" -ForegroundColor Yellow
+
+  $tar_file = "rapidjson-$rapidjson_version.tar.gz"
+  $extract_dir = "rapidjson-$rapidjson_version"
+
+  if (-not (Test-Path "$downloads_path\$tar_file")) {
+    Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+    Invoke-PackageDownload -package_name "rapidjson" -downloads_path $downloads_path
+  }
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path $extract_dir)) {
+      & tar -xzf "$downloads_path\$tar_file"
+      if ($LASTEXITCODE -ne 0) { throw "tar extraction failed" }
+    }
+
+    Set-Location $extract_dir
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @(
+        "-DRAPIDJSON_BUILD_DOC=OFF",
+        "-DRAPIDJSON_BUILD_EXAMPLES=OFF",
+        "-DRAPIDJSON_BUILD_TESTS=OFF"
+      )
+  }
+  finally {
+    Pop-Location
+  }
+}
+
 function Build-Strawberry {
   Write-Host "Building strawberry" -ForegroundColor Yellow
 
@@ -2882,7 +3378,16 @@ try {
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libmpg123.pc")) { $buildQueue += "mpg123" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\mp3lame.pc")) { $buildQueue += "lame" }
   if (-not (Test-Path "$prefix_path\lib\libtwolame_dll.lib")) { $buildQueue += "twolame" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\fftw3.pc")) { $buildQueue += "fftw3" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\mpcdec.pc")) { $buildQueue += "musepack" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libopenmpt.pc")) { $buildQueue += "libopenmpt" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\libgme.pc")) { $buildQueue += "libgme" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\fdk-aac.pc")) { $buildQueue += "fdk-aac" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\faad2.pc")) { $buildQueue += "faad2" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\faac.pc")) { $buildQueue += "faac" }
+  if (-not (Test-Path "$prefix_path\include\utf8cpp\utf8.h")) { $buildQueue += "utfcpp" }
+  if (-not (Test-Path "$prefix_path\lib\libbs2b.lib")) { $buildQueue += "libbs2b" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\libebur128.pc")) { $buildQueue += "libebur128" }
   if (-not (Test-Path "$prefix_path\lib\avutil.lib")) { $buildQueue += "ffmpeg" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libchromaprint.pc")) { $buildQueue += "chromaprint" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-1.0.pc")) { $buildQueue += "gstreamer" }
@@ -2891,6 +3396,10 @@ try {
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-plugins-bad-1.0.pc")) { $buildQueue += "gst-plugins-bad" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-plugins-ugly-1.0.pc")) { $buildQueue += "gst-plugins-ugly" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\gstreamer-libav-1.0.pc")) { $buildQueue += "gst-libav" }
+  if (-not (Test-Path "$prefix_path\lib\gstreamer-1.0\gstspotify.dll")) { $buildQueue += "gst-plugins-rs" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\absl_any.pc")) { $buildQueue += "abseil-cpp" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\protobuf.pc")) { $buildQueue += "protobuf" }
+  if (-not (Test-Path "$prefix_path\lib\cmake\RapidJSON\RapidJSONConfig.cmake")) { $buildQueue += "rapidjson" }
   if (-not (Test-Path "$prefix_path\bin\qt-configure-module.bat")) { $buildQueue += "qt" }
   if (-not (Test-Path "$prefix_path\bin\linguist.exe")) { $buildQueue += "qttools" }
   if (-not (Test-Path "$prefix_path\lib\cmake\QtGrpc\QtGrpcConfig.cmake")) { $buildQueue += "qtgrpc" }
@@ -2961,7 +3470,16 @@ try {
       "mpg123" { Build-MPG123 }
       "lame" { Build-Lame }
       "twolame" { Build-Twolame }
+      "fftw3" { Build-Fftw3 }
+      "musepack" { Build-Musepack }
       "libopenmpt" { Build-LibOpenmpt }
+      "libgme" { Build-LibGme }
+      "fdk-aac" { Build-FdkAac }
+      "faad2" { Build-Faad2 }
+      "faac" { Build-Faac }
+      "utfcpp" { Build-UtfCpp }
+      "libbs2b" { Build-LibBs2b }
+      "libebur128" { Build-LibEbur128 }
       "ffmpeg" { Build-FFmpeg }
       "chromaprint" { Build-Chromaprint }
       "gstreamer" { Build-GStreamer }
@@ -2970,6 +3488,10 @@ try {
       "gst-plugins-bad" { Build-GstPluginsBad }
       "gst-plugins-ugly" { Build-GstPluginsUgly }
       "gst-libav" { Build-GstLibav }
+      "gst-plugins-rs" { Build-GstPluginsRs }
+      "abseil-cpp" { Build-AbseilCpp }
+      "protobuf" { Build-Protobuf }
+      "rapidjson" { Build-RapidJson }
       "qt" { Build-Qt }
       "qttools" { Build-QtTools }
       "qtgrpc" { Build-QtGrpc }
