@@ -1283,6 +1283,33 @@ function Build-Harfbuzz {
   }
 }
 
+function Build-Taglib {
+  Write-Host "Building taglib" -ForegroundColor Yellow
+
+  Push-Location $build_path
+  try {
+    if (-not (Test-Path "taglib-$taglib_version")) {
+      $tar_file = "$downloads_path\taglib-$taglib_version.tar.gz"
+      if (-not (Test-Path $tar_file)) {
+        Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
+        Invoke-PackageDownload -package_name "taglib" -downloads_path $downloads_path
+      }
+      $relative_tar_path = Resolve-Path -Relative $tar_file
+      & tar -xf $relative_tar_path
+    }
+
+    Set-Location "taglib-$taglib_version"
+
+    Invoke-CMakeBuild -source_path "." -build_path "build" `
+      -generator $cmake_generator -build_type $cmake_build_type `
+      -install_prefix $prefix_path_forward `
+      -additional_args @("-DBUILD_SHARED_LIBS=ON")
+  }
+  finally {
+    Pop-Location
+  }
+}
+
 # Add more audio codec build functions (abbreviated for space)
 function Build-Ogg {
   Write-Host "Building libogg" -ForegroundColor Yellow
@@ -2746,6 +2773,7 @@ try {
   if (-not (Test-Path "$prefix_path\lib\gio\modules\gioopenssl.lib")) { $buildQueue += "glib-networking" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\freetype2.pc")) { $buildQueue += "freetype" }
   if (-not (Test-Path "$prefix_path\lib\harfbuzz*.lib")) { $buildQueue += "harfbuzz" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\taglib.pc")) { $buildQueue += "taglib" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\ogg.pc")) { $buildQueue += "ogg" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\vorbis.pc")) { $buildQueue += "vorbis" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\flac.pc")) { $buildQueue += "flac" }
@@ -2823,6 +2851,7 @@ try {
       "glib-networking" { Build-GlibNetworking }
       "freetype" { Build-Freetype }
       "harfbuzz" { Build-Harfbuzz }
+      "taglib" { Build-Taglib }
       "ogg" { Build-Ogg }
       "vorbis" { Build-Vorbis }
       "flac" { Build-Flac }
