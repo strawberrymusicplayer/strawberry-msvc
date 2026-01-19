@@ -98,7 +98,7 @@ Write-Host "Setting up environment variables..." -ForegroundColor Cyan
 $env:PKG_CONFIG_EXECUTABLE = "$prefix_path\bin\pkgconf.exe"
 $env:PKG_CONFIG_PATH = "$prefix_path\lib\pkgconfig"
 $env:CL = "-MP"
-$env:PATH = "$env:PATH;$prefix_path\bin"
+$env:PATH = "$prefix_path\bin;$env:PATH"
 $env:YASMPATH = "$prefix_path\bin"
 
 # Ensure Visual Studio x64 tools are used
