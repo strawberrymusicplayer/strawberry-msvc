@@ -2166,6 +2166,16 @@ function Build-GstPluginsBad {
   try {
     $env:CFLAGS = "-I$prefix_path_forward/include -I$prefix_path_forward/include/opus"
 
+    # Download patch if not present
+    $patch_file = "$downloads_path\gst-plugins-bad-meson-dependency.patch"
+    if (-not (Test-Path $patch_file)) {
+      Write-Host "Patch file not found, downloading..." -ForegroundColor Yellow
+      Invoke-PackageDownload -package_name "patch-gst-plugins-bad-meson-dependency" -downloads_path $downloads_path
+      if (-not (Test-Path $patch_file)) {
+        Write-Warning "Failed to download patch file"
+      }
+    }
+
     Push-Location $build_path
     try {
       if ($gst_dev -eq "ON") {
