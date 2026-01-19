@@ -2748,6 +2748,18 @@ function Build-Peparse {
 function Build-Peutil {
   Write-Host "Building pe-util" -ForegroundColor Yellow
 
+  if (-not (Test-Path "$downloads_path\pe-util")) {
+    Write-Host "Cloning pe-util git repository..." -ForegroundColor Yellow
+    $dep_urls = Get-DependencyUrls
+    if ($dep_urls.GitRepos.ContainsKey('pe-util')) {
+      $git_url = $dep_urls.GitRepos['pe-util']
+      Sync-GitRepository -url $git_url -destination_path $downloads_path
+    }
+    else {
+      throw "pe-util git repository URL not found in dependency configuration"
+    }
+  }
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "pe-util")) {
@@ -2773,6 +2785,18 @@ function Build-Peutil {
 
 function Build-Strawberry {
   Write-Host "Building strawberry" -ForegroundColor Yellow
+
+  if (-not (Test-Path "$downloads_path\strawberry")) {
+    Write-Host "Cloningstrawberry git repository..." -ForegroundColor Yellow
+    $dep_urls = Get-DependencyUrls
+    if ($dep_urls.GitRepos.ContainsKey('strawberry')) {
+      $git_url = $dep_urls.GitRepos['strawberry']
+      Sync-GitRepository -url $git_url -destination_path $downloads_path
+    }
+    else {
+      throw "strawberry git repository URL not found in dependency configuration"
+    }
+  }
 
   Push-Location $build_path
   try {
