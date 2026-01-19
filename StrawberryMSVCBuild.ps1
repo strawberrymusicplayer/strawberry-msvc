@@ -2787,7 +2787,7 @@ function Build-Strawberry {
   Write-Host "Building strawberry" -ForegroundColor Yellow
 
   if (-not (Test-Path "$downloads_path\strawberry")) {
-    Write-Host "Cloningstrawberry git repository..." -ForegroundColor Yellow
+    Write-Host "Cloning strawberry git repository..." -ForegroundColor Yellow
     $dep_urls = Get-DependencyUrls
     if ($dep_urls.GitRepos.ContainsKey('strawberry')) {
       $git_url = $dep_urls.GitRepos['strawberry']
