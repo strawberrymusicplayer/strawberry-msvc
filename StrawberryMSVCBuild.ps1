@@ -2724,7 +2724,7 @@ function Build-Peparse {
       $tar_file = "$downloads_path\pe-parse-$peparse_version.tar.gz"
       if (-not (Test-Path $tar_file)) {
         Write-Host "Tarball not found, downloading..." -ForegroundColor Yellow
-        Invoke-PackageDownload -package_name "peparse" -downloads_path $downloads_path
+        Invoke-PackageDownload -package_name "pe-parse" -downloads_path $downloads_path
       }
       tar -xf $tar_file
     }
