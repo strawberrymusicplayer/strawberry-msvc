@@ -2542,6 +2542,19 @@ function Build-QtGrpc {
 function Build-QtSparkle {
   Write-Host "Building qtsparkle" -ForegroundColor Yellow
 
+  # Clone qtsparkle git repository if not present
+  if (-not (Test-Path "$downloads_path\qtsparkle")) {
+    Write-Host "Cloning qtsparkle git repository..." -ForegroundColor Yellow
+    $dep_urls = Get-DependencyUrls
+    if ($dep_urls.GitRepos.ContainsKey('qtsparkle')) {
+      $git_url = $dep_urls.GitRepos['qtsparkle']
+      Sync-GitRepository -url $git_url -destination_path $downloads_path
+    }
+    else {
+      throw "qtsparkle git repository URL not found in dependency configuration"
+    }
+  }
+
   Push-Location $build_path
   try {
     if (-not (Test-Path "qtsparkle")) {
