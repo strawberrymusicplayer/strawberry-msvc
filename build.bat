@@ -876,19 +876,13 @@ cmake --install . || goto end
 
 @echo Building libpsl
 
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-@set LDFLAGS=-L%PREFIX_PATH%\lib
-
 cd "%BUILD_PATH%" || goto end
 if not exist "libpsl-%LIBPSL_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libpsl-%LIBPSL_VERSION%.tar.gz" || goto end
 cd "libpsl-%LIBPSL_VERSION%" || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
-
-@set CFLAGS=
-@set LDFLAGS=
 
 @goto continue
 
@@ -960,21 +954,15 @@ echo Cflags: -I${includedir}>> "%PREFIX_PATH%/lib/pkgconfig/sqlite3.pc"
 
 @echo Building glib
 
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-@set LDFLAGS=-L%PREFIX_PATH%\lib
-
 cd "%BUILD_PATH%" || goto end
 if not exist "glib-%GLIB_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-%GLIB_VERSION%.tar"
 @rem if not exist "glib-%GLIB_VERSION%" tar -xvf "%DOWNLOADS_PATH%\glib-%GLIB_VERSION%.tar.xz" || goto end
 cd "glib-%GLIB_VERSION%" || goto end
 @rem sed -i "s/libintl = dependency('intl', required: false)/libintl = cc.find_library('intl', dirs: '%PREFIX_PATH_ESCAPE%\\lib', required: true)/g" meson.build || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" -Dtests=false build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --includedir="%PREFIX_PATH%\include" --libdir="%PREFIX_PATH%\lib" -Dpkg_config_path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" -Dtests=false build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
-
-@set CFLAGS=
-@set LDFLAGS=
 
 @goto continue
 
@@ -999,18 +987,14 @@ move /y "%PREFIX_PATH%\lib\libproxy.dll" "%PREFIX_PATH%\bin\libproxy.dll" || got
 
 @echo Building libsoup
 
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-
 cd "%BUILD_PATH%" || goto end
 if not exist "libsoup-%LIBSOUP_VERSION%" 7z x "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" -so | 7z x -aoa -si"libsoup-%LIBSOUP_VERSION%.tar" || goto end
 @rem if not exist "libsoup-%LIBSOUP_VERSION%" tar -xvf "%DOWNLOADS_PATH%\libsoup-%LIBSOUP_VERSION%.tar.xz" || goto end
 cd "libsoup-%LIBSOUP_VERSION%" || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload -Dtests=false -Dvapi=disabled -Dgssapi=disabled -Dintrospection=disabled -Dtests=false -Dsysprof=disabled -Dtls_check=false build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
-
-@set CFLAGS=
 
 @goto continue
 
@@ -1019,18 +1003,14 @@ ninja install || goto end
 
 @echo Building glib-networking
 
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-
 cd "%BUILD_PATH%" || goto end
 if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" 7z x "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" -so | 7z x -aoa -si"glib-networking-%GLIB_NETWORKING_VERSION%.tar" || goto end
 @rem if not exist "glib-networking-%GLIB_NETWORKING_VERSION%" tar -xvf "%DOWNLOADS_PATH%\glib-networking-%GLIB_NETWORKING_VERSION%.tar.xz" || goto end
 cd "glib-networking-%GLIB_NETWORKING_VERSION%" || goto end
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled -Dgnome_proxy=disabled -Dlibproxy=disabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload -Dgnutls=enabled -Dopenssl=enabled -Dgnome_proxy=disabled -Dlibproxy=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
-
-@set CFLAGS=
 
 @goto continue
 
@@ -1072,16 +1052,12 @@ ninja install || goto end
 
 @echo Building harfbuzz
 
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-@set CXXFLAGS=-I%PREFIX_PATH_FORWARD%/include
-@set LDFLAGS=-L%PREFIX_PATH%\lib
-
 cd "%BUILD_PATH%" || goto end
 if not exist "harfbuzz-%HARFBUZZ_VERSION%" 7z x "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" -so | 7z x -aoa -si"harfbuzz-%HARFBUZZ_VERSION%.tar"
 @rem if not exist "harfbuzz-%HARFBUZZ_VERSION%" tar -xvf "%DOWNLOADS_PATH%\harfbuzz-%HARFBUZZ_VERSION%.tar.xz" || goto end
 cd "harfbuzz-%HARFBUZZ_VERSION%" || goto end
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --wrap-mode=nodownload -Dcpp_std=c++17 -Dtests=disabled -Ddocs=disabled -Dicu=enabled -Dfreetype=enabled -Dcairo=disabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" -Dc_args="-I%PREFIX_PATH%\include" -Dcpp_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload -Dcpp_std=c++17 -Dtests=disabled -Ddocs=disabled -Dicu=enabled -Dfreetype=enabled -Dcairo=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1103,10 +1079,6 @@ cd build || goto end
 cmake --build . || goto end
 cmake --install . || goto end
 @if "%BUILD_TYPE%" == "debug" copy /y "%PREFIX_PATH%\lib\freetyped.lib" "%PREFIX_PATH%\lib\freetype.lib" || goto end
-
-@set CFLAGS=
-@set CXXFLAGS=
-@set LDFLAGS=
 
 @goto continue
 
@@ -1606,8 +1578,6 @@ cmake --install . || goto end
 
 @echo Building GStreamer
 
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
-
 cd "%BUILD_PATH%" || goto end
 
 if "%GST_DEV%" == "ON" @(
@@ -1620,7 +1590,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gstreamer-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dbenchmarks=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=disabled -Ddoc=disabled -Dgst_debug=true -Dgst_parse=true -Dregistry=true build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload -Dexamples=disabled -Dtests=disabled -Dbenchmarks=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=disabled -Ddoc=disabled -Dgst_debug=true -Dgst_parse=true -Dregistry=true build || goto end
 
 cd build || goto end
 ninja || goto end
@@ -1629,16 +1599,12 @@ ninja install || goto end
 @rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
 @rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
-@set CFLAGS=
-
 goto continue
 
 
 :gst-plugins-base
 
 @echo Building gst-plugins-base
-
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include -I%PREFIX_PATH_FORWARD%/include/opus
 
 cd "%BUILD_PATH%" || goto end
 
@@ -1652,7 +1618,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-base-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=disabled -Dorc=enabled -Ddoc=disabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Ddsd=enabled -Dencoding=enabled -Dgio=enabled -Dgio-typefinder=enabled -Dpbtypes=enabled -Dplayback=enabled -Dtcp=enabled -Dtypefind=enabled -Dvolume=enabled -Dogg=enabled -Dopus=enabled -Dvorbis=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dtools=enabled -Dintrospection=disabled -Dnls=disabled -Dorc=enabled -Ddoc=disabled -Dadder=enabled -Dapp=enabled -Daudioconvert=enabled -Daudiomixer=enabled -Daudiorate=enabled -Daudioresample=enabled -Daudiotestsrc=enabled -Ddsd=enabled -Dencoding=enabled -Dgio=enabled -Dgio-typefinder=enabled -Dpbtypes=enabled -Dplayback=enabled -Dtcp=enabled -Dtypefind=enabled -Dvolume=enabled -Dogg=enabled -Dopus=enabled -Dvorbis=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1660,16 +1626,12 @@ ninja install || goto end
 @rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
 @rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
-@set CFLAGS=
-
 @goto continue
 
 
 :gst-plugins-good
 
 @echo Building gst-plugins-good
-
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
 
 cd "%BUILD_PATH%" || goto end
 
@@ -1683,7 +1645,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-good-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dnls=disabled -Dorc=enabled -Dasm=enabled -Ddoc=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dautodetect=enabled -Dequalizer=enabled -Dicydemux=enabled -Did3demux=enabled -Disomp4=enabled -Dreplaygain=enabled -Drtp=enabled -Drtsp=enabled -Dspectrum=enabled -Dudp=enabled -Dwavenc=enabled -Dwavparse=enabled -Dxingmux=enabled -Dadaptivedemux2=enabled -Ddirectsound=enabled -Dflac=enabled -Dlame=enabled -Dmpg123=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dwaveform=enabled -Dwavpack=enabled -Dsoup=enabled -Dhls-crypto=openssl build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dnls=disabled -Dorc=enabled -Dasm=enabled -Ddoc=disabled -Dapetag=enabled -Daudiofx=enabled -Daudioparsers=enabled -Dautodetect=enabled -Dequalizer=enabled -Dicydemux=enabled -Did3demux=enabled -Disomp4=enabled -Dreplaygain=enabled -Drtp=enabled -Drtsp=enabled -Dspectrum=enabled -Dudp=enabled -Dwavenc=enabled -Dwavparse=enabled -Dxingmux=enabled -Dadaptivedemux2=enabled -Ddirectsound=enabled -Dflac=enabled -Dlame=enabled -Dmpg123=enabled -Dspeex=enabled -Dtaglib=enabled -Dtwolame=enabled -Dwaveform=enabled -Dwavpack=enabled -Dsoup=enabled -Dhls-crypto=openssl build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1691,16 +1653,12 @@ ninja install || goto end
 @rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
 @rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
-@set CFLAGS=
-
 @goto continue
 
 
 :gst-plugins-bad
 
 @echo Building gst-plugins-bad
-
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include -I%PREFIX_PATH_FORWARD%/include/opus
 
 cd "%BUILD_PATH%" || goto end
 
@@ -1716,7 +1674,7 @@ if "%GST_DEV%" == "ON" @(
   patch -p1 -N < "%DOWNLOADS_PATH%\gst-plugins-bad-meson-dependency.patch"
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtools=enabled -Dtests=disabled -Dintrospection=disabled -Dnls=disabled -Dorc=enabled -Dgpl=enabled -Daiff=enabled -Dasfmux=enabled -Did3tag=enabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dremovesilence=enabled -Daes=enabled -Dasio=enabled -Dbluez=enabled -Dbs2b=enabled -Dchromaprint=enabled -Ddash=enabled -Ddirectsound=enabled -Dfaac=enabled -Dfaad=enabled -Dfdkaac=enabled -Dgme=enabled -Dmusepack=enabled -Dopenmpt=enabled -Dopus=enabled -Dwasapi=enabled -Dwasapi2=enabled -Dhls=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtools=enabled -Dtests=disabled -Dintrospection=disabled -Dnls=disabled -Dorc=enabled -Dgpl=enabled -Daiff=enabled -Dasfmux=enabled -Did3tag=enabled -Dmpegdemux=enabled -Dmpegpsmux=enabled -Dmpegtsdemux=enabled -Dmpegtsmux=enabled -Dremovesilence=enabled -Daes=enabled -Dasio=enabled -Dbluez=enabled -Dbs2b=enabled -Dchromaprint=enabled -Ddash=enabled -Ddirectsound=enabled -Dfaac=enabled -Dfaad=enabled -Dfdkaac=enabled -Dgme=enabled -Dmusepack=enabled -Dopenmpt=enabled -Dopus=enabled -Dwasapi=enabled -Dwasapi2=enabled -Dhls=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1724,16 +1682,12 @@ ninja install || goto end
 @rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
 @rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
-@set CFLAGS=
-
 @goto continue
 
 
 :gst-plugins-ugly
 
 @echo Building gst-plugins-ugly
-
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
 
 cd "%BUILD_PATH%" || goto end
 
@@ -1747,7 +1701,7 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-plugins-ugly-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload --auto-features=disabled -Dnls=disabled -Dorc=enabled -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dasfdemux=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload --auto-features=disabled -Dnls=disabled -Dorc=enabled -Dtests=disabled -Ddoc=disabled -Dgpl=enabled -Dasfdemux=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
@@ -1755,16 +1709,12 @@ ninja install || goto end
 @rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
 @rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
 
-@set CFLAGS=
-
 @goto continue
 
 
 :gst-libav
 
 @echo Building gst-libav
-
-@set CFLAGS=-I%PREFIX_PATH_FORWARD%/include
 
 cd "%BUILD_PATH%" || goto end
 
@@ -1778,15 +1728,13 @@ if "%GST_DEV%" == "ON" @(
   cd "gst-libav-%GSTREAMER_VERSION%" || goto end
 )
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --pkg-config-path="%PREFIX_PATH%\lib\pkgconfig" -Dc_args="-I%PREFIX_PATH%\include" --wrap-mode=nodownload -Dtests=disabled -Ddoc=disabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
 
 @rem if not exist "%PREFIX_PATH%\bin\gstreamer-1.0" mkdir "%PREFIX_PATH%\bin\gstreamer-1.0" || goto end
 @rem if exist "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" move /Y "%PREFIX_PATH%\lib\gstreamer-1.0\"*".dll" "%PREFIX_PATH%\bin\gstreamer-1.0\" || goto end
-
-@set CFLAGS=
 
 @goto continue
 
