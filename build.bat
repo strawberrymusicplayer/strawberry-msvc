@@ -383,44 +383,9 @@ if "%BUILD_TYPE%" == "release" perl Configure VC-WIN64A shared zlib no-capieng n
 nmake || goto end
 nmake install_sw || goto end
 
-copy %PREFIX_PATH%\lib\libssl.lib %PREFIX_PATH%\lib\ssl.lib
-copy %PREFIX_PATH%\lib\libcrypto.lib %PREFIX_PATH%\lib\crypto.lib
-
-@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo enginesdir=${libdir}/engines-3>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo modulesdir=${libdir}/ossl-modules>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo.>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo Name: OpenSSL-libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo Description: OpenSSL cryptography library>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo Libs: -L${libdir} -lcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo Libs.private: -lz -ldl -pthread>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-@echo Cflags: -DOPENSSL_LOAD_CONF -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\libcrypto.pc"
-
-@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo.>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Name: OpenSSL-libssl>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Description: Secure Sockets Layer and cryptography libraries>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Requires.private: libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Libs: -L${libdir} -lssl>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-@echo Cflags: -DOPENSSL_LOAD_CONF -I${includedir}>> "%PREFIX_PATH%\lib\pkgconfig\libssl.pc"
-
-@echo prefix=%PREFIX_PATH_FORWARD%> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo exec_prefix=${prefix}>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo libdir=${exec_prefix}/lib>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo includedir=${prefix}/include>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo.>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo Name: OpenSSL>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo Description: Secure Sockets Layer and cryptography libraries and tools>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo Version: %OPENSSL_VERSION%>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
-@echo Requires: libssl libcrypto>> "%PREFIX_PATH%\lib\pkgconfig\openssl.pc"
+copy /y %PREFIX_PATH%\lib\libssl.lib %PREFIX_PATH%\lib\ssl.lib || goto end
+copy /y %PREFIX_PATH%\lib\libcrypto.lib %PREFIX_PATH%\lib\crypto.lib || goto end
+copy /y exporters\*.pc %PREFIX_PATH%\lib\pkgconfig\ || goto end
 
 @goto continue
 
