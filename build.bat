@@ -1743,20 +1743,15 @@ ninja install || goto end
 
 @echo Building gst-plugins-rs
 
-@rem Workaround gstspotify.dll failing to link when PKG_CONFIG_PATH is set.
-@set PKG_CONFIG_PATH=
-
 cd "%BUILD_PATH%" || goto end
 
 if not exist "gst-plugins-rs" git clone --recurse-submodules --depth 1 -b "%GSTREAMER_GST_PLUGINS_RS_VERSION%" https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs || goto end
 cd "gst-plugins-rs" || goto end
 
-if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --wrap-mode=nodownload --auto-features=disabled -Dexamples=disabled -Dtests=disabled -Dspotify=enabled build || goto end
+if not exist "build\build.ninja" meson setup --buildtype="%MESON_BUILD_TYPE%" --default-library=shared --prefix="%PREFIX_PATH%" --wrap-mode=nodownload --auto-features=disabled  --pkg-config-path="" -Dexamples=disabled -Dtests=disabled -Dspotify=enabled build || goto end
 cd build || goto end
 ninja || goto end
 ninja install || goto end
-
-@set PKG_CONFIG_PATH=%PREFIX_PATH%\lib\pkgconfig
 
 @goto continue
 
