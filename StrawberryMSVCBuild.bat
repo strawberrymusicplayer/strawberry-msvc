@@ -25,7 +25,14 @@
 @rem @set CMAKE_GENERATOR=Visual Studio 17 2022
 @set CMAKE_GENERATOR=Ninja
 
-@call versions.bat
+@for /f "usebackq tokens=1,2 delims== eol=#" %%a in ("%~dp0StrawberryPackageVersions.txt") do (
+  @set %%a=%%b
+)
+
+@set BOOST_VERSION_UNDERSCORE=%BOOST_VERSION:.=_%
+@set EXPAT_VERSION_UNDERSCORE=%EXPAT_VERSION:.=_%
+@set STRAWBERRY_PERL_VERSION_STRIPPED=%STRAWBERRY_PERL_VERSION:.=%
+@set CURL_VERSION_UNDERSCORE=%CURL_VERSION:.=_%
 
 @echo Strawberry MSVC dependencies build script
 @echo.
