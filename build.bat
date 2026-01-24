@@ -392,7 +392,7 @@ copy /y exporters\*.pc %PREFIX_PATH%\lib\pkgconfig\ || goto end
 
 :gmp
 
-@echo Installing gmp
+@echo Building gmp
 
 if not exist "%BUILD_PATH%\ShiftMediaProject\build" mkdir "%BUILD_PATH%\ShiftMediaProject\build" || goto end
 cd "%BUILD_PATH%\ShiftMediaProject\build" || goto end
@@ -431,7 +431,7 @@ xcopy /s /y ..\..\..\msvc\include\gmp*.h "%PREFIX_PATH%\include\" || goto end
 
 :nettle
 
-@echo Installing nettle
+@echo Building nettle
 
 if not exist "%BUILD_PATH%\ShiftMediaProject\build" mkdir "%BUILD_PATH%\ShiftMediaProject\build" || goto end
 cd "%BUILD_PATH%\ShiftMediaProject\build" || goto end
@@ -489,7 +489,7 @@ xcopy /s /y ..\..\..\msvc\include\nettle\*.h "%PREFIX_PATH%\include\nettle\" || 
 
 :gnutls
 
-@echo Installing gnutls
+@echo Building gnutls
 
 if not exist "%BUILD_PATH%\ShiftMediaProject\build" mkdir "%BUILD_PATH%\ShiftMediaProject\build" || goto end
 cd "%BUILD_PATH%\ShiftMediaProject\build" || goto end
