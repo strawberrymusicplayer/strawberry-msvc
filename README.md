@@ -6,11 +6,12 @@ These instructions are provided as-is, they are primarily intended for developer
 
 We do not offer support to users for building Strawberry on Windows.
 
-Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary updated, so make sure you bump the versions in versions.bat before you run install.bat.
+Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary updated, so make sure you bump the versions in `StrawberryPackageVersions.txt` before you start.
 
 ### Requirements
 
 * [Git for Windows](https://gitforwindows.org/)
+* [Powershell 7](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell-on-windows)
 * [Visual Studio 2022 or 2026](https://visualstudio.microsoft.com/vs/)
 * [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2022)
 * [CMake](https://cmake.org/)
@@ -38,15 +39,14 @@ Download and install manually:
 
 ### Clone repositories and download tools/dependencies
 
-Open a `Command Prompt` and type:
+Open a `PowerShell 7` and type:
 
-```
+```powershell
 mkdir C:\data\projects\strawberry
 cd C:\data\projects\strawberry
 git clone https://github.com/strawberrymusicplayer/strawberry.git
 git clone https://github.com/strawberrymusicplayer/strawberry-msvc.git
 cd strawberry-msvc
-.\download.bat
 ```
 
 ### Installation
@@ -105,7 +105,7 @@ Building with Meson 1.6.0 installation results in build issues
 [meson: error: unrecognized arguments:](https://github.com/strawberrymusicplayer/strawberry-msvc/issues/6).
 
 A temporary solution is to remove Meson via Windows Settings | `Apps or remove programs`.
-Then install Meson via Python PIP system wide. Start | `x64 Native Tools Command Prompt for VS 2026` and type:
+Then install Meson via Python PIP system wide. Start | `PowerShell 7` and type:
 
 ```
 pip install meson
@@ -124,19 +124,33 @@ To use prebuilds, download the following `tar.xz` files from Github [strawberry-
 - Set one debug or release in `PATH` environment variable:
     - For debug: `C:\strawberry_msvc_x86_64_debug\bin`, or:
     - For release: `C:\strawberry_msvc_x86_64_release\bin`
-- Start | `x64 Native Tools Command Prompt for VS 2026`:
-```
+
+**Using PowerShell (recommended):**
+
+- Start | `PowerShell 7`
+
+```powershell
 cd C:\data\projects\strawberry\strawberry-msvc
+
+# For debug build:
+.\StrawberryMSVCBuild.ps1 -build_type debug -arch x86_64
+
+# For release build:
+.\StrawberryMSVCBuild.ps1 -build_type release -arch x86_64
 ```
 
-For debug build:
-```
-.\build.bat
-```
+**Using Command Prompt (legacy):**
 
-For release build:
-```
-.\build.bat release
+- Start | `x64 Native Tools Command Prompt for VS 2026`
+
+```cmd
+cd C:\data\projects\strawberry\strawberry-msvc
+
+# For debug build:
+.\StrawberryMSVCBuild.bat debug
+
+# For release build:
+.\StrawberryMSVCBuild.bat release
 ```
 
 Strawberry and Windows installer executables are generated in:
