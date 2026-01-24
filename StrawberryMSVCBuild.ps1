@@ -27,7 +27,7 @@
 .PARAMETER downloads_path
   Path to downloads directory (default: c:\data\projects\strawberry\msvc_\downloads)
 .PARAMETER build_path
-  Path to build directory (default: c:\data\projects\strawberry\msvc_\build_${arch}_${build_type})
+  Path to build directory (default: c:\data\projects\strawberry\msvc_\build_<arch>_<build_type>, where <arch> and <build_type> are substituted with the actual parameter values)
 .EXAMPLE
   .\StrawberryMSVCBuild.ps1 -build_type release -arch x86_64
 .EXAMPLE
