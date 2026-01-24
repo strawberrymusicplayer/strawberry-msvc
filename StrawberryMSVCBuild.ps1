@@ -22,8 +22,16 @@
   Builds all dependencies required for Strawberry Music Player on Windows using MSVC
 .PARAMETER build_type
   Build type: debug or release (default: debug)
+.PARAMETER arch
+  Architecture: x86, x64, x86_64, amd64, or arm64
+.PARAMETER downloads_path
+  Path to downloads directory (default: c:\data\projects\strawberry\msvc_\downloads)
+.PARAMETER build_path
+  Path to build directory (default: c:\data\projects\strawberry\msvc_\build_${arch}_${build_type})
 .EXAMPLE
-  .\StrawberryMSVCBuild.ps1 -build_type release
+  .\StrawberryMSVCBuild.ps1 -build_type release -arch x86_64
+.EXAMPLE
+  .\StrawberryMSVCBuild.ps1 -build_type debug -arch x86_64 -downloads_path "D:\strawberry\downloads" -build_path "D:\strawberry\build"
 #>
 
 [CmdletBinding()]
@@ -34,7 +42,13 @@ param(
 
   [Parameter(Mandatory=$true)]
   [ValidateSet("x86", "x64", "x86_64", "amd64", "arm64")]
-  [string]$arch
+  [string]$arch,
+
+  [Parameter(Mandatory=$false)]
+  [string]$downloads_path = "c:\data\projects\strawberry\msvc_\downloads",
+
+  [Parameter(Mandatory=$false)]
+  [string]$build_path = ""
 )
 
 # Set strict mode
@@ -173,8 +187,11 @@ else {
 }
 
 # Set paths
-$downloads_path = "c:\data\projects\strawberry\msvc_\downloads"
-$build_path = "c:\data\projects\strawberry\msvc_\build_${arch}_${build_type}"
+# Use default build path if not specified
+if ([string]::IsNullOrEmpty($build_path)) {
+  $build_path = "c:\data\projects\strawberry\msvc_\build_${arch}_${build_type}"
+}
+
 $prefix_path = "c:\strawberry_msvc_${arch}_${build_type}"
 $prefix_path_forward = $prefix_path -replace '\\', '/'
 $prefix_path_escape = $prefix_path -replace '\\', '\\'
