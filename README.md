@@ -6,8 +6,6 @@ These instructions are provided as-is, they are primarily intended for developer
 
 We do not offer support to users for building Strawberry on Windows.
 
-Build tools (Git, CMake, Meson, Perl, Python, etc) versions are not regulary updated, so make sure you bump the versions in `StrawberryPackageVersions.txt` before you start.
-
 ### Requirements
 
 * [Git for Windows](https://gitforwindows.org/)
@@ -39,7 +37,7 @@ Download and install manually:
 
 ### Clone repositories and download tools/dependencies
 
-Open a `PowerShell 7` and type:
+Open a `PowerShell 7` shell and type:
 
 ```powershell
 mkdir C:\data\projects\strawberry
@@ -125,8 +123,6 @@ To use prebuilds, download the following `tar.xz` files from Github [strawberry-
     - For debug: `C:\strawberry_msvc_x86_64_debug\bin`, or:
     - For release: `C:\strawberry_msvc_x86_64_release\bin`
 
-**Using PowerShell (recommended):**
-
 - Start | `PowerShell 7`
 
 ```powershell
@@ -137,20 +133,6 @@ rem For debug build:
 
 rem For release build:
 .\StrawberryMSVCBuild.ps1 -build_type release -arch x86_64
-```
-
-**Using Command Prompt (legacy):**
-
-- Start | `x64 Native Tools Command Prompt for VS 2026`
-
-```cmd
-cd C:\data\projects\strawberry\strawberry-msvc
-
-rem For debug build:
-.\StrawberryMSVCBuild.bat debug
-
-rem For release build:
-.\StrawberryMSVCBuild.bat release
 ```
 
 Strawberry and Windows installer executables are generated in:
