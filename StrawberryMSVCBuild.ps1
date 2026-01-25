@@ -1317,7 +1317,7 @@ function Build-Pixman {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "pixman"
-    ExtractPackage "pixman-$pixman_version.tar.gz" -ignore_errors
+    ExtractPackage "pixman-$pixman_version.tar.gz" -ignore_errors $true
     Set-Location "pixman-$pixman_version"
     MesonBuild -additional_args @("-Dgtk=disabled", "-Dlibpng=enabled")
   }
