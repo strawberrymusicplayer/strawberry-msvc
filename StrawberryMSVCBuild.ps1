@@ -822,6 +822,7 @@ function MesonBuild {
         $setup_args += $additional_args
       }
       $setup_args += $build_path
+      Write-Host "meson setup" @setup_args
       & meson setup @setup_args
       if ($LASTEXITCODE -ne 0) {
         throw "Meson setup failed"
