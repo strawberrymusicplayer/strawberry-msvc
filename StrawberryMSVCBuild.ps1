@@ -2449,6 +2449,9 @@ function Build-AbseilCpp {
     ExtractPackage "abseil-cpp-$abseil_version.tar.gz"
     Set-Location abseil-cpp-$abseil_version
     CMakeBuild -additional_args @(
+        "-DCMAKE_CXX_STANDARD=17",
+        "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+        "-DABSL_INTERNAL_AT_LEAST_CXX17=ON",
         "-DABSL_BUILD_TESTING=OFF",
         "-DABSL_USE_EXTERNAL_GOOGLETEST=OFF"
       )
