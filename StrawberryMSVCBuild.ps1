@@ -1610,6 +1610,8 @@ function Build-Jasper {
   try {
     DownloadPackage -package_name "jasper"
     ExtractPackage "jasper-$jasper_version.tar.gz" -ignore_errors $true
+    Get-Content "jasper-$jasper_version\CMakeLists.txt" | Where-Object { $_ -notmatch '^\s*include\(InstallRequiredSystemLibraries\)\s*$' } | Set-Content "jasper-$jasper_version\CMakeLists.txt_"
+    Move-Item -Force "jasper-$jasper_version\CMakeLists.txt_" "jasper-$jasper_version\CMakeLists.txt"
     CMakeBuild -source_path "jasper-$jasper_version" -build_path "jasper-$jasper_version-build" -additional_args @(
       "-DJAS_ENABLE_JP2_CODEC=ON",
       "-DJAS_ENABLE_JPC_CODEC=ON",
