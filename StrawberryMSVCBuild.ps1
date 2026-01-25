@@ -233,6 +233,7 @@ if (-not (Test-Path "$prefix_path\bin\sed.exe")) {
 Write-Host "Setting up environment variables..." -ForegroundColor Cyan
 $env:PKG_CONFIG_EXECUTABLE = "$prefix_path\bin\pkgconf.exe"
 $env:PKG_CONFIG_PATH = "$prefix_path\lib\pkgconfig"
+$env:PKG_CONFIG_ALLOW_SYSTEM_CFLAGS = "1"
 $env:CL = "-MP"
 $env:PATH = "$prefix_path\bin;$env:PATH"
 $env:YASMPATH = "$prefix_path\bin"
