@@ -813,7 +813,10 @@ function MesonBuild {
         "--libdir=$prefix_path\lib",
         "--prefix=$prefix_path_forward",
         "--wrap-mode=$wrap_mode",
-        "-Dc_args=-I$prefix_path\include"
+        "-Dc_args=-I$prefix_path\include",
+        "-Dcpp_args=-I$prefix_path\include",
+        "-Dc_link_args=-L$prefix_path\lib",
+        "-Dcpp_link_args=-L$prefix_path\lib"
       )
       if ($additional_args) {
         $setup_args += $additional_args
