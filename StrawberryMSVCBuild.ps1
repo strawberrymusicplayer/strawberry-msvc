@@ -453,6 +453,7 @@ function GetPackageUrls {
     'orc' = "https://gstreamer.freedesktop.org/src/orc/orc-$orc_version.tar.xz"
     'sqlite' = "https://sqlite.org/2026/sqlite-autoconf-$sqlite_version.tar.gz"
     'libproxy' = "https://github.com/libproxy/libproxy/archive/refs/tags/$libproxy_version/libproxy-$libproxy_version.tar.gz"
+    'proxy-libintl' = "https://github.com/frida/proxy-libintl/archive/refs/tags/$proxy_libintl_version/proxy-libintl-$proxy_libintl_version.tar.gz"
     'glib' = "https://download.gnome.org/sources/glib/2.87/glib-$glib_version.tar.xz"
     'libsoup' = "https://download.gnome.org/sources/libsoup/3.6/libsoup-$libsoup_version.tar.xz"
     'glib-networking' = "https://download.gnome.org/sources/glib-networking/2.80/glib-networking-$glib_networking_version.tar.xz"
@@ -537,7 +538,6 @@ function GetGitRepoUrls {
     'qtsparkle' = "https://github.com/strawberrymusicplayer/qtsparkle"
     'libffi' = "https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi"
     'ffmpeg' = "https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg"
-    'proxy-libintl' = "https://github.com/frida/proxy-libintl"
     'gstreamer' = "https://gitlab.freedesktop.org/gstreamer/gstreamer"
     'gst-plugins-rs' = "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs"
     'tinysvcmdns' = "https://github.com/Pro/tinysvcmdns"
@@ -1491,6 +1491,21 @@ function Build-SQLite {
   }
 }
 
+function Build-ProxyIntl {
+  Write-Host "Building proxy-libintl" -ForegroundColor Yellow
+  Push-Location $build_path
+  try {
+    DownloadPackage -package_name "proxy-libintl"
+    ExtractPackage "proxy-libintl-$proxy_libintl_version.tar.gz" -ignore_errors $true
+    Set-Location "proxy-libintl-$proxy_libintl_version"
+    MesonBuild
+    CreatePkgConfigFile -prefix $prefix_path_forward -name "libintl" -description "libintl" -url "https://github.com/frida/proxy-libintl" -version $proxy_libintl_version -libs "-L`${libdir} -lintl" -cflags "-I`${includedir}" -output_file "$prefix_path\lib\pkgconfig\intl.pc"
+  }
+  finally {
+    Pop-Location
+  }
+}
+
 function Build-Glib {
   Write-Host "Building glib" -ForegroundColor Yellow
   Push-Location $build_path
@@ -1499,7 +1514,6 @@ function Build-Glib {
     ExtractPackage "glib-$glib_version.tar.xz" -ignore_errors $true
     Set-Location "glib-$glib_version"
     MesonBuild `
-      -wrap_mode "default" `
       -additional_args @(
         "-Dtests=false"
       )
@@ -2760,6 +2774,7 @@ try {
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libpsl.pc")) { $build_queue += "libpsl" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\orc-0.4.pc")) { $build_queue += "orc" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\sqlite3.pc")) { $build_queue += "sqlite" }
+  if (-not (Test-Path "$prefix_path\lib\pkgconfig\libintl.pc")) { $build_queue += "proxy-libintl" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\glib-2.0.pc")) { $build_queue += "glib" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libsoup-3.0.pc")) { $build_queue += "libsoup" }
   if (-not (Test-Path "$prefix_path\lib\gio\modules\gioopenssl.lib")) { $build_queue += "glib-networking" }
@@ -2855,6 +2870,7 @@ try {
       "libpsl" { Build-LibPSL }
       "orc" { Build-Orc }
       "sqlite" { Build-SQLite }
+      "proxy-libintl" { Build-ProxyIntl }
       "glib" { Build-Glib }
       "libsoup" { Build-LibSoup }
       "glib-networking" { Build-GlibNetworking }
