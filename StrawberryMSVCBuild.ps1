@@ -1835,10 +1835,12 @@ function Build-Lame {
     (Get-Content "Makefile.MSVC") -replace "MACHINE = /machine:.*", "MACHINE = /machine:${lame_machine}" | Set-Content "Makefile.MSVC"
     & nmake -f Makefile.MSVC MSVCVER=${lame_msvcver} libmp3lame.dll
     if ($LASTEXITCODE -ne 0) { throw "nmake build failed" }
-    Copy-Item "include\*.h" "$prefix_path\include\" -Force
-    Copy-Item "output\libmp3lame*.lib" "$prefix_path\lib\" -Force
-    Copy-Item "output\libmp3lame*.dll" "$prefix_path\bin\" -Force
-    CreatePkgConfigFile -prefix $prefix_path_forward -name "lame" -description "encoder that converts audio to the MP3 file format." -url "https://lame.sourceforge.io/" -version $lame_version -libs "-L`${libdir} -lmp3lame" -cflags "-I`${includedir}" -output_file "$prefix_path\lib\pkgconfig\mp3lame.pc"
+    New-Item -Path "$prefix_path\include\lame" -ItemType Directory -Force
+    Copy-Item "include\lame.h" "$prefix_path\include\lame\" -Force
+    Copy-Item "output\libmp3lame.lib" "$prefix_path\lib\mp3lame.lib" -Force
+    Copy-Item "output\libmp3lame.dll" "$prefix_path\bin\mp3lame.dll" -Force
+    CreatePkgConfigFile -prefix $prefix_path_forward -name "lame" -description "encoder that converts audio to the MP3 file format." -url "https://lame.sourceforge.io/" -version $lame_version -libs "-L`${libdir} -lmp3lame" -cflags "-I`${includedir}" -output_file "$prefix_path\lib\pkgconfig\lame.pc"
+    Copy-Item "$prefix_path\lib\pkgconfig\lame.pc" "$prefix_path\lib\pkgconfig\libmp3lame.pc" -Force
     Write-Host "lame built successfully!" -ForegroundColor Green
   }
   finally {
@@ -2830,7 +2832,7 @@ try {
   if (-not (Test-Path "$prefix_path\bin\opusfile.dll")) { $build_queue += "opusfile" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\speex.pc")) { $build_queue += "speex" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libmpg123.pc")) { $build_queue += "mpg123" }
-  if (-not (Test-Path "$prefix_path\lib\pkgconfig\mp3lame.pc")) { $build_queue += "lame" }
+  if (-not (Test-Path "$prefix_path\lib\mp3lame.lib")) { $build_queue += "lame" }
   if (-not (Test-Path "$prefix_path\lib\libtwolame_dll.lib")) { $build_queue += "twolame" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\fftw3.pc")) { $build_queue += "fftw3" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\mpcdec.pc")) { $build_queue += "musepack" }
