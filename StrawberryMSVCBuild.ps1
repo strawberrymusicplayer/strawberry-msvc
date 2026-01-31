@@ -611,7 +611,7 @@ function DownloadPackage {
     }
     $package_url = $package_urls[$package_name]
     DownloadFileIfNotExists -url $package_url -destination_path $downloads_path
-    Write-Host "✓ Package $package_name is available" -ForegroundColor Green    
+    Write-Host "✓ Package $package_name is available" -ForegroundColor Green
   }
   catch {
     Write-Warning "Failed to download package $package_name : $_"
@@ -677,7 +677,7 @@ function ExtractPackage {
 
     [Parameter(Mandatory=$false)]
     [string]$package_dir,
-    
+
     [Parameter(Mandatory=$false)]
     [bool]$ignore_errors = $false
   )
@@ -1313,7 +1313,7 @@ function Build-Brotli {
 function Build-ICU4C {
   Write-Host "Building icu4c" -ForegroundColor Yellow
   Push-Location $build_path
-  try {    
+  try {
     DownloadPackage -package_name "icu4c"
     ExtractPackage "icu4c-$icu4c_version-sources.tgz" "icu"
     Set-Location "icu\source\allinone"
@@ -1822,7 +1822,7 @@ function Build-MPG123 {
   finally {
     Pop-Location
   }
- 
+
 }
 
 function Build-Lame {
@@ -1958,7 +1958,7 @@ function Build-LibGME {
     ExtractPackage "libgme-$libgme_version-src.tar.gz"
     Set-Location libgme-$libgme_version
     & patch -p1 -N -i $downloads_path/libgme-pkgconf.patch
-    CMakeBuild 
+    CMakeBuild
   }
   finally {
     Pop-Location
