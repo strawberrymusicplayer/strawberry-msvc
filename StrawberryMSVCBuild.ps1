@@ -523,7 +523,6 @@ function GetPatchUrls {
     'musepack-fixes.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/musepack-fixes.patch"
     'libopenmpt-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libopenmpt-cmake.patch"
     'faac-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/faac-msvc.patch"
-    'gst-plugins-bad-meson-dependency.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/gst-plugins-bad-meson-dependency.patch"
     'libbs2b-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libbs2b-msvc.patch"
     'twolame.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch"
     'sparsehash-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/sparsehash-msvc.patch"
@@ -2281,8 +2280,6 @@ function Build-GstPluginsBad {
       ExtractPackage "gst-plugins-bad-$gstreamer_version.tar.xz"
       Set-Location "gst-plugins-bad-$gstreamer_version"
     }
-    DownloadPatch -patch_name "gst-plugins-bad-meson-dependency.patch"
-    & patch -p1 -N -i "$downloads_path\gst-plugins-bad-meson-dependency.patch"
     MesonBuild `
       -additional_args @(
         "--auto-features=disabled",
