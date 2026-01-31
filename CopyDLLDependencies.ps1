@@ -133,8 +133,8 @@ $DependenciesSeen = @{}
 $DependenciesCopied = @{}
 $DependenciesQueue = New-Object System.Collections.Queue
 
-foreach ($dir in $InDirs) {
-  Get-ChildItem $dir -Recurse -File |
+foreach ($InDir in $InDirs) {
+  Get-ChildItem $InDir -Recurse -File |
     Where-Object { $_.Extension -in ".dll", ".exe" } |
     ForEach-Object {
       $name = $_.Name.ToLower()
