@@ -2010,8 +2010,8 @@ function Build-Faac {
     UpgradeVSProject "faac.sln"
     MSBuildProject "faac.sln" -configuration "$build_type"
     Copy-Item "..\..\include\*.h" "$prefix_path\include\" -Force
-    Copy-Item "bin\$build_type\libfaac_dll.lib" "$prefix_path\lib\libfaac.lib" -Force
-    Copy-Item "bin\$build_type\*.dll" "$prefix_path\bin\" -Force
+    Copy-Item "bin\$build_type\libfaac_dll.lib" "$prefix_path\lib\faac.lib" -Force
+    Copy-Item "bin\$build_type\libfaac_dll.dll" "$prefix_path\bin\faac.dll" -Force
     CreatePkgConfigFile -prefix $prefix_path_forward -name "faac" -description "faac" -url "https://github.com/knik0/faac" -version $faac_version -libs "-L`${libdir} -lfaac" -cflags "-I`${includedir}" -output_file "$prefix_path\lib\pkgconfig\faac.pc"
   }
   finally {
@@ -2840,7 +2840,7 @@ try {
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\libgme.pc")) { $build_queue += "libgme" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\fdk-aac.pc")) { $build_queue += "fdk-aac" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\faad2.pc")) { $build_queue += "faad2" }
-  if (-not (Test-Path "$prefix_path\lib\pkgconfig\faac.pc")) { $build_queue += "faac" }
+  if (-not (Test-Path "$prefix_path\lib\faac.lib")) { $build_queue += "faac" }
   if (-not (Test-Path "$prefix_path\include\utf8cpp\utf8.h")) { $build_queue += "utfcpp" }
   if (-not (Test-Path "$prefix_path\lib\pkgconfig\taglib.pc")) { $build_queue += "taglib" }
   if (-not (Test-Path "$prefix_path\lib\libbs2b.lib")) { $build_queue += "libbs2b" }
