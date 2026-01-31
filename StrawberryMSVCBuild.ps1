@@ -504,8 +504,9 @@ function GetPackageUrls {
     'glew' = "https://downloads.sourceforge.net/project/glew/glew/$glew_version/glew-$glew_version.tgz"
     'libprojectm' = "https://github.com/projectM-visualizer/projectm/releases/download/v$libprojectm_version/libprojectm-$libprojectm_version.tar.gz"
     'pe-parse' = "https://github.com/trailofbits/pe-parse/archive/refs/tags/v$peparse_version/pe-parse-$peparse_version.tar.gz"
-    'vc-redist-x86' = "https://aka.ms/vs/17/release/vc_redist.x86.exe"
-    'vc-redist-x64' = "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+    'vc-redist-x86' = "https://aka.ms/vc14/vc_redist.x86.exe"
+    'vc-redist-x64' = "https://aka.ms/vc14/vc_redist.x64.exe"
+    "vc-redist-arm64" = "https://aka.ms/vc14/vc_redist.arm64.exe"
   }
   return $package_urls
 }
@@ -2744,6 +2745,38 @@ function Build-Strawberry {
   }
 }
 
+function Build-StrawberrySetup {
+  Write-Host "Creating StrawberrySetup" -ForegroundColor Yellow
+  Push-Location $build_path
+  try {
+    New-Item -Path "StrawberrySetup" -ItemType Directory -Force | Out-Null
+    Set-Location "StrawberrySetup"
+    New-Item -Path @('platforms', 'styles', 'imageformats', 'tls', 'sqldrivers', 'gio-modules', 'gstreamer-plugins') -ItemType Directory -Force
+    Copy-Item -Path "$build_path\strawberry\build\strawberry.exe", `
+                    "$build_path\strawberry\build\strawberry.nsi", `
+                    "$build_path\strawberry\COPYING", `
+                    "$build_path\strawberry\dist\windows\*.ico", `
+                    "$build_path\strawberry\dist\windows\*.nsh" `
+                    "." -Force
+    Copy-Item "$prefix_path\plugins\platforms\*.dll" ".\platforms\" -Force
+    Copy-Item "$prefix_path\plugins\styles\*.dll" ".\styles\" -Force
+    Copy-Item "$prefix_path\plugins\imageformats\*.dll" ".\imageformats\" -Force
+    Copy-Item "$prefix_path\plugins\tls\*.dll" ".\tls\" -Force
+    Copy-Item "$prefix_path\plugins\sqldrivers\*.dll" ".\sqldrivers\" -Force
+    Copy-Item "$prefix_path\lib\gio\modules\*.dll" ".\gio-modules\" -Force
+    Copy-Item "$prefix_path\lib\gstreamer-1.0\*.dll" ".\gstreamer-plugins\" -Force
+    Copy-Item -Path "$prefix_path\bin\sqlite3.exe", "$prefix_path\bin\gst-*.exe" -Destination "." -Force
+    & "$PSScriptRoot\CopyDLLDependencies.ps1" -Copy -DestDir ".\" -InDir ".\" -InDir ".\platforms" -InDir ".\styles" -InDir ".\imageformats" -InDir ".\tls" -InDir ".\sqldrivers" -InDir ".\gio-modules" -InDir ".\gstreamer-plugins" -RecursiveSrcDir "$prefix_path\bin"
+    DownloadPackage -package_name "vc-redist-${arch_short}"
+    Copy-Item "$downloads_path\vc_redist.${arch_short}.exe" "." -Force
+    & makensis strawberry.nsi
+    Write-Host "Strawberry setup built successfully!" -ForegroundColor Green
+  }
+  finally {
+    Pop-Location
+  }
+}
+
 #endregion
 
 #region Main Build Logic
@@ -2834,6 +2867,7 @@ try {
   if (-not (Test-Path "$prefix_path\lib\cmake\pe-parse\pe-parse-config.cmake")) { $build_queue += "pe-parse" }
   if (-not (Test-Path "$prefix_path\bin\peldd.exe")) { $build_queue += "pe-util" }
   if (-not (Test-Path "$build_path\strawberry\build\strawberry.exe")) { $build_queue += "strawberry" }
+  if (-not (Test-Path "$build_path\StrawberrySetup\StrawberrySetup*.exe")) { $build_queue += "strawberry-setup" }
 
   if ($build_queue.Count -eq 0) {
     Write-Host "All dependencies already built!" -ForegroundColor Green
@@ -2930,6 +2964,7 @@ try {
       "pe-parse" { Build-PeParse }
       "pe-util" { Build-PeUtil }
       "strawberry" { Build-Strawberry }
+      "strawberry-setup" { Build-StrawberrySetup }
       default {
         Write-Warning "Unknown component: $component (skipping)"
       }
