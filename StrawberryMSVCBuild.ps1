@@ -1216,6 +1216,7 @@ function Build-LibPNG {
     Set-Location "libpng-$libpng_version"
     & patch -p1 -N -i "$downloads_path\libpng-pkgconf.patch" 2>&1 | Out-Null
     CMakeBuild
+    Remove-Item "$prefix_path\bin\libpng16_static${lib_postfix}.lib.dll" -Force
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path\lib\libpng16d.lib" "$prefix_path\lib\png16.lib" -Force
     }
@@ -1236,6 +1237,8 @@ function Build-LibJPEG {
         "-DENABLE_SHARED=ON",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
       )
+    Remove-Item "$prefix_path\lib\jpeg-static${lib_postfix}.lib" -Force
+    Remove-Item "$prefix_path\lib\turbojpeg-static${lib_postfix}.lib" -Force
   }
   finally {
     Pop-Location
@@ -1960,6 +1963,7 @@ function Build-LibGME {
     Set-Location libgme-$libgme_version
     & patch -p1 -N -i $downloads_path/libgme-pkgconf.patch
     CMakeBuild
+    Remove-Item "$prefix_path\lib\gme-static.lib" -Force
   }
   finally {
     Pop-Location
