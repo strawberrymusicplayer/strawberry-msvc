@@ -1683,7 +1683,16 @@ function Build-Harfbuzz {
     DownloadPackage -package_name "harfbuzz"
     ExtractPackage "harfbuzz-$harfbuzz_version.tar.xz"
     Set-Location "harfbuzz-$harfbuzz_version"
-    CMakeBuild
+    MesonBuild `
+      -additional_args @(
+        "-Dcpp_std=c++17",
+        "-Dtests=disabled",
+        "-Ddocs=disabled",
+        "-Dfreetype=enabled",
+        "-Dicu=enabled",
+        "-Dcairo=disabled",
+        "-Dutilities=disabled"
+      )
   }
   finally {
     Pop-Location
