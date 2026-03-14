@@ -2901,7 +2901,7 @@ try {
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libsoup-3.0.pc")) { $build_queue += "libsoup" }
   if (-not (Test-Path "$prefix_path/lib/gio/modules/gioopenssl.lib")) { $build_queue += "glib-networking" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/freetype2.pc")) { $build_queue += "freetype" }
-  if (-not (Test-Path "$prefix_path/lib/harfbuzz*.lib")) { $build_queue += "harfbuzz" }
+  if (-not (Test-Path "$prefix_path/lib/pkgconfig/harfbuzz.pc")) { $build_queue += "harfbuzz" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/jasper.pc")) { $build_queue += "jasper" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libtiff-4.pc")) { $build_queue += "tiff" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libwebp.pc")) { $build_queue += "libwebp" }
