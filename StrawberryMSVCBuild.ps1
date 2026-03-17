@@ -570,7 +570,6 @@ function GetPatchUrls {
     'speex-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/speex-cmake.patch"
     'musepack-fixes.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/musepack-fixes.patch"
     'libopenmpt-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libopenmpt-cmake.patch"
-    'faac-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/faac-msvc.patch"
     'libbs2b-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libbs2b-msvc.patch"
     'twolame.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch"
     'sparsehash-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/sparsehash-msvc.patch"
@@ -2104,20 +2103,9 @@ function Build-Faac {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "faac"
-    DownloadPatch -patch_name "faac-msvc.patch"
     ExtractPackage "faac-$faac_version.tar.gz" -package_dir "faac-faac-$faac_version"
     Set-Location "faac-faac-$faac_version"
-    & patch -p1 -N -i $downloads_path/faac-msvc.patch
-    Set-Location "project/msvc"
-    if (-not (Test-Path "Backup/faac.sln")) {
-      UpgradeVSProject "faac.sln"
-    }
-    MSBuildProject "faac.sln" -configuration "$build_type"
-    Copy-Item "../../include/*.h" "$prefix_path/include/" -Force
-    Copy-Item "bin/$build_type/libfaac_dll.lib" "$prefix_path/lib/" -Force
-    Copy-Item "bin/$build_type/libfaac_dll.dll" "$prefix_path/bin/" -Force
-    Copy-Item "$prefix_path/lib/libfaac_dll.lib" "$prefix_path/lib/faac.lib" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "faac" -description "faac" -url "https://github.com/knik0/faac" -version $faac_version -libs "-L`${libdir} -lfaac" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/faac.pc"
+    MesonBuild -additional_args @("-Dfrontend=false")
   }
   finally {
     Pop-Location
