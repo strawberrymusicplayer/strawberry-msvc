@@ -576,6 +576,7 @@ function GetPatchUrls {
     'sparsehash-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/sparsehash-msvc.patch"
     'yasm-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/yasm-cmake.patch"
     'libgme-pkgconf.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libgme-pkgconf.patch"
+    'glib-networking.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/refs/heads/master/patches/glib-networking.patch"
   }
   return $patch_urls
 }
@@ -1637,8 +1638,10 @@ function Build-GlibNetworking {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "glib-networking"
+    DownloadPatch -patch_name "glib-networking.patch"
     ExtractPackage "glib-networking-$glib_networking_version.tar.xz"
     Set-Location "glib-networking-$glib_networking_version"
+    & patch -p1 -N -i $downloads_path/glib-networking.patch
     MesonBuild `
       -additional_args @(
         "-Dgnutls=enabled",
