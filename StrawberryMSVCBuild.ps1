@@ -2232,8 +2232,8 @@ function Build-GStreamer {
       ExtractPackage "gstreamer-$gstreamer_version.tar.xz"
       Set-Location "gstreamer-$gstreamer_version"
     }
-    DownloadPatch -patch_name "gstreamer-macros-restrict.patch"
     # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/work_items/4989
+    DownloadPatch -patch_name "gstreamer-macros-restrict.patch"
     & patch -p1 -N -i "$downloads_path/gstreamer-macros-restrict.patch"
     MesonBuild `
       -additional_args @(
