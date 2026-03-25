@@ -576,6 +576,7 @@ function GetPatchUrls {
     'yasm-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/yasm-cmake.patch"
     'libgme-pkgconf.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libgme-pkgconf.patch"
     'glib-networking.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/refs/heads/master/patches/glib-networking.patch"
+    'gstreamer-macros-restrict.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/refs/heads/master/patches/gstreamer-macros-restrict.patch"
   }
   return $patch_urls
 }
@@ -2231,6 +2232,7 @@ function Build-GStreamer {
       ExtractPackage "gstreamer-$gstreamer_version.tar.xz"
       Set-Location "gstreamer-$gstreamer_version"
     }
+    DownloadPatch -patch_name "gstreamer-macros-restrict.patch"
     # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/work_items/4989
     & patch -p1 -N -i "$downloads_path/gstreamer-macros-restrict.patch"
     MesonBuild `
