@@ -222,8 +222,7 @@ Write-Host ""
 # Create directories
 Write-Host "Creating directories..." -ForegroundColor Cyan
 try {
-  @($downloads_path, $build_path, $prefix_path,
-      "$prefix_path/bin", "$prefix_path/lib", "$prefix_path/include") | ForEach-Object {
+  @($downloads_path, $build_path, $prefix_path, "$prefix_path/include", "$prefix_path/lib", "$prefix_path/lib/pkgconfig", "$prefix_path/lib/cmake", "$prefix_path/bin") | ForEach-Object {
     if (-not (Test-Path $_)) {
       New-Item -ItemType Directory -Path $_ -Force | Out-Null
       Write-Host "  Created: $_" -ForegroundColor Green
