@@ -483,6 +483,7 @@ function GetPackageUrls {
   [CmdletBinding()]
   param()
   $package_urls = @{
+    'strawberry-mingw-dependencies' = "https://github.com/strawberrymusicplayer/strawberry-mingw-dependencies/releases/download/release-$mingw_dependencies_version/strawberry-mingw-dependencies.tar.xz"
     'pkgconf' = "https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-$pkgconf_version.tar.gz"
     'proxy-libintl' = "https://github.com/frida/proxy-libintl/archive/refs/tags/$proxy_libintl_version/proxy-libintl-$proxy_libintl_version.tar.gz"
     'getopt-win' = "https://github.com/ludvikjerabek/getopt-win/archive/refs/tags/v$getopt_win_version/getopt-win-$getopt_win_version.tar.gz"
@@ -984,6 +985,85 @@ function CreateLibFile() {
 
 
 #region Build Functions
+
+function Install-MinGWDependencies {
+  Write-Host "Installing MinGW Dependencies" -ForegroundColor Yellow
+  Push-Location $build_path
+  try {
+    $package_name = if ($build_type -eq "debug") { "strawberry-mingw-dependencies" } else { "strawberry-mingw-dependencies" }
+    $package_dir = if ($build_type -eq "debug") { "strawberry_mingw_dependencies" } else { "strawberry_mingw_dependencies" }
+    DownloadPackage -package_name $package_name
+    ExtractPackage "${package_name}.tar.xz"
+    Push-Location $package_dir/bin
+    try {
+      CreateLibFile -name "libz"
+      CreateLibFile -name "libgnutls-30"
+      CreateLibFile -name "libfftw3-3"
+    }
+    finally {
+      Pop-Location
+    }
+    Push-Location $package_dir
+    try {
+      Copy-Item "include/zlib.h", `
+                "include/zconf.h", `
+                "include/gnutls", `
+                "include/fftw3.h" `
+                -Destination "$prefix_path/include" `
+                -Recurse -Force
+
+      Copy-Item "lib/pkgconfig/zlib.pc", `
+                "lib/pkgconfig/libtasn1.pc", `
+                "lib/pkgconfig/p11-kit-1.pc", `
+                "lib/pkgconfig/nettle.pc", `
+                "lib/pkgconfig/hogweed.pc", `
+                "lib/pkgconfig/gnutls.pc", `
+                "lib/pkgconfig/fftw3.pc" `
+                -Destination "$prefix_path/lib/pkgconfig" `
+                -Recurse -Force
+
+      Copy-Item "lib/cmake/zlib", `
+                "lib/cmake/fftw3" `
+                -Destination "$prefix_path/lib/cmake" `
+                -Recurse -Force
+
+      Copy-Item "bin/libz.lib", `
+                "bin/libgnutls-30.lib",`
+                "bin/libfftw3-3.lib" `
+                -Destination "$prefix_path/lib" -Force
+
+      Copy-Item "bin/iconv.dll", `
+                "bin/libffi-8.dll", `
+                "bin/libfftw3-3.dll", `
+                "bin/libfftw3f-3.dll",`
+                "bin/libgcc_s_seh-1.dll",`
+                "bin/libgmp-10.dll",`
+                "bin/libgnutls-30.dll",`
+                "bin/libhogweed-6.dll",`
+                "bin/libiconv.dll",`
+                "bin/libintl-8.dll",`
+                "bin/libnettle-8.dll",`
+                "bin/libp11-kit-0.dll",`
+                "bin/libwinpthread-1.dll",`
+                "bin/libz.dll" `
+                -Destination "$prefix_path/bin" -Force
+
+      (Get-Content $prefix_path/lib/pkgconfig/zlib.pc) -replace '^prefix=.*', "prefix=${prefix_path}" | Set-Content $prefix_path/lib/pkgconfig/zlib.pc
+      (Get-Content $prefix_path/lib/pkgconfig/libtasn1.pc) -replace '^prefix=.*', "prefix=${prefix_path}" | Set-Content $prefix_path/lib/pkgconfig/libtasn1.pc
+      (Get-Content $prefix_path/lib/pkgconfig/p11-kit-1.pc) -replace '^prefix=.*', "prefix=${prefix_path}" | Set-Content $prefix_path/lib/pkgconfig/p11-kit-1.pc
+      (Get-Content $prefix_path/lib/pkgconfig/nettle.pc) -replace '^prefix=.*', "prefix=${prefix_path}" | Set-Content $prefix_path/lib/pkgconfig/nettle.pc
+      (Get-Content $prefix_path/lib/pkgconfig/hogweed.pc) -replace '^prefix=.*', "prefix=${prefix_path}" | Set-Content $prefix_path/lib/pkgconfig/hogweed.pc
+      (Get-Content $prefix_path/lib/pkgconfig/gnutls.pc) -replace '^prefix=.*', "prefix=${prefix_path}" | Set-Content $prefix_path/lib/pkgconfig/gnutls.pc
+      (Get-Content $prefix_path/include/zconf.h) -replace '^#define HAVE_UNISTD_H 1', '#define HAVE_UNISTD_H 0' | Set-Content $prefix_path/include/zconf.h
+    }
+    finally {
+      Pop-Location
+    }
+  }
+  finally {
+    Pop-Location
+  }
+}
 
 function Build-PkgConf {
   Write-Host "Building pkgconf" -ForegroundColor Yellow
@@ -2815,6 +2895,11 @@ Write-Host ""
 try {
   $build_queue = @()
 
+  #if ($arch -eq "x86_64") {
+  #  if (-not (Test-Path "$prefix_path/lib/pkgconfig/gnutls.pc")) { $build_queue += "mingw-dependencies" }
+  #  if (-not (Test-Path "$prefix_path/lib/pkgconfig/fftw3.pc")) { $build_queue += "mingw-dependencies" }
+  #}
+
   if (-not (Test-Path "$prefix_path/bin/pkgconf.exe")) { $build_queue += "pkgconf" }
   if (-not (Test-Path "$prefix_path/bin/yasm.exe")) { $build_queue += "yasm" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/intl.pc")) { $build_queue += "proxy-libintl" }
@@ -2911,6 +2996,7 @@ try {
     Write-Host "========================================" -ForegroundColor Magenta
 
     switch ($component) {
+      "mingw-dependencies" { Install-MinGWDependencies }
       "pkgconf" { Build-PkgConf }
       "yasm" { Build-Yasm }
       "proxy-libintl" { Build-ProxyIntl }
