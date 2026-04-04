@@ -1230,8 +1230,8 @@ function Build-LibPNG {
   }
 }
 
-function Build-LibJPEG {
-  Write-Host "Building libjpeg" -ForegroundColor Yellow
+function Build-LibJPEGTurbo {
+  Write-Host "Building libjpeg-turbo" -ForegroundColor Yellow
   Push-Location $build_path
   try {
     DownloadPackage -package_name "libjpeg-turbo"
@@ -2785,7 +2785,7 @@ try {
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/nettle.pc")) { $build_queue += "nettle" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/gnutls.pc")) { $build_queue += "gnutls" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libpng.pc")) { $build_queue += "libpng" }
-  if (-not (Test-Path "$prefix_path/lib/pkgconfig/libjpeg.pc")) { $build_queue += "libjpeg" }
+  if (-not (Test-Path "$prefix_path/lib/pkgconfig/libjpeg.pc")) { $build_queue += "libjpeg-turbo" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libpcre2-16.pc")) { $build_queue += "pcre2" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/bzip2.pc")) { $build_queue += "bzip2" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/liblzma.pc")) { $build_queue += "xz" }
@@ -2881,7 +2881,7 @@ try {
       "nettle" { Build-Nettle }
       "gnutls" { Build-GnuTLS }
       "libpng" { Build-LibPNG }
-      "libjpeg" { Build-LibJPEG }
+      "libjpeg-turbo" { Build-LibJPEGTurbo }
       "pcre2" { Build-PCRE2 }
       "bzip2" { Build-BZip2 }
       "xz" { Build-XZ }
