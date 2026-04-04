@@ -1,0 +1,101 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b13f78c..7bf3c88 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,19 +15,14 @@ endif(WIN32)
+ 
+ add_definitions(-DFAST_MATH -DCVD_FASTLOG)
+ 
++if(MSVC AND SHARED)
++  add_definitions(-DDLL_EXPORT)
++endif()
++
+ if(NOT MSVC)
+-  set(CMAKE_C_FLAGS "-O3 -Wall -fomit-frame-pointer -pipe")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -fomit-frame-pointer -pipe")
+ endif(NOT MSVC)
+ 
+ add_subdirectory(libmpcdec)
+-add_subdirectory(libmpcpsy)
+ add_subdirectory(libmpcenc)
+-add_subdirectory(libwavformat)
+-add_subdirectory(mpcgain)
+-add_subdirectory(mpcdec)
+-add_subdirectory(mpcenc)
+-add_subdirectory(mpc2sv8)
+-add_subdirectory(mpccut)
+-add_subdirectory(mpcchap)
+-add_subdirectory(wavcmp)
+ add_subdirectory(include)
+diff --git a/libmpcdec/mpc_bits_reader.c b/libmpcdec/mpc_bits_reader.c
+index 392aede..f3bcd63 100644
+--- a/libmpcdec/mpc_bits_reader.c
++++ b/libmpcdec/mpc_bits_reader.c
+@@ -98,7 +98,7 @@ const mpc_uint32_t Cnk_lost[MAX_ENUM / 2][MAX_ENUM] =
+ 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 103, 55, 3347, 12419, 56459, 16987, 313105, 54177, 3076873, 3739321, 3132677, 66353813, 123012781, 236330717}
+ };
+ 
+-static const mpc_uint8_t log2[32] =
++static const mpc_uint8_t log2_array[32] =
+ { 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6};
+ 
+ static const mpc_uint8_t log2_lost[32] =
+@@ -138,8 +138,8 @@ mpc_uint32_t mpc_bits_log_dec(mpc_bits_reader * r, mpc_uint_t max)
+ 	mpc_uint32_t value = 0;
+ 	if (max == 0)
+ 		return 0;
+-	if (log2[max - 1] > 1)
+-		value = mpc_bits_read(r, log2[max - 1] - 1);
++	if (log2_array[max - 1] > 1)
++		value = mpc_bits_read(r, log2_array[max - 1] - 1);
+ 	if (value >= log2_lost[max - 1])
+ 		value = ((value << 1) | mpc_bits_read(r, 1)) - log2_lost[max - 1];
+ 	return value;
+diff --git a/libmpcenc/bitstream.c b/libmpcenc/bitstream.c
+index 0650ee2..45b1a7b 100644
+--- a/libmpcenc/bitstream.c
++++ b/libmpcenc/bitstream.c
+@@ -93,7 +93,7 @@ static const mpc_uint32_t Cnk_lost[MAX_ENUM / 2][MAX_ENUM] =
+ 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 103, 55, 3347, 12419, 56459, 16987, 313105, 54177, 3076873, 3739321, 3132677, 66353813, 123012781, 236330717}
+ };
+ 
+-static const mpc_uint8_t log2[32] =
++static const mpc_uint8_t log2_array[32] =
+ { 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6};
+ 
+ static const mpc_uint8_t log2_lost[32] =
+@@ -166,9 +166,9 @@ void encodeEnum(mpc_encoder_t * e, const mpc_uint32_t bits, const mpc_uint_t N)
+ void encodeLog(mpc_encoder_t * e, mpc_uint32_t value, mpc_uint32_t max)
+ {
+ 	if (value < log2_lost[max - 1])
+-		writeBits(e, value, log2[max - 1] - 1);
++		writeBits(e, value, log2_array[max - 1] - 1);
+ 	else
+-		writeBits(e, value + log2_lost[max - 1], log2[max - 1]);
++		writeBits(e, value + log2_lost[max - 1], log2_array[max - 1]);
+ }
+ 
+ void writeMagic(mpc_encoder_t * e)
+diff --git a/mpcgain/CMakeLists.txt b/mpcgain/CMakeLists.txt
+index 5445faf..34223df 100644
+--- a/mpcgain/CMakeLists.txt
++++ b/mpcgain/CMakeLists.txt
+@@ -1,12 +1,12 @@
+-FIND_PATH(REPLAY_GAIN_INCLUDE_DIR replaygain/gain_analysis.h
+-	/usr/include
+-	/usr/local/include
++if(NOT REPLAY_GAIN_INCLUDE_DIR)
++    FIND_PATH(REPLAY_GAIN_INCLUDE_DIR replaygain/gain_analysis.h
++	${CMAKE_INSTALL_PREFIX}/include
+ 	${libmpc_SOURCE_DIR}/../libreplaygain/include
+-)
++    )
++endif()
+ 
+ FIND_LIBRARY(REPLAY_GAIN_LIBRARY NAMES replaygain replaygain_static PATHS
+-	/usr/lib
+-	/usr/local/lib
++	${CMAKE_INSTALL_PREFIX}/lib
+ 	${libmpc_SOURCE_DIR}/../libreplaygain/bin/src/release
+ )
+ 

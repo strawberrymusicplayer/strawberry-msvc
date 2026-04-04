@@ -1,0 +1,115 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b6e4666..6b2a557 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,6 +66,7 @@ check_prototype_definition (cosl "long double cosl( long double arg )" "0" math.
+ check_prototype_definition (sinl "long double sinl( long double arg )" "0" math.h HAVE_DECL_SINL)
+ check_prototype_definition (memalign "void *memalign(size_t alignment, size_t size)" "0" malloc.h HAVE_DECL_MEMALIGN)
+ check_prototype_definition (posix_memalign "int posix_memalign(void **memptr, size_t alignment, size_t size)" "0" stdlib.h HAVE_DECL_POSIX_MEMALIGN)
++check_prototype_definition (_aligned_malloc "void* __cdecl _aligned_malloc(size_t _Size, size_t _Alignment)" "0" malloc.h HAVE_DECL_ALIGNED_MALLOC)
+ 
+ include (CheckSymbolExists)
+ check_symbol_exists (clock_gettime time.h HAVE_CLOCK_GETTIME)
+@@ -75,6 +76,7 @@ check_symbol_exists (drand48 stdlib.h HAVE_DRAND48)
+ check_symbol_exists (srand48 stdlib.h HAVE_SRAND48)
+ check_symbol_exists (memalign malloc.h HAVE_MEMALIGN)
+ check_symbol_exists (posix_memalign stdlib.h HAVE_POSIX_MEMALIGN)
++check_symbol_exists (_aligned_malloc malloc.h HAVE_ALIGNED_MALLOC)
+ check_symbol_exists (mach_absolute_time mach/mach_time.h HAVE_MACH_ABSOLUTE_TIME)
+ check_symbol_exists (alloca alloca.h HAVE_ALLOCA)
+ if (NOT HAVE_ALLOCA)
+@@ -131,6 +133,7 @@ endif ()
+ 
+ include (CheckCCompilerFlag)
+ 
++#All those checks fail due to linkage errors so we directly set HAVE_<ARCH> in the PORTFILE! We assume the user knows what (s)he is doing!
+ if (ENABLE_SSE)
+   foreach (FLAG "-msse" "/arch:SSE")
+     unset (HAVE_SSE CACHE)
+@@ -180,8 +183,9 @@ if (ENABLE_AVX2)
+ endif ()
+ 
+ # AVX2 codelets require FMA support as well
++# AVX2 implicitly includes FMA using Visual Studio (also definition __FMA__ is not set)
+ if (ENABLE_AVX2)
+-  foreach (FLAG "-mfma" "/arch:FMA")
++  foreach (FLAG "-mfma" "/arch:AVX2")
+     unset (HAVE_FMA CACHE)
+     unset (HAVE_FMA)
+     check_c_compiler_flag (${FLAG} HAVE_FMA)
+@@ -363,7 +367,7 @@ foreach(subtarget ${subtargets})
+           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endforeach ()
+ install(TARGETS ${fftw3_lib}
+-          EXPORT FFTW3LibraryDepends
++          EXPORT FFTW3${PREC_SUFFIX}LibraryDepends
+           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+@@ -424,11 +428,11 @@ configure_file (FFTW3ConfigVersion.cmake.in FFTW3${PREC_SUFFIX}ConfigVersion.cma
+ install (FILES
+           ${CMAKE_CURRENT_BINARY_DIR}/FFTW3${PREC_SUFFIX}Config.cmake
+           ${CMAKE_CURRENT_BINARY_DIR}/FFTW3${PREC_SUFFIX}ConfigVersion.cmake
+-	  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/fftw3${PREC_SUFFIX}
++	  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+          COMPONENT Development)
+ 
+-export (TARGETS ${fftw3_lib} NAMESPACE FFTW3:: FILE ${PROJECT_BINARY_DIR}/FFTW3LibraryDepends.cmake)
+-install(EXPORT FFTW3LibraryDepends
++export (TARGETS ${fftw3_lib} NAMESPACE FFTW3:: FILE ${PROJECT_BINARY_DIR}/FFTW3${PREC_SUFFIX}LibraryDepends.cmake)
++install(EXPORT FFTW3${PREC_SUFFIX}LibraryDepends
+         NAMESPACE FFTW3::
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/fftw3${PREC_SUFFIX}
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+         COMPONENT Development)
+diff --git a/FFTW3Config.cmake.in b/FFTW3Config.cmake.in
+index 6b1fbc2..ccd8efe 100644
+--- a/FFTW3Config.cmake.in
++++ b/FFTW3Config.cmake.in
+@@ -10,7 +10,7 @@ set (FFTW3@PREC_SUFFIX@_LIBRARIES fftw3@PREC_SUFFIX@)
+ set (FFTW3@PREC_SUFFIX@_LIBRARY_DIRS @CMAKE_INSTALL_FULL_LIBDIR@)
+ set (FFTW3@PREC_SUFFIX@_INCLUDE_DIRS @CMAKE_INSTALL_FULL_INCLUDEDIR@)
+ 
+-include ("${CMAKE_CURRENT_LIST_DIR}/FFTW3LibraryDepends.cmake")
++include ("${CMAKE_CURRENT_LIST_DIR}/FFTW3@PREC_SUFFIX@LibraryDepends.cmake")
+ 
+ if (CMAKE_VERSION VERSION_LESS 2.8.3)
+   set (CMAKE_CURRENT_LIST_DIR)
+diff --git a/cmake.config.h.in b/cmake.config.h.in
+index 1f4c505..fd763cc 100644
+--- a/cmake.config.h.in
++++ b/cmake.config.h.in
+@@ -112,6 +112,10 @@
+    you don't. */
+ #cmakedefine01 HAVE_DECL_POSIX_MEMALIGN
+ 
++/* Define to 1 if you have the declaration of `_aligned_malloc', and to 0 if you
++   don't. */
++#cmakedefine01 HAVE_DECL_ALIGNED_MALLOC
++
+ /* Define to 1 if you have the declaration of `sinl', and to 0 if you don't.
+    */
+ #cmakedefine01 HAVE_DECL_SINL
+@@ -184,6 +188,9 @@
+ /* Define to 1 if you have the `memalign' function. */
+ #cmakedefine HAVE_MEMALIGN 1
+ 
++/* Define to 1 if you have the `_aligned_malloc' function. */
++#cmakedefine HAVE_ALIGNED_MALLOC 1
++
+ /* Define to 1 if you have the `memmove' function. */
+ #cmakedefine HAVE_MEMMOVE 1
+ 
+diff --git a/kernel/kalloc.c b/kernel/kalloc.c
+index e42f6f3..ffc2257 100644
+--- a/kernel/kalloc.c
++++ b/kernel/kalloc.c
+@@ -103,7 +103,7 @@ void *X(kernel_malloc)(size_t n)
+ #    undef real_free
+ #    define real_free _mm_free
+ 
+-#  elif defined(_MSC_VER)
++#  elif defined(_MSC_VER) || defined (HAVE_ALIGNED_MALLOC)
+      /* MS Visual C++ 6.0 with a "Processor Pack" supports SIMD
+ 	and _aligned_malloc/free (uses malloc.h) */
+      p = (void *) _aligned_malloc(n, MIN_ALIGNMENT);

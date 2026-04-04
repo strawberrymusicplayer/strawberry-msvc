@@ -1,0 +1,597 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 0000000..9dffabb
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,17 @@
++cmake_minimum_required(VERSION 3.5)
++project(libbs2b)
++
++set(VERSION 3.1.0)
++
++include(GNUInstallDirs)
++include(CheckCCompilerFlag)
++include(CheckCXXCompilerFlag)
++
++add_subdirectory(src)
++
++set(prefix "${CMAKE_INSTALL_PREFIX}")
++set(exec_prefix "${CMAKE_INSTALL_PREFIX}")
++set(libdir "${CMAKE_INSTALL_FULL_LIBDIR}")
++set(includedir "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
++configure_file(libbs2b.pc.in libbs2b.pc @ONLY)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libbs2b.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+new file mode 100644
+index 0000000..2007423
+--- /dev/null
++++ b/src/CMakeLists.txt
+@@ -0,0 +1,17 @@
++add_library(libbs2b bs2b.c)
++
++target_compile_definitions(libbs2b
++  PRIVATE $<$<BOOL:${BUILD_SHARED_LIBS}>:BS2B_API_EXPORTS>
++)
++
++if(BUILD_SHARED_LIBS)
++    set_target_properties(libbs2b PROPERTIES VERSION 3.1.0 SOVERSION 0)
++endif()
++
++install(TARGETS libbs2b EXPORT targets
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++)
++
++install(FILES bs2b.h bs2bversion.h bs2btypes.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include/bs2b)
+diff --git a/src/bs2b.c b/src/bs2b.c
+index 623ca77..9c5b490 100644
+--- a/src/bs2b.c
++++ b/src/bs2b.c
+@@ -218,7 +218,7 @@ static void cross_feed_d( t_bs2bdp bs2bdp, double *sample )
+  * See descriptions in "bs2b.h"
+  */
+ 
+-t_bs2bdp bs2b_open( void )
++BS2B_API t_bs2bdp bs2b_open( void )
+ {
+ 	t_bs2bdp bs2bdp = NULL;
+ 
+@@ -231,12 +231,12 @@ t_bs2bdp bs2b_open( void )
+ 	return bs2bdp;
+ } /* bs2b_open() */
+ 
+-void bs2b_close( t_bs2bdp bs2bdp )
++BS2B_API void bs2b_close( t_bs2bdp bs2bdp )
+ {
+ 	free( bs2bdp );
+ } /* bs2b_close() */
+ 
+-void bs2b_set_level( t_bs2bdp bs2bdp, uint32_t level )
++BS2B_API void bs2b_set_level( t_bs2bdp bs2bdp, uint32_t level )
+ {
+ 	if( NULL == bs2bdp ) return;
+ 
+@@ -246,12 +246,12 @@ void bs2b_set_level( t_bs2bdp bs2bdp, uint32_t level )
+ 	init( bs2bdp );
+ } /* bs2b_set_level() */
+ 
+-uint32_t bs2b_get_level( t_bs2bdp bs2bdp )
++BS2B_API uint32_t bs2b_get_level( t_bs2bdp bs2bdp )
+ {
+ 	return bs2bdp->level;
+ } /* bs2b_get_level() */
+ 
+-void bs2b_set_level_fcut( t_bs2bdp bs2bdp, int fcut )
++BS2B_API void bs2b_set_level_fcut( t_bs2bdp bs2bdp, int fcut )
+ {
+ 	uint32_t level;
+ 
+@@ -263,12 +263,12 @@ void bs2b_set_level_fcut( t_bs2bdp bs2bdp, int fcut )
+ 	bs2b_set_level( bs2bdp, level );
+ } /* bs2b_set_level_fcut() */
+ 
+-int bs2b_get_level_fcut( t_bs2bdp bs2bdp )
++BS2B_API int bs2b_get_level_fcut( t_bs2bdp bs2bdp )
+ {
+ 	return( ( int )( bs2bdp->level & 0xffff ) );
+ } /* bs2b_get_level_fcut() */
+ 
+-void bs2b_set_level_feed( t_bs2bdp bs2bdp, int feed )
++BS2B_API void bs2b_set_level_feed( t_bs2bdp bs2bdp, int feed )
+ {
+ 	uint32_t level;
+ 
+@@ -280,12 +280,12 @@ void bs2b_set_level_feed( t_bs2bdp bs2bdp, int feed )
+ 	bs2b_set_level( bs2bdp, level );
+ } /* bs2b_set_level_feed() */
+ 
+-int bs2b_get_level_feed( t_bs2bdp bs2bdp )
++BS2B_API int bs2b_get_level_feed( t_bs2bdp bs2bdp )
+ {
+ 	return( ( int )( ( bs2bdp->level & 0xffff0000 ) >> 16 ) );
+ } /* bs2b_get_level_feed() */
+ 
+-int bs2b_get_level_delay( t_bs2bdp bs2bdp )
++BS2B_API int bs2b_get_level_delay( t_bs2bdp bs2bdp )
+ {
+ 	int fcut;
+ 	
+@@ -297,7 +297,7 @@ int bs2b_get_level_delay( t_bs2bdp bs2bdp )
+ 	return bs2b_level_delay( fcut );
+ } /* bs2b_get_level_delay() */
+ 
+-void bs2b_set_srate( t_bs2bdp bs2bdp, uint32_t srate )
++BS2B_API void bs2b_set_srate( t_bs2bdp bs2bdp, uint32_t srate )
+ {
+ 	if( NULL == bs2bdp ) return;
+ 
+@@ -308,18 +308,18 @@ void bs2b_set_srate( t_bs2bdp bs2bdp, uint32_t srate )
+ 	bs2b_clear( bs2bdp );
+ } /* bs2b_set_srate() */
+ 
+-uint32_t bs2b_get_srate( t_bs2bdp bs2bdp )
++BS2B_API uint32_t bs2b_get_srate( t_bs2bdp bs2bdp )
+ {
+ 	return bs2bdp->srate;
+ } /* bs2b_get_srate() */
+ 
+-void bs2b_clear( t_bs2bdp bs2bdp )
++BS2B_API void bs2b_clear( t_bs2bdp bs2bdp )
+ {
+ 	if( NULL == bs2bdp ) return;
+ 	memset( &bs2bdp->lfs, 0, sizeof( bs2bdp->lfs ) );
+ } /* bs2b_clear() */
+ 
+-int bs2b_is_clear( t_bs2bdp bs2bdp )
++BS2B_API int bs2b_is_clear( t_bs2bdp bs2bdp )
+ {
+ 	int loopv = sizeof( bs2bdp->lfs );
+ 
+@@ -332,17 +332,17 @@ int bs2b_is_clear( t_bs2bdp bs2bdp )
+ 	return 1;
+ } /* bs2b_is_clear() */
+ 
+-char const *bs2b_runtime_version( void )
++BS2B_API char const *bs2b_runtime_version( void )
+ {
+ 	return BS2B_VERSION_STR;
+ } /* bs2b_runtime_version() */
+ 
+-uint32_t bs2b_runtime_version_int( void )
++BS2B_API uint32_t bs2b_runtime_version_int( void )
+ {
+ 	return BS2B_VERSION_INT;
+ } /* bs2b_runtime_version_int() */
+ 
+-void bs2b_cross_feed_d( t_bs2bdp bs2bdp, double *sample, int n )
++BS2B_API void bs2b_cross_feed_d( t_bs2bdp bs2bdp, double *sample, int n )
+ {
+ 	if( n > 0 )
+ 	{
+@@ -361,7 +361,7 @@ void bs2b_cross_feed_d( t_bs2bdp bs2bdp, double *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_d() */
+ 
+-void bs2b_cross_feed_dbe( t_bs2bdp bs2bdp, double *sample, int n )
++BS2B_API void bs2b_cross_feed_dbe( t_bs2bdp bs2bdp, double *sample, int n )
+ {
+ 	if( n > 0 )
+ 	{
+@@ -390,7 +390,7 @@ void bs2b_cross_feed_dbe( t_bs2bdp bs2bdp, double *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_dbe() */
+ 
+-void bs2b_cross_feed_dle( t_bs2bdp bs2bdp, double *sample, int n )
++BS2B_API void bs2b_cross_feed_dle( t_bs2bdp bs2bdp, double *sample, int n )
+ {
+ 	if( n > 0 )
+ 	{
+@@ -419,7 +419,7 @@ void bs2b_cross_feed_dle( t_bs2bdp bs2bdp, double *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_dle() */
+ 
+-void bs2b_cross_feed_f( t_bs2bdp bs2bdp, float *sample, int n )
++BS2B_API void bs2b_cross_feed_f( t_bs2bdp bs2bdp, float *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -446,7 +446,7 @@ void bs2b_cross_feed_f( t_bs2bdp bs2bdp, float *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_f() */
+ 
+-void bs2b_cross_feed_fbe( t_bs2bdp bs2bdp, float *sample, int n )
++BS2B_API void bs2b_cross_feed_fbe( t_bs2bdp bs2bdp, float *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -483,7 +483,7 @@ void bs2b_cross_feed_fbe( t_bs2bdp bs2bdp, float *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_fbe() */
+ 
+-void bs2b_cross_feed_fle( t_bs2bdp bs2bdp, float *sample, int n )
++BS2B_API void bs2b_cross_feed_fle( t_bs2bdp bs2bdp, float *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -529,7 +529,7 @@ void bs2b_cross_feed_fle( t_bs2bdp bs2bdp, float *sample, int n )
+ #define MAX_INT8_VALUE          127.0
+ #define MIN_INT8_VALUE         -128.0
+ 
+-void bs2b_cross_feed_s32( t_bs2bdp bs2bdp, int32_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s32( t_bs2bdp bs2bdp, int32_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -556,7 +556,7 @@ void bs2b_cross_feed_s32( t_bs2bdp bs2bdp, int32_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s32() */
+ 
+-void bs2b_cross_feed_u32( t_bs2bdp bs2bdp, uint32_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u32( t_bs2bdp bs2bdp, uint32_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -583,7 +583,7 @@ void bs2b_cross_feed_u32( t_bs2bdp bs2bdp, uint32_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u32() */
+ 
+-void bs2b_cross_feed_s32be( t_bs2bdp bs2bdp, int32_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s32be( t_bs2bdp bs2bdp, int32_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -620,7 +620,7 @@ void bs2b_cross_feed_s32be( t_bs2bdp bs2bdp, int32_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s32be() */
+ 
+-void bs2b_cross_feed_u32be( t_bs2bdp bs2bdp, uint32_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u32be( t_bs2bdp bs2bdp, uint32_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -657,7 +657,7 @@ void bs2b_cross_feed_u32be( t_bs2bdp bs2bdp, uint32_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u32be() */
+ 
+-void bs2b_cross_feed_s32le( t_bs2bdp bs2bdp, int32_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s32le( t_bs2bdp bs2bdp, int32_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -694,7 +694,7 @@ void bs2b_cross_feed_s32le( t_bs2bdp bs2bdp, int32_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s32le() */
+ 
+-void bs2b_cross_feed_u32le( t_bs2bdp bs2bdp, uint32_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u32le( t_bs2bdp bs2bdp, uint32_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -731,7 +731,7 @@ void bs2b_cross_feed_u32le( t_bs2bdp bs2bdp, uint32_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u32le() */
+ 
+-void bs2b_cross_feed_s16( t_bs2bdp bs2bdp, int16_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s16( t_bs2bdp bs2bdp, int16_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -758,7 +758,7 @@ void bs2b_cross_feed_s16( t_bs2bdp bs2bdp, int16_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s16() */
+ 
+-void bs2b_cross_feed_u16( t_bs2bdp bs2bdp, uint16_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u16( t_bs2bdp bs2bdp, uint16_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -785,7 +785,7 @@ void bs2b_cross_feed_u16( t_bs2bdp bs2bdp, uint16_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u16() */
+ 
+-void bs2b_cross_feed_s16be( t_bs2bdp bs2bdp, int16_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s16be( t_bs2bdp bs2bdp, int16_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -822,7 +822,7 @@ void bs2b_cross_feed_s16be( t_bs2bdp bs2bdp, int16_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s16be() */
+ 
+-void bs2b_cross_feed_u16be( t_bs2bdp bs2bdp, uint16_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u16be( t_bs2bdp bs2bdp, uint16_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -859,7 +859,7 @@ void bs2b_cross_feed_u16be( t_bs2bdp bs2bdp, uint16_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u16be() */
+ 
+-void bs2b_cross_feed_s16le( t_bs2bdp bs2bdp, int16_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s16le( t_bs2bdp bs2bdp, int16_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -896,7 +896,7 @@ void bs2b_cross_feed_s16le( t_bs2bdp bs2bdp, int16_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s16le() */
+ 
+-void bs2b_cross_feed_u16le( t_bs2bdp bs2bdp, uint16_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u16le( t_bs2bdp bs2bdp, uint16_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -933,7 +933,7 @@ void bs2b_cross_feed_u16le( t_bs2bdp bs2bdp, uint16_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u16le() */
+ 
+-void bs2b_cross_feed_s8( t_bs2bdp bs2bdp, int8_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s8( t_bs2bdp bs2bdp, int8_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -960,7 +960,7 @@ void bs2b_cross_feed_s8( t_bs2bdp bs2bdp, int8_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s8() */
+ 
+-void bs2b_cross_feed_u8( t_bs2bdp bs2bdp, uint8_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u8( t_bs2bdp bs2bdp, uint8_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -987,7 +987,7 @@ void bs2b_cross_feed_u8( t_bs2bdp bs2bdp, uint8_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u8() */
+ 
+-void bs2b_cross_feed_s24( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s24( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -1014,7 +1014,7 @@ void bs2b_cross_feed_s24( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s24() */
+ 
+-void bs2b_cross_feed_u24( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u24( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -1041,7 +1041,7 @@ void bs2b_cross_feed_u24( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u24() */
+ 
+-void bs2b_cross_feed_s24be( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s24be( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -1078,7 +1078,7 @@ void bs2b_cross_feed_s24be( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s24be() */
+ 
+-void bs2b_cross_feed_u24be( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u24be( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -1115,7 +1115,7 @@ void bs2b_cross_feed_u24be( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_u24be() */
+ 
+-void bs2b_cross_feed_s24le( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
++BS2B_API void bs2b_cross_feed_s24le( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+@@ -1152,7 +1152,7 @@ void bs2b_cross_feed_s24le( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n )
+ 	} /* if */
+ } /* bs2b_cross_feed_s24le() */
+ 
+-void bs2b_cross_feed_u24le( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n )
++BS2B_API void bs2b_cross_feed_u24le( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n )
+ {
+ 	double sample_d[ 2 ];
+ 
+diff --git a/src/bs2b.h b/src/bs2b.h
+index 4399ac8..18b5176 100644
+--- a/src/bs2b.h
++++ b/src/bs2b.h
+@@ -27,6 +27,16 @@
+ #include "bs2bversion.h"
+ #include "bs2btypes.h"
+ 
++#ifdef _WIN32
++#  if defined(BS2B_API_EXPORTS)
++#    define BS2B_API __declspec(dllexport)
++#  else
++#    define BS2B_API
++#  endif
++#else
++#   define BS2B_API
++#endif
++
+ /* Minimum/maximum sample rate (Hz) */
+ #define BS2B_MINSRATE 2000
+ #define BS2B_MAXSRATE 384000
+@@ -84,55 +94,55 @@ extern "C"
+ /* Allocates and sets a data to defaults.
+  * Return NULL on error.
+  */
+-t_bs2bdp bs2b_open( void );
++BS2B_API t_bs2bdp bs2b_open( void );
+ 
+ /* Close */
+-void bs2b_close( t_bs2bdp bs2bdp );
++BS2B_API BS2B_API void bs2b_close( t_bs2bdp bs2bdp );
+ 
+ /* Sets a new coefficients by new crossfeed value.
+  * level = ( ( uint32_t )fcut | ( ( uint32_t )feed << 16 ) )
+  * where 'feed' is crossfeeding level at low frequencies (dB * 10)
+  * and 'fcut' is cut frecuency (Hz)
+  */
+-void bs2b_set_level( t_bs2bdp bs2bdp, uint32_t level );
++BS2B_API void bs2b_set_level( t_bs2bdp bs2bdp, uint32_t level );
+ 
+ /* Return a current crossfeed level value. */
+-uint32_t bs2b_get_level( t_bs2bdp bs2bdp );
++BS2B_API uint32_t bs2b_get_level( t_bs2bdp bs2bdp );
+ 
+ /* Sets a new coefficients by new cut frecuency value (Hz). */
+-void bs2b_set_level_fcut( t_bs2bdp bs2bdp, int fcut );
++BS2B_API void bs2b_set_level_fcut( t_bs2bdp bs2bdp, int fcut );
+ 
+ /* Return a current cut frecuency value (Hz). */
+-int bs2b_get_level_fcut( t_bs2bdp bs2bdp );
++BS2B_API int bs2b_get_level_fcut( t_bs2bdp bs2bdp );
+ 
+ /* Sets a new coefficients by new crossfeeding level value (dB * 10). */
+-void bs2b_set_level_feed( t_bs2bdp bs2bdp, int feed );
++BS2B_API void bs2b_set_level_feed( t_bs2bdp bs2bdp, int feed );
+ 
+ /* Return a current crossfeeding level value (dB * 10). */
+-int bs2b_get_level_feed( t_bs2bdp bs2bdp );
++BS2B_API int bs2b_get_level_feed( t_bs2bdp bs2bdp );
+ 
+ /* Return a current delay value at low frequencies (micro seconds). */
+-int bs2b_get_level_delay( t_bs2bdp bs2bdp );
++BS2B_API int bs2b_get_level_delay( t_bs2bdp bs2bdp );
+ 
+ /* Clear buffers and sets a new coefficients with new sample rate value.
+  * srate - sample rate by Hz.
+  */
+-void bs2b_set_srate( t_bs2bdp bs2bdp, uint32_t srate );
++BS2B_API void bs2b_set_srate( t_bs2bdp bs2bdp, uint32_t srate );
+ 
+ /* Return current sample rate value */
+-uint32_t bs2b_get_srate( t_bs2bdp bs2bdp );
++BS2B_API uint32_t bs2b_get_srate( t_bs2bdp bs2bdp );
+ 
+ /* Clear buffer */
+-void bs2b_clear( t_bs2bdp bs2bdp );
++BS2B_API void bs2b_clear( t_bs2bdp bs2bdp );
+ 
+ /* Return 1 if buffer is clear */
+-int bs2b_is_clear( t_bs2bdp bs2bdp );
++BS2B_API int bs2b_is_clear( t_bs2bdp bs2bdp );
+ 
+ /* Return bs2b version string */
+-char const *bs2b_runtime_version( void );
++BS2B_API char const *bs2b_runtime_version( void );
+ 
+ /* Return bs2b version integer */
+-uint32_t bs2b_runtime_version_int( void );
++BS2B_API uint32_t bs2b_runtime_version_int( void );
+ 
+ /* 'bs2b_cross_feed_*' crossfeeds buffer of 'n' stereo samples
+  * pointed by 'sample'.
+@@ -142,82 +152,82 @@ uint32_t bs2b_runtime_version_int( void );
+  */
+ 
+ /* sample poits to double floats native endians */
+-void bs2b_cross_feed_d( t_bs2bdp bs2bdp, double *sample, int n );
++BS2B_API void bs2b_cross_feed_d( t_bs2bdp bs2bdp, double *sample, int n );
+ 
+ /* sample poits to double floats big endians */
+-void bs2b_cross_feed_dbe( t_bs2bdp bs2bdp, double *sample, int n );
++BS2B_API void bs2b_cross_feed_dbe( t_bs2bdp bs2bdp, double *sample, int n );
+ 
+ /* sample poits to double floats little endians */
+-void bs2b_cross_feed_dle( t_bs2bdp bs2bdp, double *sample, int n );
++BS2B_API void bs2b_cross_feed_dle( t_bs2bdp bs2bdp, double *sample, int n );
+ 
+ /* sample poits to floats native endians */
+-void bs2b_cross_feed_f( t_bs2bdp bs2bdp, float *sample, int n );
++BS2B_API void bs2b_cross_feed_f( t_bs2bdp bs2bdp, float *sample, int n );
+ 
+ /* sample poits to floats big endians */
+-void bs2b_cross_feed_fbe( t_bs2bdp bs2bdp, float *sample, int n );
++BS2B_API void bs2b_cross_feed_fbe( t_bs2bdp bs2bdp, float *sample, int n );
+ 
+ /* sample poits to floats little endians */
+-void bs2b_cross_feed_fle( t_bs2bdp bs2bdp, float *sample, int n );
++BS2B_API void bs2b_cross_feed_fle( t_bs2bdp bs2bdp, float *sample, int n );
+ 
+ /* sample poits to 32bit signed integers native endians */
+-void bs2b_cross_feed_s32( t_bs2bdp bs2bdp, int32_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s32( t_bs2bdp bs2bdp, int32_t *sample, int n );
+ 
+ /* sample poits to 32bit unsigned integers native endians */
+-void bs2b_cross_feed_u32( t_bs2bdp bs2bdp, uint32_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u32( t_bs2bdp bs2bdp, uint32_t *sample, int n );
+ 
+ /* sample poits to 32bit signed integers big endians */
+-void bs2b_cross_feed_s32be( t_bs2bdp bs2bdp, int32_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s32be( t_bs2bdp bs2bdp, int32_t *sample, int n );
+ 
+ /* sample poits to 32bit unsigned integers big endians */
+-void bs2b_cross_feed_u32be( t_bs2bdp bs2bdp, uint32_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u32be( t_bs2bdp bs2bdp, uint32_t *sample, int n );
+ 
+ /* sample poits to 32bit signed integers little endians */
+-void bs2b_cross_feed_s32le( t_bs2bdp bs2bdp, int32_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s32le( t_bs2bdp bs2bdp, int32_t *sample, int n );
+ 
+ /* sample poits to 32bit unsigned integers little endians */
+-void bs2b_cross_feed_u32le( t_bs2bdp bs2bdp, uint32_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u32le( t_bs2bdp bs2bdp, uint32_t *sample, int n );
+ 
+ /* sample poits to 16bit signed integers native endians */
+-void bs2b_cross_feed_s16( t_bs2bdp bs2bdp, int16_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s16( t_bs2bdp bs2bdp, int16_t *sample, int n );
+ 
+ /* sample poits to 16bit unsigned integers native endians */
+-void bs2b_cross_feed_u16( t_bs2bdp bs2bdp, uint16_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u16( t_bs2bdp bs2bdp, uint16_t *sample, int n );
+ 
+ /* sample poits to 16bit signed integers big endians */
+-void bs2b_cross_feed_s16be( t_bs2bdp bs2bdp, int16_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s16be( t_bs2bdp bs2bdp, int16_t *sample, int n );
+ 
+ /* sample poits to 16bit unsigned integers big endians */
+-void bs2b_cross_feed_u16be( t_bs2bdp bs2bdp, uint16_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u16be( t_bs2bdp bs2bdp, uint16_t *sample, int n );
+ 
+ /* sample poits to 16bit signed integers little endians */
+-void bs2b_cross_feed_s16le( t_bs2bdp bs2bdp, int16_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s16le( t_bs2bdp bs2bdp, int16_t *sample, int n );
+ 
+ /* sample poits to 16bit unsigned integers little endians */
+-void bs2b_cross_feed_u16le( t_bs2bdp bs2bdp, uint16_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u16le( t_bs2bdp bs2bdp, uint16_t *sample, int n );
+ 
+ /* sample poits to 8bit signed integers */
+-void bs2b_cross_feed_s8( t_bs2bdp bs2bdp, int8_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s8( t_bs2bdp bs2bdp, int8_t *sample, int n );
+ 
+ /* sample poits to 8bit unsigned integers */
+-void bs2b_cross_feed_u8( t_bs2bdp bs2bdp, uint8_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u8( t_bs2bdp bs2bdp, uint8_t *sample, int n );
+ 
+ /* sample poits to 24bit signed integers native endians */
+-void bs2b_cross_feed_s24( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s24( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n );
+ 
+ /* sample poits to 24bit unsigned integers native endians */
+-void bs2b_cross_feed_u24( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u24( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n );
+ 
+ /* sample poits to 24bit signed integers be endians */
+-void bs2b_cross_feed_s24be( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s24be( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n );
+ 
+ /* sample poits to 24bit unsigned integers be endians */
+-void bs2b_cross_feed_u24be( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u24be( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n );
+ 
+ /* sample poits to 24bit signed integers little endians */
+-void bs2b_cross_feed_s24le( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n );
++BS2B_API void bs2b_cross_feed_s24le( t_bs2bdp bs2bdp, bs2b_int24_t *sample, int n );
+ 
+ /* sample poits to 24bit unsigned integers little endians */
+-void bs2b_cross_feed_u24le( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n );
++BS2B_API void bs2b_cross_feed_u24le( t_bs2bdp bs2bdp, bs2b_uint24_t *sample, int n );
+ 
+ #ifdef __cplusplus
+ }	/* extern "C" */

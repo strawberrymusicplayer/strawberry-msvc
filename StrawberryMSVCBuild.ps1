@@ -99,6 +99,7 @@ Write-Host ""
 
 $script_path = Split-Path -Parent $MyInvocation.MyCommand.Path
 $version_file = Join-Path $script_path "StrawberryPackageVersions.txt"
+$patch_path = Join-Path $script_path "patches"
 
 if (Test-Path $version_file) {
   Get-Content $version_file | ForEach-Object {
@@ -540,27 +541,6 @@ function GetPackageUrls {
   return $package_urls
 }
 
-function GetPatchUrls {
-  [CmdletBinding()]
-  param()
-  $patch_urls = @{
-    'libpng-pkgconf.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libpng-pkgconf.patch"
-    'bzip2-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/bzip2-cmake.patch"
-    'opusfile-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/opusfile-cmake.patch"
-    'speex-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/speex-cmake.patch"
-    'musepack-fixes.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/musepack-fixes.patch"
-    'libopenmpt-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libopenmpt-cmake.patch"
-    'libbs2b-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libbs2b-msvc.patch"
-    'twolame.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/twolame.patch"
-    'sparsehash-msvc.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/sparsehash-msvc.patch"
-    'yasm-cmake.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/yasm-cmake.patch"
-    'libgme-pkgconf.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/master/patches/libgme-pkgconf.patch"
-    'glib-networking.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/refs/heads/master/patches/glib-networking.patch"
-    'gstreamer-macros-restrict.patch' = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry-msvc-dependencies/refs/heads/master/patches/gstreamer-macros-restrict.patch"
-  }
-  return $patch_urls
-}
-
 function GetGitRepoUrls {
   $git_repo_urls = @{
     'qtbase' = "https://code.qt.io/qt/qtbase"
@@ -593,19 +573,6 @@ function GetPackageUrl {
     throw "Package '$package_name' not found in package URLs"
   }
   return $package_urls[$package_name]
-}
-
-function GetPatchUrl {
-  [CmdletBinding()]
-  param(
-    [Parameter(Mandatory=$true)]
-    [string]$patch_name
-  )
-  $patch_urls = GetPatchUrls
-  if (!$patch_urls.ContainsKey($patch_name)) {
-    throw "Patch '$patch_name' not found in patch URLs"
-  }
-  return $patch_urls[$patch_name]
 }
 
 function GetGitRepoUrl {
@@ -642,31 +609,6 @@ function DownloadPackage {
   }
   catch {
     Write-Warning "Failed to download package $package_name : $_"
-    throw
-  }
-}
-
-function DownloadPatch {
-  [CmdletBinding()]
-  param(
-    [Parameter(Mandatory=$true)]
-    [string]$patch_name
-  )
-  Write-Host "Checking patch: $patch_name" -ForegroundColor Cyan
-  try {
-    if (-not (Test-Path $downloads_path)) {
-      New-Item -ItemType Directory -Path $downloads_path -Force | Out-Null
-    }
-    $patch_urls = GetPatchUrls
-    if (!$patch_urls.ContainsKey($patch_name)) {
-      throw "Patch '$patch_name' not found in dependency configuration"
-    }
-    $patch_url = $patch_urls[$patch_name]
-    DownloadFileIfNotExists -url $patch_url -destination_path $downloads_path
-    Write-Host "✓ Patch $patch_name is available" -ForegroundColor Green
-  }
-  catch {
-    Write-Warning "Failed to download patch $patch_name : $_"
     throw
   }
 }
@@ -1028,12 +970,11 @@ function Build-Yasm {
   Push-Location $build_path
   try {
     CloneGitRepo -git_repo_name "yasm"
-    DownloadPatch -patch_name "yasm-cmake.patch"
     if (-not (Test-Path "yasm")) {
       RecursiveCopy "$downloads_path/yasm" "$build_path/yasm"
     }
     Set-Location "yasm"
-    & patch -p1 -N -i "$downloads_path/yasm-cmake.patch" 2>&1 | Out-Null
+    & patch -p1 -N -i "$patch_path/yasm-cmake.patch" 2>&1 | Out-Null
     CMakeBuild
   }
   finally {
@@ -1275,10 +1216,9 @@ function Build-LibPNG {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "libpng"
-    DownloadPatch -patch_name "libpng-pkgconf.patch"
     ExtractPackage "libpng-$libpng_version.tar.gz"
     Set-Location "libpng-$libpng_version"
-    & patch -p1 -N -i "$downloads_path/libpng-pkgconf.patch" 2>&1 | Out-Null
+    & patch -p1 -N -i "$patch_path/libpng-pkgconf.patch" 2>&1 | Out-Null
     CMakeBuild
     Remove-Item "$prefix_path/lib/libpng16_static${lib_postfix}.lib" -Force -ErrorAction SilentlyContinue
     if ($build_type -eq "debug") {
@@ -1334,10 +1274,9 @@ function Build-BZip2 {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "bzip2"
-    DownloadPatch -patch_name "bzip2-cmake.patch"
     ExtractPackage "bzip2-$bzip2_version.tar.gz"
     Set-Location "bzip2-$bzip2_version"
-    & patch -p1 -N -i "$downloads_path/bzip2-cmake.patch" 2>&1 | Out-Null
+    & patch -p1 -N -i "$patch_path/bzip2-cmake.patch" 2>&1 | Out-Null
     CMakeBuild -build_path "build2" -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
   }
   finally {
@@ -1618,10 +1557,9 @@ function Build-GlibNetworking {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "glib-networking"
-    DownloadPatch -patch_name "glib-networking.patch"
     ExtractPackage "glib-networking-$glib_networking_version.tar.xz"
     Set-Location "glib-networking-$glib_networking_version"
-    & patch -p1 -N -i $downloads_path/glib-networking.patch
+    & patch -p1 -N -i $patch_path/glib-networking.patch
     MesonBuild `
       -additional_args @(
         "-Dgnutls=enabled",
@@ -1849,10 +1787,9 @@ function Build-Opusfile {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "opusfile"
-    DownloadPatch -patch_name "opusfile-cmake.patch"
     ExtractPackage "opusfile-$opusfile_version.tar.gz"
     Push-Location opusfile-$opusfile_version
-    & patch -p1 -N -i $downloads_path/opusfile-cmake.patch
+    & patch -p1 -N -i $patch_path/opusfile-cmake.patch
     CMakeBuild -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
     Write-Host "opusfile built successfully!" -ForegroundColor Green
   }
@@ -1866,10 +1803,9 @@ function Build-Speex {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "speex"
-    DownloadPatch -patch_name "speex-cmake.patch"
     ExtractPackage "speex-Speex-$speex_version.tar.gz"
     Push-Location speex-Speex-$speex_version
-    & patch -p1 -N -i "$downloads_path/speex-cmake.patch"
+    & patch -p1 -N -i "$patch_path/speex-cmake.patch"
     CMakeBuild
     if ($build_type -eq "debug") {
       Copy-Item "$prefix_path/lib/libspeexd.lib" "$prefix_path/lib/libspeex.lib" -Force
@@ -1931,10 +1867,9 @@ function Build-Twolame {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "twolame"
-    DownloadPatch -patch_name "twolame.patch"
     ExtractPackage "twolame-$twolame_version.tar.gz"
     Set-Location twolame-$twolame_version
-    & patch -p1 -N -i "$downloads_path/twolame.patch"
+    & patch -p1 -N -i "$patch_path/twolame.patch"
     Set-Location "win32"
     if (-not (Test-Path "Backup/libtwolame_dll.sln")) {
       UpgradeVSProject "libtwolame_dll.sln"
@@ -1986,10 +1921,9 @@ function Build-Musepack {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "musepack"
-    DownloadPatch -patch_name "musepack-fixes.patch"
     ExtractPackage "musepack_src_r$musepack_version.tar.gz"
     Set-Location musepack_src_r$musepack_version
-    & patch -p1 -N -i $downloads_path/musepack-fixes.patch
+    & patch -p1 -N -i $patch_path/musepack-fixes.patch
     CMakeBuild -additional_args @(
         "-DSHARED=ON",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
@@ -2008,7 +1942,6 @@ function Build-LibOpenMPT {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "libopenmpt"
-    DownloadPatch -patch_name "libopenmpt-cmake.patch"
     if (-not (Test-Path "libopenmpt")) {
       $zip_file = "$downloads_path/libopenmpt-$libopenmpt_version+release.msvc.zip"
       Write-Host "Extracting $zip_file" -ForegroundColor Cyan
@@ -2023,7 +1956,7 @@ function Build-LibOpenMPT {
       }
     }
     Set-Location "libopenmpt"
-    & patch -p1 -N -i $downloads_path/libopenmpt-cmake.patch
+    & patch -p1 -N -i $patch_path/libopenmpt-cmake.patch
     CMakeBuild -build_path "build2"
     Write-Host "libopenmpt built successfully!" -ForegroundColor Green
   }
@@ -2037,10 +1970,9 @@ function Build-LibGME {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "libgme"
-    DownloadPatch -patch_name "libgme-pkgconf.patch"
     ExtractPackage "libgme-$libgme_version-src.tar.gz"
     Set-Location libgme-$libgme_version
-    & patch -p1 -N -i $downloads_path/libgme-pkgconf.patch
+    & patch -p1 -N -i $patch_path/libgme-pkgconf.patch
     CMakeBuild
     Remove-Item "$prefix_path/lib/gme-static.lib" -Force -ErrorAction SilentlyContinue
   }
@@ -2126,10 +2058,9 @@ function Build-LibBS2B {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "libbs2b"
-    DownloadPatch -patch_name "libbs2b-msvc.patch"
     ExtractPackage "libbs2b-$libbs2b_version.tar.bz2"
     Set-Location libbs2b-$libbs2b_version
-    & patch -p1 -N -i $downloads_path/libbs2b-msvc.patch
+    & patch -p1 -N -i $patch_path/libbs2b-msvc.patch
     CMakeBuild
   }
   finally {
@@ -2213,8 +2144,7 @@ function Build-GStreamer {
       Set-Location "gstreamer-$gstreamer_version"
     }
     # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/work_items/4989
-    DownloadPatch -patch_name "gstreamer-macros-restrict.patch"
-    & patch -p1 -N -i "$downloads_path/gstreamer-macros-restrict.patch"
+    & patch -p1 -N -i "$patch_path/gstreamer-macros-restrict.patch"
     MesonBuild `
       -additional_args @(
         "-Dexamples=disabled",
@@ -2487,10 +2417,9 @@ function Build-SparseHash {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "sparsehash"
-    DownloadPatch -patch_name "sparsehash-msvc.patch"
     ExtractPackage "sparsehash-$sparsehash_version.tar.gz"
     Set-Location "sparsehash-sparsehash-$sparsehash_version"
-    & patch -p1 -N -i "$downloads_path/sparsehash-msvc.patch"
+    & patch -p1 -N -i "$patch_path/sparsehash-msvc.patch"
     Copy-Item "src/google" "$prefix_path/include/" -Recurse -Force
     Copy-Item "src/sparsehash" "$prefix_path/include/" -Recurse -Force
     Copy-Item "src/windows/sparsehash/internal/sparseconfig.h" "$prefix_path/include/sparsehash/internal/" -Force

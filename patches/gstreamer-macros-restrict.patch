@@ -1,0 +1,17 @@
+diff --git a/gst/gstmacros.h b/gst/gstmacros.h
+index 4265724..12885fa 100644
+--- a/gst/gstmacros.h
++++ b/gst/gstmacros.h
+@@ -42,11 +42,9 @@ G_BEGIN_DECLS
+ #endif
+ 
+ /* MSVC defines 'restrict' as a keyword and not a define */
+-#if (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L) && !defined(restrict)
++#if (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L) && !defined(_MSC_VER) && !defined(restrict)
+ #  if defined(__GNUC__) && __GNUC__ >= 4
+ #    define restrict __restrict__
+-#  elif defined(_MSC_VER)
+-#    define restrict __restrict
+ #  else
+ #    define restrict
+ #  endif
