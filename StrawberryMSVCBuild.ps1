@@ -169,7 +169,6 @@ if ($arch -eq "x64" -or $arch -eq "x86_64" -or $arch -eq "amd64") {
   $boost_architecture="x86"
   $glib_networking_gnutls="enabled"
   $gst_twolame="enabled"
-  $gst_faac="enabled"
   $lame_machine="X64"
   $lame_msvcver="Win64"
 }
@@ -187,7 +186,6 @@ elseif ($arch -eq "arm64") {
   $boost_architecture="arm"
   $glib_networking_gnutls="disabled"
   $gst_twolame="disabled"
-  $gst_faac="disabled"
   $lame_machine="ARM64"
   $lame_msvcver="Win64"
 }
