@@ -469,7 +469,7 @@ function GetPackageUrls {
     'zlib' = "https://zlib.net/zlib-$zlib_version.tar.gz"
     'openssl' = "https://github.com/openssl/openssl/releases/download/openssl-$openssl_version/openssl-$openssl_version.tar.gz"
     'libpng' = "https://downloads.sourceforge.net/project/libpng/libpng16/$libpng_version/libpng-$libpng_version.tar.gz"
-    'libjpeg-turbo' = "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$libjpeg_version/libjpeg-turbo-$libjpeg_version.tar.gz"
+    'libjpeg-turbo' = "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$libjpeg_turbo_version/libjpeg-turbo-$libjpeg_turbo_version.tar.gz"
     'pcre2' = "https://github.com/PhilipHazel/pcre2/releases/download/pcre2-$pcre2_version/pcre2-$pcre2_version.tar.gz"
     'bzip2' = "https://sourceware.org/pub/bzip2/bzip2-$bzip2_version.tar.gz"
     'xz' = "https://downloads.sourceforge.net/project/lzmautils/xz-$xz_version.tar.gz"
@@ -1235,8 +1235,8 @@ function Build-LibJPEGTurbo {
   Push-Location $build_path
   try {
     DownloadPackage -package_name "libjpeg-turbo"
-    ExtractPackage "libjpeg-turbo-$libjpeg_version.tar.gz"
-    Set-Location "libjpeg-turbo-$libjpeg_version"
+    ExtractPackage "libjpeg-turbo-$libjpeg_turbo_version.tar.gz"
+    Set-Location "libjpeg-turbo-$libjpeg_turbo_version"
     CMakeBuild -additional_args @(
         "-DENABLE_SHARED=ON",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
