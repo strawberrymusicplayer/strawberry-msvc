@@ -950,6 +950,38 @@ Description: $description
   Set-Content -Path $output_file -Value $content -Encoding ASCII
 }
 
+function CreateLibFile() {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory=$true)]
+    [string]$name
+  )
+
+  $def = "${name}.def"
+  $dll = "${name}.dll"
+
+  # Create/overwrite the .def header
+  @(
+    "LIBRARY $dll"
+    "EXPORTS"
+  ) | Set-Content -Encoding ASCII $def
+
+  # Append exported symbol names from dumpbin output
+  dumpbin /exports $dll |
+    Select-Object -Skip 19 |
+    ForEach-Object {
+      # Split on whitespace; token 4 in cmd for/f == index 3 here
+      $parts = ($_ -split '\s+')
+      if ($parts.Length -ge 4) { $parts[3] }
+    } |
+    Where-Object { $_ } |
+    Add-Content -Encoding ASCII $def
+
+  # Build the import library from the .def
+  & lib /machine:x64 /def:$def
+
+}
+
 
 #region Build Functions
 
@@ -1904,15 +1936,20 @@ function Build-FFTW3 {
       New-Item -ItemType Directory -Path "fftw" -Force | Out-Null
     }
     Set-Location "fftw"
-    & 7z x "$downloads_path/fftw-$fftw_version-x64-$build_type.zip" -y
-    if ($LASTEXITCODE -ne 0) { throw "7z extraction failed" }
-    # Generate .lib file from .def
-    & lib /machine:x64 /def:libfftw3-3.def
-    if ($LASTEXITCODE -ne 0) { throw "lib.exe failed to create import library" }
-    Copy-Item "libfftw3-3.dll" "$prefix_path/bin/" -Force
-    Copy-Item "libfftw3-3.lib" "$prefix_path/lib/" -Force
-    Copy-Item "fftw3.h" "$prefix_path/include/" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "fftw3" -description "discrete Fourier transform (DFT)" -url "https://www.fftw.org/" -version $fftw_version -libs "-L`${libdir} -lfftw3-3" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/fftw3.pc"
+    try {
+      & 7z x "$downloads_path/fftw-$fftw_version-x64-$build_type.zip" -y
+      if ($LASTEXITCODE -ne 0) { throw "7z extraction failed" }
+      # Generate .lib file from .def
+      & lib /machine:x64 /def:libfftw3-3.def
+      if ($LASTEXITCODE -ne 0) { throw "lib.exe failed to create import library" }
+      Copy-Item "libfftw3-3.dll" "$prefix_path/bin/" -Force
+      Copy-Item "libfftw3-3.lib" "$prefix_path/lib/" -Force
+      Copy-Item "fftw3.h" "$prefix_path/include/" -Force
+      CreatePkgConfigFile -prefix $prefix_path -name "fftw3" -description "discrete Fourier transform (DFT)" -url "https://www.fftw.org/" -version $fftw_version -libs "-L`${libdir} -lfftw3-3" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/fftw3.pc"
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
