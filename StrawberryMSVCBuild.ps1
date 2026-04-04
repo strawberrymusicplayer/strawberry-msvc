@@ -155,25 +155,7 @@ switch ($arch_numeric_id) {
 $vs_host_arch = $vs_host_arch.ToLower()
 $arch = $arch.ToLower()
 
-if ($arch -eq "x86") {
-  $arch="x86"
-  $vs_arch="x86"
-  $openssl_platform="VC-WIN32"
-  $msbuild_platform="win32"
-  $arch_short="x86"
-  $arch_win="win32"
-  $arch_bits="32"
-  $libdir="lib"
-  $bindir="bin"
-  $libjpeg_turbo_simd="ON"
-  $boost_architecture="x86"
-  $glib_networking_gnutls="enabled"
-  $gst_twolame="enabled"
-  $gst_faac="enabled"
-  $lame_machine="X86"
-  $lame_msvcver="X86"
-}
-elseif ($arch -eq "x64" -or $arch -eq "x86_64" -or $arch -eq "amd64") {
+if ($arch -eq "x64" -or $arch -eq "x86_64" -or $arch -eq "amd64") {
   $arch="x86_64"
   $vs_arch="amd64"
   $openssl_platform="VC-WIN64A"
