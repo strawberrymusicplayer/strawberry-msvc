@@ -327,15 +327,14 @@ function Assert-Command {
 # Check for required tools
 Write-Host "Checking requirements..." -ForegroundColor Cyan
 
-$tool_checks = @(
-  @{ Command = "patch"; Paths = @("C:/Program Files/Git/usr/bin"); Message = "Missing patch" }
+$cmd_checks = @(
   @{ Command = "sed"; Paths = @("C:/Program Files/Git/usr/bin"); Message = "Missing sed" }
+  @{ Command = "patch"; Paths = @("C:/Program Files/Git/usr/bin"); Message = "Missing patch" }
   @{ Command = "nasm"; Paths = @("C:/Program Files/nasm"); Message = "Missing nasm. Download from https://www.nasm.us/" }
   @{ Command = "win_flex"; Paths = @("C:/win_flex_bison"); Message = "Missing win_flex. Download from https://sourceforge.net/projects/winflexbison/" }
   @{ Command = "win_bison"; Paths = @("C:/win_flex_bison"); Message = "Missing win_bison. Download from https://sourceforge.net/projects/winflexbison/" }
   @{ Command = "perl"; Paths = @("C:/Strawberry/perl/bin"); Message = "Missing perl. Download Strawberry Perl from https://strawberryperl.com/" }
   @{ Command = "python"; Paths = @("C:/Program Files/Python314", "C:/Program Files/Python313", "C:/Program Files/Python312", "C:/Program Files/Python311", "C:/Program Files/Python310"); Message = "Missing python. Download from https://www.python.org/" }
-  @{ Command = "tar"; Paths = @("C:/Program Files/Git/usr/bin"); Message = "Missing tar" }
   @{ Command = "bzip2"; Paths = @("C:/Program Files/Git/usr/bin"); Message = "Missing bzip2" }
   @{ Command = "7z"; Paths = @("C:/Program Files/7-Zip"); Message = "Missing 7z. Download 7-Zip from https://www.7-zip.org/download.html" }
   @{ Command = "cmake"; Paths = @("C:/Program Files/CMake/bin"); Message = "Missing cmake. Download from https://cmake.org/" }
@@ -343,27 +342,49 @@ $tool_checks = @(
   @{ Command = "nmake"; Paths = @(); Message = "Missing nmake. Install Visual Studio 2022 or 2026" }
 )
 
-foreach ($check in $tool_checks) {
-  if (-not (Test-Command $check.Command)) {
-    foreach ($path in $check.Paths) {
+foreach ($cmd_check in $cmd_checks) {
+  if (-not (Test-Command $cmd_check.Command)) {
+    foreach ($path in $cmd_check.Paths) {
       if (Test-Path $path) {
-        $cmd_path = "$path/${check.Command}"
+        $cmd_path = "$path/${cmd_check.Command}"
         if (Test-Path $cmd_path) {
           $env:PATH = "$env:PATH;$path"
           break
         }
       }
     }
-    if (-not (Test-Command $check.Command)) {
-      Write-Error $check.Message
+    if (-not (Test-Command $cmd_check.Command)) {
+      Write-Error $cmd_check.Message
       exit 1
     }
   }
-  Write-Host "  $($check.Command) found" -ForegroundColor Green
+  Write-Host "  $($cmd_check.Command) found" -ForegroundColor Green
+}
+
+# Check for GNU tar
+# bsdtar (libarchive) gets stuck when extracting tar.xz archives
+
+$tar_candidates = Get-Command tar -All -ErrorAction SilentlyContinue | Where-Object CommandType -eq Application | Select-Object -ExpandProperty Source -Unique
+$tar_results = foreach ($i in $tar_candidates) {
+  $out = & $i --version 2>&1 | Out-String
+  [pscustomobject]@{
+    Path       = $i
+    IsGnuTar   = ($out -match '^(?m)tar \(GNU tar\)')
+    IsBsdTar   = ($out -match '(?im)\bbsdtar\b')
+    VersionRaw = ($out -replace '\r','').Trim()
+  }
+}
+$tar_cmd_path = ($tar_results | Where-Object IsGnuTar | Select-Object -First 1 -ExpandProperty Path)
+if (-not $tar_cmd_path) {
+  Write-Host "No GNU tar found. Candidates and their banners:"
+  $tar_results | ForEach-Object { "{0}`n  {1}`n" -f $_.Path, ($_.VersionRaw -split "`n" | Select-Object -First 1) }
+  throw "GNU tar not found on PATH."
 }
 
 Write-Host ""
 Write-Host "All requirements satisfied!" -ForegroundColor Green
+Write-Host ""
+Write-Host "Using GNU tar from $tar_cmd_path"
 Write-Host ""
 
 function RecursiveCopy {
@@ -660,28 +681,11 @@ function ExtractPackage {
   }
   Write-Host "Extracting $package_file" -ForegroundColor Cyan
   $extension = [System.IO.Path]::GetExtension($package_file)
-  if ($extension -eq ".gz" -or $extension -eq ".tgz" -or $extension -eq ".bz2") {
-    & tar -xf "$downloads_path/$package_file"
+  if ($extension -eq ".gz" -or $extension -eq ".tgz" -or $extension -eq ".bz2" -or $extension -eq ".xz") {
+    & $tar_cmd_path -xf "$downloads_path/$package_file" --force-local
     if ($LASTEXITCODE -ne 0) {
       if (-not $ignore_errors) {
         throw "Failed to extract $package_file"
-      }
-    }
-  }
-  elseif ($extension -eq ".xz") {
-    $downloads_path_backslash = $downloads_path -replace '/', '\'
-    $package_file_backslash = $package_file -replace '/', '\'
-    & 7z x -aos "$downloads_path_backslash\$package_file_backslash" -o"$downloads_path_backslash" | Out-Default
-    if ($LASTEXITCODE -ne 0) {
-      if (-not $ignore_errors) {
-        throw "Failed to extract $package_file"
-      }
-    }
-    $package_file_base = $package_file_backslash -replace '\.[^.]+$', ''
-    & 7z x -aos "$downloads_path_backslash\$package_file_base" | Out-Default
-    if ($LASTEXITCODE -ne 0) {
-      if (-not $ignore_errors) {
-        throw "Failed to extract $package_file_base"
       }
     }
   }
