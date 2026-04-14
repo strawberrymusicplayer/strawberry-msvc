@@ -563,6 +563,7 @@ function GetPackageUrls {
 
 function GetGitRepoUrls {
   $git_repo_urls = @{
+    'glib-networking' = "https://gitlab.gnome.org/GNOME/glib-networking"
     'qtbase' = "https://code.qt.io/qt/qtbase"
     'qttools' = "https://code.qt.io/qt/qttools"
     'qtsparkle' = "https://github.com/strawberrymusicplayer/qtsparkle"
@@ -1591,16 +1592,20 @@ function Build-GlibNetworking {
   Write-Host "Building glib-networking" -ForegroundColor Yellow
   Push-Location $build_path
   try {
-    DownloadPackage -package_name "glib-networking"
-    ExtractPackage "glib-networking-$glib_networking_version.tar.xz"
-    Set-Location "glib-networking-$glib_networking_version"
+    #DownloadPackage -package_name "glib-networking"
+    #ExtractPackage "glib-networking-$glib_networking_version.tar.xz"
+    #Set-Location "glib-networking-$glib_networking_version"
+    CloneGitRepo -git_repo_name "glib-networking"
+    RecursiveCopy "$downloads_path/glib-networking" "glib-networking"
+    Set-Location "glib-networking"
     & patch -p1 -N -i $patch_path/glib-networking.patch
     MesonBuild `
       -additional_args @(
         "-Dgnutls=enabled",
         "-Dopenssl=enabled",
         "-Dgnome_proxy=disabled",
-        "-Dlibproxy=disabled"
+        "-Dlibproxy=disabled",
+        "-Dtests=false"
       )
   }
   finally {
