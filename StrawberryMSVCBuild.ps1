@@ -2528,6 +2528,7 @@ function Build-QtBase {
       ExtractPackage "qtbase-everywhere-src-$qt_version.tar.xz"
       Set-Location "qtbase-everywhere-src-$qt_version"
     }
+    & patch -p1 -N -i "$patch_path/qtbase-openssl4.patch" 2>&1 | Out-Null
     CMakeBuild -additional_args @(
         "-DQT_BUILD_EXAMPLES=OFF",
         "-DQT_BUILD_TESTS=OFF",
