@@ -524,8 +524,7 @@ function GetPackageUrls {
     'mpg123' = "https://downloads.sourceforge.net/project/mpg123/mpg123/$mpg123_version/mpg123-$mpg123_version.tar.bz2"
     'lame' = "https://downloads.sourceforge.net/project/lame/lame/$lame_version/lame-$lame_version.tar.gz"
     'twolame' = "https://downloads.sourceforge.net/twolame/twolame-$twolame_version.tar.gz"
-    'fftw-debug' = "https://files.strawberrymusicplayer.org/fftw-$fftw_version-x64-debug.zip"
-    'fftw-release' = "https://files.strawberrymusicplayer.org/fftw-$fftw_version-x64-release.zip"
+    'fftw' = "https://github.com/strawberrymusicplayer/fftw3-mingw-cross/releases/download/${fftw_version}/fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}.tar.xz"
     'musepack' = "https://files.musepack.net/source/musepack_src_r$musepack_version.tar.gz"
     'libopenmpt' = "https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-$libopenmpt_version+release.msvc.zip"
     'libgme' = "https://github.com/libgme/game-music-emu/releases/download/$libgme_version/libgme-$libgme_version-src.tar.gz"
@@ -1935,26 +1934,23 @@ function Build-FFTW3 {
   Write-Host "Building fftw3" -ForegroundColor Yellow
   Push-Location $build_path
   try {
-    $package_name = if ($build_type -eq "debug") { "fftw-debug" } else { "fftw-release" }
-    DownloadPackage -package_name $package_name
-    if (-not (Test-Path "fftw")) {
-      New-Item -ItemType Directory -Path "fftw" -Force | Out-Null
-    }
-    Set-Location "fftw"
+    # It's recommended to build FFTW3 with MinGW-W64 so we use a binary package built on GitHub
+    DownloadPackage -package_name "fftw"
+    ExtractPackage "fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}.tar.xz"
+    Push-Location "fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}/lib"
     try {
-      & 7z x "$downloads_path/fftw-$fftw_version-x64-$build_type.zip" -y
-      if ($LASTEXITCODE -ne 0) { throw "7z extraction failed" }
       # Generate .lib file from .def
       & lib /machine:x64 /def:libfftw3-3.def
       if ($LASTEXITCODE -ne 0) { throw "lib.exe failed to create import library" }
-      Copy-Item "libfftw3-3.dll" "$prefix_path/bin/" -Force
-      Copy-Item "libfftw3-3.lib" "$prefix_path/lib/" -Force
-      Copy-Item "fftw3.h" "$prefix_path/include/" -Force
-      CreatePkgConfigFile -prefix $prefix_path -name "fftw3" -description "discrete Fourier transform (DFT)" -url "https://www.fftw.org/" -version $fftw_version -libs "-L`${libdir} -lfftw3-3" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/fftw3.pc"
     }
     finally {
       Pop-Location
     }
+    RecursiveCopy "fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}" "$prefix_path"
+    & sed -i "s,^prefix=.*,prefix=${prefix_path},g" "$prefix_path/lib/pkgconfig/fftw3.pc"
+    & sed -i "s,^exec_prefix=.*,exec_prefix=${prefix_path},g" "$prefix_path/lib/pkgconfig/fftw3.pc"
+    & sed -i "s,^libdir=.*,libdir=${prefix_path}/lib,g" "$prefix_path/lib/pkgconfig/fftw3.pc"
+    & sed -i "s,^includedir=.*,includedir=${prefix_path}/include,g" "$prefix_path/lib/pkgconfig/fftw3.pc"
   }
   finally {
     Pop-Location
