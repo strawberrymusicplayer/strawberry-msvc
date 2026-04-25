@@ -1059,7 +1059,7 @@ function Build-ZLib {
     Set-Location "zlib-$zlib_version"
     CMakeBuild
     if ($build_type -eq "debug") {
-      (Get-Content $prefix_path/lib/pkgconfig/zlib.pc) -replace '-lz$', '-lzd' | Set-Content $prefix_path/lib/pkgconfig/zlib.pc
+      & sed -i 's/-lz$/-lzd/g' "$prefix_path/lib/z.lib"
       Copy-Item "$prefix_path/lib/zd.lib" "$prefix_path/lib/z.lib" -Force
     }
   }
@@ -1198,8 +1198,8 @@ function Build-GnuTLS {
 </Project>
 "@
     Set-Content -Path "$build_path/ShiftMediaProject/build/gnutls/SMP/inject_zlib.props" -Value $props_content
-    (Get-Content "libgnutls.vcxproj") -replace 'zlib.lib', "z${lib_postfix}.lib" | Set-Content "libgnutls.vcxproj"
-    (Get-Content "libgnutls.vcxproj") -replace 'zlibd.lib', "z${lib_postfix}.lib" | Set-Content "libgnutls.vcxproj"
+    & sed -i "s/zlib.lib/z${lib_postfix}.lib/g" "libgnutls.vcxproj"
+    & sed -i "s/zlibd.lib/z${lib_postfix}.lib/g" "libgnutls.vcxproj"
     if (-not (Test-Path "$build_path/ShiftMediaProject/build/gnutls/SMP/Backup/libgnutls.sln")) {
       UpgradeVSProject -project_path "libgnutls.sln"
     }
@@ -1215,7 +1215,7 @@ function Build-GnuTLS {
     Write-Host "Building static gnutls"
     & git clean -fd
     & git reset --hard HEAD
-    (Get-Content "project_get_dependencies.bat") -replace 'PAUSE', 'ECHO.' | Set-Content "project_get_dependencies.bat"
+    & sed -i 's/PAUSE/ECHO./g' "project_get_dependencies.bat"
     & "./project_get_dependencies.bat"
     if (-not (Test-Path "../../gmp/SMP/Backup/libgmp.vcxproj")) {
       UpgradeVSProject -project_path "../../gmp/SMP/libgmp.vcxproj"
@@ -1666,8 +1666,7 @@ function Build-Jasper {
   try {
     DownloadPackage -package_name "jasper"
     ExtractPackage "jasper-$jasper_version.tar.gz" -ignore_errors $true
-    Get-Content "jasper-$jasper_version/CMakeLists.txt" | Where-Object { $_ -notmatch '^\s*include\(InstallRequiredSystemLibraries\)\s*$' } | Set-Content "jasper-$jasper_version/CMakeLists.txt_"
-    Move-Item -Force "jasper-$jasper_version/CMakeLists.txt_" "jasper-$jasper_version/CMakeLists.txt"
+    & sed -i '/include(InstallRequiredSystemLibraries)/d' "CMakeLists.txt"
     CMakeBuild -source_path "jasper-$jasper_version" -build_path "jasper-$jasper_version-build" -additional_args @(
       "-DJAS_ENABLE_JP2_CODEC=ON",
       "-DJAS_ENABLE_JPC_CODEC=ON",
@@ -1811,8 +1810,7 @@ function Build-Opus {
     ExtractPackage "opus-$opus_version.tar.gz"
     Push-Location opus-$opus_version
     # Remove problematic line from CMakeLists.txt
-    $content = Get-Content "CMakeLists.txt" | Where-Object { $_ -notmatch "include\(opus_buildtype\.cmake\)" }
-    $content | Set-Content "CMakeLists.txt"
+    & sed -i '/include(opus_buildtype.cmake)/d' CMakeLists.txt
     CMakeBuild
     Write-Host "opus built successfully!" -ForegroundColor Green
   }
@@ -1884,7 +1882,7 @@ function Build-Lame {
     DownloadPackage -package_name "lame"
     ExtractPackage "lame-$lame_version.tar.gz"
     Push-Location lame-$lame_version
-    (Get-Content "Makefile.MSVC") -replace "MACHINE = /machine:.*", "MACHINE = /machine:${lame_machine}" | Set-Content "Makefile.MSVC"
+    & sed -i "s/MACHINE = \/machine:.*/MACHINE = \/machine:${lame_machine}/g" Makefile.MSVC
     & nmake -f Makefile.MSVC MSVCVER=${lame_msvcver} libmp3lame.dll
     if ($LASTEXITCODE -ne 0) { throw "nmake build failed" }
     New-Item -Path "$prefix_path/include/lame" -ItemType Directory -Force
@@ -1914,9 +1912,8 @@ function Build-Twolame {
       UpgradeVSProject "libtwolame_dll.sln"
     }
     Start-Sleep -Seconds 5
-    (Get-Content "libtwolame_dll.sln") -replace "Win32", "x64" | Set-Content "libtwolame_dll.sln"
-    (Get-Content "libtwolame_dll.vcxproj") -replace "Win32", "x64" | Set-Content "libtwolame_dll.vcxproj"
-    (Get-Content "libtwolame_dll.vcxproj") -replace "MachineX86", "MachineX64" | Set-Content "libtwolame_dll.vcxproj"
+    & sed -i 's/Win32/x64/g' *.sln *.vcproj *.vcxproj
+    & sed -i 's/MachineX86/MachineX64/g' *.sln *.vcxproj
     MSBuildProject -project_path "libtwolame_dll.sln" -configuration "$build_type"
     Copy-Item "../libtwolame/twolame.h" "$prefix_path/include/" -Force
     Copy-Item "lib/libtwolame_dll.lib" "$prefix_path/lib/" -Force
