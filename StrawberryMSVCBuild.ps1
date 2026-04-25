@@ -1940,7 +1940,10 @@ function Build-FFTW3 {
     Push-Location "fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}/lib"
     try {
       # Generate .lib file from .def
-      & lib /machine:x64 /def:libfftw3-3.def
+      if ((-not (Test-Path "fftw3.def")) && Test-Path "libfftw3-3.def") {
+        Copy-Item "libfftw3-3.def" "fftw3.def" -Force
+      }
+      & lib /machine:x64 /def:fftw3.def
       if ($LASTEXITCODE -ne 0) { throw "lib.exe failed to create import library" }
     }
     finally {
