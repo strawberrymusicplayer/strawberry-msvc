@@ -505,7 +505,7 @@ function GetPackageUrls {
     'orc' = "https://gstreamer.freedesktop.org/src/orc/orc-$orc_version.tar.xz"
     'sqlite' = "https://sqlite.org/2026/sqlite-autoconf-$sqlite_version.tar.gz"
     'libproxy' = "https://github.com/libproxy/libproxy/archive/refs/tags/$libproxy_version/libproxy-$libproxy_version.tar.gz"
-    'glib' = "https://download.gnome.org/sources/glib/2.88/glib-$glib_version.tar.xz"
+    'glib' = "https://download.gnome.org/sources/glib/2.89/glib-$glib_version.tar.xz"
     'libsoup' = "https://download.gnome.org/sources/libsoup/3.6/libsoup-$libsoup_version.tar.xz"
     'glib-networking' = "https://download.gnome.org/sources/glib-networking/2.80/glib-networking-$glib_networking_version.tar.xz"
     'freetype' = "https://sourceforge.net/projects/freetype/files/freetype2/$freetype_version/freetype-$freetype_version.tar.gz"
@@ -2184,8 +2184,6 @@ function Build-GStreamer {
       ExtractPackage "gstreamer-$gstreamer_version.tar.xz"
       Set-Location "gstreamer-$gstreamer_version"
     }
-    # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/work_items/4989
-    & patch -p1 -N -i "$patch_path/gstreamer-macros-restrict.patch"
     MesonBuild `
       -additional_args @(
         "-Dexamples=disabled",
