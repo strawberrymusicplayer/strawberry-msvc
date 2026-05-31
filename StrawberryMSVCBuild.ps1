@@ -168,7 +168,6 @@ if ($arch -eq "x64" -or $arch -eq "x86_64" -or $arch -eq "amd64") {
   $bindir="bin64"
   $libjpeg_turbo_simd="ON"
   $boost_architecture="x86"
-  $glib_networking_gnutls="enabled"
   $gst_twolame="enabled"
   $lame_machine="X64"
   $lame_msvcver="Win64"
@@ -185,7 +184,6 @@ elseif ($arch -eq "arm64") {
   $bindir="binARM64"
   $libjpeg_turbo_simd="OFF"
   $boost_architecture="arm"
-  $glib_networking_gnutls="disabled"
   $gst_twolame="disabled"
   $lame_machine="ARM64"
   $lame_msvcver="Win64"
@@ -572,10 +570,6 @@ function GetGitRepoUrls {
     'gst-plugins-rs' = "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs"
     'tinysvcmdns' = "https://github.com/Pro/tinysvcmdns"
     'yasm' = "https://github.com/yasm/yasm"
-    'vsyasm' = "https://github.com/ShiftMediaProject/VSYASM"
-    'gmp' = "https://github.com/ShiftMediaProject/gmp"
-    'nettle' = "https://github.com/ShiftMediaProject/nettle"
-    'gnutls' = "https://github.com/ShiftMediaProject/gnutls"
     'pe-util' = "https://github.com/gsauthof/pe-util"
     'strawberry' = "https://github.com/strawberrymusicplayer/strawberry"
   }
@@ -1094,158 +1088,6 @@ function Build-OpenSSL {
   }
 }
 
-function Build-GMP {
-  Write-Host "Building gmp" -ForegroundColor Yellow
-  Push-Location $build_path
-  try {
-    CloneGitRepo -git_repo_name "gmp"
-    $smp_build_path = "$build_path/ShiftMediaProject/build"
-    if (-not (Test-Path $smp_build_path)) {
-      New-Item -ItemType Directory -Path $smp_build_path -Force | Out-Null
-    }
-    Set-Location $smp_build_path
-    if (-not (Test-Path "gmp")) {
-      RecursiveCopy "$downloads_path/gmp" "gmp"
-      Set-Location "gmp"
-      & git checkout $gmp_version
-      Set-Location ..
-    }
-    Set-Location "gmp/SMP"
-    if (-not (Test-Path "Backup/libgmp.vcxproj")) {
-      UpgradeVSProject -project_path "$smp_build_path/gmp/SMP/libgmp.vcxproj"
-    }
-    MSBuildProject -project_path "$smp_build_path/gmp/SMP/libgmp.vcxproj" -configuration "${cmake_build_type}DLL"
-    Copy-Item "../../../msvc/lib/${arch_short}/gmp$lib_postfix.lib" "$prefix_path/lib/" -Force
-    Copy-Item "../../../msvc/bin/${arch_short}/gmp$lib_postfix.dll" "$prefix_path/bin/" -Force
-    Copy-Item "../../../msvc/include/gmp*.h" "$prefix_path/include/" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "gmp" -description "gmp" -url "https://gmplib.org/" -version $gmp_version -libs "-L`${libdir} -lgmp$lib_postfix" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/gmp.pc"
-  }
-  finally {
-    Pop-Location
-  }
-}
-
-function Build-Nettle {
-  Write-Host "Building nettle" -ForegroundColor Yellow
-  Push-Location $build_path
-  try {
-    CloneGitRepo -git_repo_name "nettle"
-    $smp_build_path = "$build_path/ShiftMediaProject/build"
-    if (-not (Test-Path $smp_build_path)) {
-      New-Item -ItemType Directory -Path $smp_build_path -Force | Out-Null
-    }
-    Set-Location $smp_build_path
-    if (-not (Test-Path "nettle")) {
-      RecursiveCopy "$downloads_path/nettle" "nettle"
-      Set-Location "nettle"
-      & git checkout "nettle_$nettle_version"
-      Set-Location ..
-    }
-    Set-Location "nettle/SMP"
-    if (-not (Test-Path "Backup/libnettle.vcxproj")) {
-      UpgradeVSProject -project_path "libnettle.vcxproj"
-    }
-    MSBuildProject -project_path "libnettle.vcxproj" -configuration "${cmake_build_type}DLL"
-    Copy-Item "../../../msvc/lib/${arch_short}/nettle$lib_postfix.lib" "$prefix_path/lib/" -Force
-    Copy-Item "../../../msvc/bin/${arch_short}/nettle$lib_postfix.dll" "$prefix_path/bin/" -Force
-    if (-not (Test-Path "$prefix_path/include/nettle")) {
-      New-Item -ItemType Directory -Path "$prefix_path/include/nettle" -Force | Out-Null
-    }
-    Copy-Item "../../../msvc/include/nettle" "$prefix_path/include/" -Force
-    if (-not (Test-Path "Backup/libhogweed.vcxproj")) {
-      UpgradeVSProject -project_path "libhogweed.vcxproj"
-    }
-    MSBuildProject -project_path "libhogweed.vcxproj" -configuration "${cmake_build_type}DLL"
-    Copy-Item "../../../msvc/lib/${arch_short}/hogweed$lib_postfix.lib" "$prefix_path/lib/" -Force
-    Copy-Item "../../../msvc/bin/${arch_short}/hogweed$lib_postfix.dll" "$prefix_path/bin/" -Force
-    Copy-Item "../../../msvc/include/nettle/*.h" "$prefix_path/include/nettle/" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "nettle" -description "nettle" -url "https://www.lysator.liu.se/~nisse/nettle/" -version $nettle_version -libs "-L`${libdir} -lnettle${lib_postfix}" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/nettle.pc"
-    CreatePkgConfigFile -prefix $prefix_path -name "hogweed" -description "hogweed" -url "https://www.lysator.liu.se/~nisse/nettle/" -version $nettle_version -libs "-L`${libdir} -lhogweed${lib_postfix}" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/hogweed.pc"
-  }
-  finally {
-    Pop-Location
-  }
-}
-
-function Build-GnuTLS {
-  Write-Host "Building gnutls" -ForegroundColor Yellow
-  Push-Location $build_path
-  try {
-    CloneGitRepo -git_repo_name "gnutls"
-    $smp_build_path = "$build_path/ShiftMediaProject/build"
-    if (-not (Test-Path $smp_build_path)) {
-      New-Item -ItemType Directory -Path $smp_build_path -Force | Out-Null
-    }
-    Set-Location $smp_build_path
-    if (-not (Test-Path "gnutls")) {
-      RecursiveCopy "$downloads_path/gnutls" "gnutls"
-      Set-Location "gnutls"
-      & git checkout $gnutls_version
-      Set-Location ..
-    }
-    Set-Location "gnutls/SMP"
-    # Create inject_zlib.props
-    $props_content = @"
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemDefinitionGroup>
-  <ClCompile>
-      <AdditionalIncludeDirectories>$prefix_path/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-  </ClCompile>
-  <Link>
-      <AdditionalLibraryDirectories>$prefix_path/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-  </Link>
-  </ItemDefinitionGroup>
-</Project>
-"@
-    Set-Content -Path "$build_path/ShiftMediaProject/build/gnutls/SMP/inject_zlib.props" -Value $props_content
-    & sed -i "s/zlib.lib/z${lib_postfix}.lib/g" "libgnutls.vcxproj"
-    & sed -i "s/zlibd.lib/z${lib_postfix}.lib/g" "libgnutls.vcxproj"
-    if (-not (Test-Path "$build_path/ShiftMediaProject/build/gnutls/SMP/Backup/libgnutls.sln")) {
-      UpgradeVSProject -project_path "libgnutls.sln"
-    }
-    Write-Host "Building shared gnutls"
-    MSBuildProject -project_path "libgnutls.sln" -configuration "${cmake_build_type}DLL" -additional_args @("/p:ForceImportBeforeCppTargets=$build_path/ShiftMediaProject/build/gnutls/SMP/inject_zlib.props")
-    Copy-Item "../../../msvc/lib/${arch_short}/gnutls${lib_postfix}.lib" "$prefix_path/lib/" -Force
-    Copy-Item "../../../msvc/bin/${arch_short}/gnutls${lib_postfix}.dll" "$prefix_path/bin/" -Force
-    if (-not (Test-Path "$prefix_path/include/gnutls")) {
-      New-Item -ItemType Directory -Path "$prefix_path/include/gnutls" -Force | Out-Null
-    }
-    Copy-Item "../../../msvc/include/gnutls/*.h" "$prefix_path/include/gnutls/" -Force
-    # Workaround: Build static deps version
-    Write-Host "Building static gnutls"
-    & git clean -fd
-    & git reset --hard HEAD
-    & sed -i 's/PAUSE/ECHO./g' "project_get_dependencies.bat"
-    & "./project_get_dependencies.bat"
-    if (-not (Test-Path "../../gmp/SMP/Backup/libgmp.vcxproj")) {
-      UpgradeVSProject -project_path "../../gmp/SMP/libgmp.vcxproj"
-    }
-    if (-not (Test-Path "../../zlib/SMP/Backup/libzlib.vcxproj")) {
-      UpgradeVSProject -project_path "../../zlib/SMP/libzlib.vcxproj"
-    }
-    if (-not (Test-Path "../../nettle/SMP/Backup/libnettle.vcxproj")) {
-      UpgradeVSProject -project_path "../../nettle/SMP/libnettle.vcxproj"
-    }
-    if (-not (Test-Path "../../nettle/SMP/Backup/libhogweed.vcxproj")) {
-      UpgradeVSProject -project_path "../../nettle/SMP/libhogweed.vcxproj"
-    }
-    UpgradeVSProject -project_path "libgnutls.vcxproj"
-    MSBuildProject -project_path "../../gmp/SMP/libgmp.vcxproj" -configuration "Release"
-    MSBuildProject -project_path "../../zlib/SMP/libzlib.vcxproj" -configuration "Release"
-    MSBuildProject -project_path "../../nettle/SMP/libnettle.vcxproj" -configuration "Release"
-    MSBuildProject -project_path "../../nettle/SMP/libhogweed.vcxproj" -configuration "Release"
-    MSBuildProject -project_path "libgnutls.vcxproj" -configuration "ReleaseDLLStaticDeps"
-    Remove-Item "$prefix_path/lib/gnutls$lib_postfix.lib" -Force -ErrorAction SilentlyContinue
-    Remove-Item "$prefix_path/bin/gnutls$lib_postfix.dll" -Force -ErrorAction SilentlyContinue
-    Copy-Item "../../../msvc/lib/${arch_short}/gnutls.lib" "$prefix_path/lib/" -Force
-    Copy-Item "../../../msvc/bin/${arch_short}/gnutls.dll" "$prefix_path/bin/" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "gnutls" -description "gnutls" -url "https://www.gnutls.org/" -version $gnutls_version -libs "-L`${libdir} -lgnutls" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/gnutls.pc"
-  }
-  finally {
-    Pop-Location
-  }
-}
-
 function Build-LibPNG {
   Write-Host "Building libpng" -ForegroundColor Yellow
   Push-Location $build_path
@@ -1600,7 +1442,7 @@ function Build-GlibNetworking {
     & patch -p1 -N -i $patch_path/glib-networking.patch
     MesonBuild `
       -additional_args @(
-        "-Dgnutls=enabled",
+        "-Dgnutls=disabled",
         "-Dopenssl=enabled",
         "-Dgnome_proxy=disabled",
         "-Dlibproxy=disabled",
@@ -2821,9 +2663,6 @@ try {
   if (-not (Test-Path "$prefix_path/lib/getopt.lib")) { $build_queue += "getopt-win" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/zlib.pc")) { $build_queue += "zlib" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/openssl.pc")) { $build_queue += "openssl" }
-  if (-not (Test-Path "$prefix_path/lib/pkgconfig/gmp.pc")) { $build_queue += "gmp" }
-  if (-not (Test-Path "$prefix_path/lib/pkgconfig/nettle.pc")) { $build_queue += "nettle" }
-  if (-not (Test-Path "$prefix_path/lib/pkgconfig/gnutls.pc")) { $build_queue += "gnutls" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libpng.pc")) { $build_queue += "libpng" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libjpeg.pc")) { $build_queue += "libjpeg-turbo" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libpcre2-16.pc")) { $build_queue += "pcre2" }
@@ -2917,9 +2756,6 @@ try {
       "getopt-win" { Build-GetOptWin }
       "zlib" { Build-Zlib }
       "openssl" { Build-OpenSSL }
-      "gmp" { Build-GMP }
-      "nettle" { Build-Nettle }
-      "gnutls" { Build-GnuTLS }
       "libpng" { Build-LibPNG }
       "libjpeg-turbo" { Build-LibJPEGTurbo }
       "pcre2" { Build-PCRE2 }
