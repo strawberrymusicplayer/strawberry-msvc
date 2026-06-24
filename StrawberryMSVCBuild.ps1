@@ -1964,7 +1964,7 @@ function Build-Twolame {
         Start-Sleep -Seconds 5
         & sed -i "s/Win32/$vs_platform/g" *.sln *.vcproj *.vcxproj
         & sed -i "s/MachineX86/Machine$lib_machine/g" *.sln *.vcxproj
-        MSBuildProject -project_path "libtwolame_dll.sln" -configuration "${build_type}DLL"
+        MSBuildProject -project_path "libtwolame_dll.sln" -configuration "${build_type}"
         Copy-Item "../libtwolame/twolame.h" "$prefix_path/include/" -Force
         Copy-Item "lib/libtwolame_dll.lib" "$prefix_path/lib/" -Force
         Copy-Item "lib/*.dll" "$prefix_path/bin/" -Force
