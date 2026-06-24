@@ -166,6 +166,8 @@ if ($arch -eq "x64" -or $arch -eq "x86_64" -or $arch -eq "amd64") {
   $arch_bits="64"
   $libdir="lib64"
   $bindir="bin64"
+  $lib_machine="x64"
+  $vs_platform="x64"
   $libjpeg_turbo_simd="ON"
   $boost_architecture="x86"
   $gst_twolame="enabled"
@@ -182,6 +184,8 @@ elseif ($arch -eq "arm64") {
   $arch_bits="64"
   $libdir="libARM64"
   $bindir="binARM64"
+  $lib_machine="ARM64"
+  $vs_platform="ARM64"
   $libjpeg_turbo_simd="OFF"
   $boost_architecture="arm"
   $gst_twolame="disabled"
@@ -522,7 +526,7 @@ function GetPackageUrls {
     'mpg123' = "https://downloads.sourceforge.net/project/mpg123/mpg123/$mpg123_version/mpg123-$mpg123_version.tar.bz2"
     'lame' = "https://downloads.sourceforge.net/project/lame/lame/$lame_version/lame-$lame_version.tar.gz"
     'twolame' = "https://downloads.sourceforge.net/twolame/twolame-$twolame_version.tar.gz"
-    'fftw' = "https://github.com/strawberrymusicplayer/fftw3-mingw-cross/releases/download/${fftw_version}/fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}.tar.xz"
+    'fftw' = "https://github.com/strawberrymusicplayer/fftw3-mingw-cross/releases/download/${fftw_version}/fftw-${arch}-w64-mingw32-${build_type}-${fftw_version}.tar.xz"
     'musepack' = "https://files.musepack.net/source/musepack_src_r$musepack_version.tar.gz"
     'libopenmpt' = "https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-$libopenmpt_version+release.msvc.zip"
     'libgme' = "https://github.com/libgme/game-music-emu/releases/download/$libgme_version/libgme-$libgme_version-src.tar.gz"
@@ -972,7 +976,7 @@ function CreateLibFile() {
     Add-Content -Encoding ASCII $def
 
   # Build the import library from the .def
-  & lib /machine:x64 /def:$def
+  & lib /machine:$lib_machine /def:$def
 
 }
 
@@ -1510,7 +1514,7 @@ function Build-Jasper {
   try {
     DownloadPackage -package_name "jasper"
     ExtractPackage "jasper-$jasper_version.tar.gz" -ignore_errors $true
-    & sed -i '/include(InstallRequiredSystemLibraries)/d' "CMakeLists.txt"
+    & sed -i '/include(InstallRequiredSystemLibraries)/d' "jasper-$jasper_version/CMakeLists.txt"
     CMakeBuild -source_path "jasper-$jasper_version" -build_path "jasper-$jasper_version-build" -additional_args @(
       "-DJAS_ENABLE_JP2_CODEC=ON",
       "-DJAS_ENABLE_JPC_CODEC=ON",
@@ -1756,9 +1760,9 @@ function Build-Twolame {
       UpgradeVSProject "libtwolame_dll.sln"
     }
     Start-Sleep -Seconds 5
-    & sed -i 's/Win32/x64/g' *.sln *.vcproj *.vcxproj
-    & sed -i 's/MachineX86/MachineX64/g' *.sln *.vcxproj
-    MSBuildProject -project_path "libtwolame_dll.sln" -configuration "$build_type"
+    & sed -i "s/Win32/$vs_platform/g" *.sln *.vcproj *.vcxproj
+    & sed -i "s/MachineX86/Machine$lib_machine/g" *.sln *.vcxproj
+    MSBuildProject -project_path "libtwolame_dll.sln" -configuration "${build_type}DLL"
     Copy-Item "../libtwolame/twolame.h" "$prefix_path/include/" -Force
     Copy-Item "lib/libtwolame_dll.lib" "$prefix_path/lib/" -Force
     Copy-Item "lib/*.dll" "$prefix_path/bin/" -Force
@@ -1777,20 +1781,20 @@ function Build-FFTW3 {
   try {
     # It's recommended to build FFTW3 with MinGW-W64 so we use a binary package built on GitHub
     DownloadPackage -package_name "fftw"
-    ExtractPackage "fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}.tar.xz"
-    Push-Location "fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}/lib"
+    ExtractPackage "fftw-${arch}-w64-mingw32-${build_type}-${fftw_version}.tar.xz"
+    Push-Location "fftw-${arch}-w64-mingw32-${build_type}-${fftw_version}/lib"
     try {
       # Generate .lib file from .def
       if ((-not (Test-Path "fftw3.def")) && Test-Path "libfftw3-3.def") {
         Copy-Item "libfftw3-3.def" "fftw3.def" -Force
       }
-      & lib /machine:x64 /def:fftw3.def
+      & lib /machine:$lib_machine /def:fftw3.def
       if ($LASTEXITCODE -ne 0) { throw "lib.exe failed to create import library" }
     }
     finally {
       Pop-Location
     }
-    RecursiveCopy "fftw-x86_64-w64-mingw32-${build_type}-${fftw_version}" "$prefix_path"
+    RecursiveCopy "fftw-${arch}-w64-mingw32-${build_type}-${fftw_version}" "$prefix_path"
     & sed -i "s,^prefix=.*,prefix=${prefix_path},g" "$prefix_path/lib/pkgconfig/fftw3.pc"
     & sed -i "s,^exec_prefix=.*,exec_prefix=${prefix_path},g" "$prefix_path/lib/pkgconfig/fftw3.pc"
     & sed -i "s,^libdir=.*,libdir=${prefix_path}/lib,g" "$prefix_path/lib/pkgconfig/fftw3.pc"
