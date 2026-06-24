@@ -991,7 +991,7 @@ function Build-PkgConf {
     ExtractPackage "pkgconf-$pkgconf_version.tar.gz"
     Push-Location "pkgconf-pkgconf-$pkgconf_version"
     try {
-      MesonBuild -additional_args @("-Dtests=disabled")
+      MesonBuild
       Copy-Item "$prefix_path/bin/pkgconf.exe" "$prefix_path/bin/pkg-config.exe" -Force
     }
     finally {
