@@ -989,9 +989,14 @@ function Build-PkgConf {
   try {
     DownloadPackage -package_name "pkgconf"
     ExtractPackage "pkgconf-$pkgconf_version.tar.gz"
-    Set-Location "pkgconf-pkgconf-$pkgconf_version"
-    MesonBuild -additional_args @("-Dtests=disabled")
-    Copy-Item "$prefix_path/bin/pkgconf.exe" "$prefix_path/bin/pkg-config.exe" -Force
+    Push-Location "pkgconf-pkgconf-$pkgconf_version"
+    try {
+      MesonBuild -additional_args @("-Dtests=disabled")
+      Copy-Item "$prefix_path/bin/pkgconf.exe" "$prefix_path/bin/pkg-config.exe" -Force
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1006,9 +1011,14 @@ function Build-Yasm {
     if (-not (Test-Path "yasm")) {
       RecursiveCopy "$downloads_path/yasm" "$build_path/yasm"
     }
-    Set-Location "yasm"
-    & patch -p1 -N -i "$patch_path/yasm-cmake.patch" 2>&1 | Out-Null
-    CMakeBuild
+    Push-Location "yasm"
+    try {
+      & patch -p1 -N -i "$patch_path/yasm-cmake.patch" 2>&1 | Out-Null
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1021,9 +1031,14 @@ function Build-ProxyIntl {
   try {
     DownloadPackage -package_name "proxy-libintl"
     ExtractPackage "proxy-libintl-$proxy_libintl_version.tar.gz" -ignore_errors $true
-    Set-Location "proxy-libintl-$proxy_libintl_version"
-    MesonBuild
-    CreatePkgConfigFile -prefix $prefix_path -name "libintl" -description "libintl" -url "https://github.com/frida/proxy-libintl" -version $proxy_libintl_version -libs "-L`${libdir} -lintl" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/intl.pc"
+    Push-Location "proxy-libintl-$proxy_libintl_version"
+    try {
+      MesonBuild
+      CreatePkgConfigFile -prefix $prefix_path -name "libintl" -description "libintl" -url "https://github.com/frida/proxy-libintl" -version $proxy_libintl_version -libs "-L`${libdir} -lintl" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/intl.pc"
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1036,12 +1051,17 @@ function Build-GetOptWin {
   try {
     DownloadPackage -package_name "getopt-win"
     ExtractPackage "getopt-win-$getopt_win_version.tar.gz"
-    Set-Location "getopt-win-$getopt_win_version"
-    CMakeBuild -additional_args @(
-        "-DBUILD_SHARED_LIB=ON",
-        "-DBUILD_STATIC_LIB=OFF",
-        "-DBUILD_TESTING=OFF"
-      )
+    Push-Location "getopt-win-$getopt_win_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DBUILD_SHARED_LIB=ON",
+          "-DBUILD_STATIC_LIB=OFF",
+          "-DBUILD_TESTING=OFF"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1054,11 +1074,16 @@ function Build-ZLib {
   try {
     DownloadPackage -package_name "zlib"
     ExtractPackage "zlib-$zlib_version.tar.gz"
-    Set-Location "zlib-$zlib_version"
-    CMakeBuild
-    if ($build_type -eq "debug") {
-      & sed -i 's/-lz$/-lzd/g' "$prefix_path/lib/pkgconfig/zlib.pc"
-      Copy-Item "$prefix_path/lib/zd.lib" "$prefix_path/lib/z.lib" -Force
+    Push-Location "zlib-$zlib_version"
+    try {
+      CMakeBuild
+      if ($build_type -eq "debug") {
+        & sed -i 's/-lz$/-lzd/g' "$prefix_path/lib/pkgconfig/zlib.pc"
+        Copy-Item "$prefix_path/lib/zd.lib" "$prefix_path/lib/z.lib" -Force
+      }
+    }
+    finally {
+      Pop-Location
     }
   }
   finally {
@@ -1074,18 +1099,23 @@ function Build-OpenSSL {
     PrependPathToEnvPath -path 'C:\Strawberry\perl\site\bin'
     DownloadPackage -package_name "openssl"
     ExtractPackage "openssl-$openssl_version.tar.gz"
-    Set-Location "openssl-$openssl_version"
-    $is_debug = $build_type -eq "debug"
-    $build_flag = if ($is_debug) { "--debug" } else { "--release" }
-    & perl Configure $openssl_platform shared zlib no-capieng no-tests --prefix="$prefix_path" --libdir=lib --openssldir="$prefix_path/ssl" $build_flag --with-zlib-include="$prefix_path/include" --with-zlib-lib="$prefix_path/lib/z${lib_postfix}.lib"
-    if ($LASTEXITCODE -ne 0) { throw "OpenSSL configure failed" }
-    & nmake
-    if ($LASTEXITCODE -ne 0) { throw "OpenSSL build failed" }
-    & nmake install_sw
-    if ($LASTEXITCODE -ne 0) { throw "OpenSSL install failed" }
-    Copy-Item "$prefix_path/lib/libssl.lib" "$prefix_path/lib/ssl.lib" -Force
-    Copy-Item "$prefix_path/lib/libcrypto.lib" "$prefix_path/lib/crypto.lib" -Force
-    Copy-Item "exporters/*.pc" "$prefix_path/lib/pkgconfig" -Force
+    Push-Location "openssl-$openssl_version"
+    try {
+      $is_debug = $build_type -eq "debug"
+      $build_flag = if ($is_debug) { "--debug" } else { "--release" }
+      & perl Configure $openssl_platform shared zlib no-capieng no-tests --prefix="$prefix_path" --libdir=lib --openssldir="$prefix_path/ssl" $build_flag --with-zlib-include="$prefix_path/include" --with-zlib-lib="$prefix_path/lib/z${lib_postfix}.lib"
+      if ($LASTEXITCODE -ne 0) { throw "OpenSSL configure failed" }
+      & nmake
+      if ($LASTEXITCODE -ne 0) { throw "OpenSSL build failed" }
+      & nmake install_sw
+      if ($LASTEXITCODE -ne 0) { throw "OpenSSL install failed" }
+      Copy-Item "$prefix_path/lib/libssl.lib" "$prefix_path/lib/ssl.lib" -Force
+      Copy-Item "$prefix_path/lib/libcrypto.lib" "$prefix_path/lib/crypto.lib" -Force
+      Copy-Item "exporters/*.pc" "$prefix_path/lib/pkgconfig" -Force
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1098,12 +1128,17 @@ function Build-LibPNG {
   try {
     DownloadPackage -package_name "libpng"
     ExtractPackage "libpng-$libpng_version.tar.gz"
-    Set-Location "libpng-$libpng_version"
-    & patch -p1 -N -i "$patch_path/libpng-pkgconf.patch" 2>&1 | Out-Null
-    CMakeBuild
-    Remove-Item "$prefix_path/lib/libpng16_static${lib_postfix}.lib" -Force -ErrorAction SilentlyContinue
-    if ($build_type -eq "debug") {
-      Copy-Item "$prefix_path/lib/libpng16d.lib" "$prefix_path/lib/png16.lib" -Force
+    Push-Location "libpng-$libpng_version"
+    try {
+      & patch -p1 -N -i "$patch_path/libpng-pkgconf.patch" 2>&1 | Out-Null
+      CMakeBuild
+      Remove-Item "$prefix_path/lib/libpng16_static${lib_postfix}.lib" -Force -ErrorAction SilentlyContinue
+      if ($build_type -eq "debug") {
+        Copy-Item "$prefix_path/lib/libpng16d.lib" "$prefix_path/lib/png16.lib" -Force
+      }
+    }
+    finally {
+      Pop-Location
     }
   }
   finally {
@@ -1117,13 +1152,18 @@ function Build-LibJPEGTurbo {
   try {
     DownloadPackage -package_name "libjpeg-turbo"
     ExtractPackage "libjpeg-turbo-$libjpeg_turbo_version.tar.gz"
-    Set-Location "libjpeg-turbo-$libjpeg_turbo_version"
-    CMakeBuild -additional_args @(
-        "-DENABLE_SHARED=ON",
-        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-      )
-    Remove-Item "$prefix_path/lib/jpeg-static.lib" -Force -ErrorAction SilentlyContinue
-    Remove-Item "$prefix_path/lib/turbojpeg-static.lib" -Force -ErrorAction SilentlyContinue
+    Push-Location "libjpeg-turbo-$libjpeg_turbo_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DENABLE_SHARED=ON",
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        )
+      Remove-Item "$prefix_path/lib/jpeg-static.lib" -Force -ErrorAction SilentlyContinue
+      Remove-Item "$prefix_path/lib/turbojpeg-static.lib" -Force -ErrorAction SilentlyContinue
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1136,14 +1176,19 @@ function Build-PCRE2 {
   try {
     DownloadPackage -package_name "pcre2"
     ExtractPackage "pcre2-$pcre2_version.tar.gz"
-    Set-Location "pcre2-$pcre2_version"
-    CMakeBuild -additional_args @(
-        "-DPCRE2_BUILD_PCRE2_16=ON",
-        "-DPCRE2_BUILD_PCRE2_32=ON",
-        "-DPCRE2_BUILD_PCRE2_8=ON",
-        "-DPCRE2_BUILD_TESTS=OFF",
-        "-DPCRE2_SUPPORT_UNICODE=ON"
-      )
+    Push-Location "pcre2-$pcre2_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DPCRE2_BUILD_PCRE2_16=ON",
+          "-DPCRE2_BUILD_PCRE2_32=ON",
+          "-DPCRE2_BUILD_PCRE2_8=ON",
+          "-DPCRE2_BUILD_TESTS=OFF",
+          "-DPCRE2_SUPPORT_UNICODE=ON"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1156,9 +1201,14 @@ function Build-BZip2 {
   try {
     DownloadPackage -package_name "bzip2"
     ExtractPackage "bzip2-$bzip2_version.tar.gz"
-    Set-Location "bzip2-$bzip2_version"
-    & patch -p1 -N -i "$patch_path/bzip2-cmake.patch" 2>&1 | Out-Null
-    CMakeBuild -build_path "build2" -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
+    Push-Location "bzip2-$bzip2_version"
+    try {
+      & patch -p1 -N -i "$patch_path/bzip2-cmake.patch" 2>&1 | Out-Null
+      CMakeBuild -build_path "build2" -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1171,11 +1221,16 @@ function Build-XZ {
   try {
     DownloadPackage -package_name "xz"
     ExtractPackage "xz-$xz_version.tar.gz"
-    Set-Location "xz-$xz_version"
-    CMakeBuild -additional_args @(
-        "-DBUILD_TESTING=OFF",
-        "-DXZ_NLS=OFF"
-      )
+    Push-Location "xz-$xz_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DBUILD_TESTING=OFF",
+          "-DXZ_NLS=OFF"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1188,8 +1243,13 @@ function Build-Brotli {
   try {
     DownloadPackage -package_name "brotli"
     ExtractPackage "brotli-$brotli_version.tar.gz"
-    Set-Location "brotli-$brotli_version"
-    CMakeBuild -build_path "build2" -additional_args @("-DBUILD_TESTING=OFF")
+    Push-Location "brotli-$brotli_version"
+    try {
+      CMakeBuild -build_path "build2" -additional_args @("-DBUILD_TESTING=OFF")
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1202,18 +1262,28 @@ function Build-ICU4C {
   try {
     DownloadPackage -package_name "icu4c"
     ExtractPackage "icu4c-$icu4c_version-sources.tgz" "icu"
-    Set-Location "icu/source/allinone"
-    MSBuildProject -project_path "allinone.sln" -configuration "$build_type" -additional_args @("-p:SkipUWP=true")
-    Set-Location "../../"
-    if (-not (Test-Path "include")) {
-      throw "Missing icu4c include dir"
+    Push-Location "icu/source/allinone"
+    try {
+      MSBuildProject -project_path "allinone.sln" -configuration "$build_type" -additional_args @("-p:SkipUWP=true")
     }
-    Copy-Item "include/unicode" "$prefix_path/include/" -Recurse -Force
-    Copy-Item "$libdir/*.*" "$prefix_path/lib/" -Force
-    Copy-Item "$bindir/*.*" "$prefix_path/bin/" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "icu-uc" -description "International Components for Unicode: Common and Data libraries" -version $icu4c_version -libs "-L`${libdir} -licuuc$lib_postfix -licudt" -libs_private "-lpthread -lm" -output_file "$prefix_path/lib/pkgconfig/icu-uc.pc"
-    CreatePkgConfigFile -prefix $prefix_path -name "icu-i18n" -description "International Components for Unicode: Stream and I/O Library" -version $icu4c_version -libs "-licuin$lib_postfix" -requires "icu-uc" -output_file "$prefix_path/lib/pkgconfig/icu-i18n.pc"
-    CreatePkgConfigFile -prefix $prefix_path -name "icu-io" -description "International Components for Unicode: Stream and I/O Library" -version $icu4c_version -libs "-licuio$lib_postfix" -requires "icu-i18n" -output_file "$prefix_path/lib/pkgconfig/icu-io.pc"
+    finally {
+      Pop-Location
+    }
+    Push-Location "icu"
+    try {
+      if (-not (Test-Path "include")) {
+        throw "Missing icu4c include dir"
+      }
+      Copy-Item "include/unicode" "$prefix_path/include/" -Recurse -Force
+      Copy-Item "$libdir/*.*" "$prefix_path/lib/" -Force
+      Copy-Item "$bindir/*.*" "$prefix_path/bin/" -Force
+      CreatePkgConfigFile -prefix $prefix_path -name "icu-uc" -description "International Components for Unicode: Common and Data libraries" -version $icu4c_version -libs "-L`${libdir} -licuuc$lib_postfix -licudt" -libs_private "-lpthread -lm" -output_file "$prefix_path/lib/pkgconfig/icu-uc.pc"
+      CreatePkgConfigFile -prefix $prefix_path -name "icu-i18n" -description "International Components for Unicode: Stream and I/O Library" -version $icu4c_version -libs "-licuin$lib_postfix" -requires "icu-uc" -output_file "$prefix_path/lib/pkgconfig/icu-i18n.pc"
+      CreatePkgConfigFile -prefix $prefix_path -name "icu-io" -description "International Components for Unicode: Stream and I/O Library" -version $icu4c_version -libs "-licuio$lib_postfix" -requires "icu-i18n" -output_file "$prefix_path/lib/pkgconfig/icu-io.pc"
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1226,8 +1296,13 @@ function Build-Pixman {
   try {
     DownloadPackage -package_name "pixman"
     ExtractPackage "pixman-$pixman_version.tar.gz" -ignore_errors $true
-    Set-Location "pixman-$pixman_version"
-    MesonBuild -additional_args @("-Dgtk=disabled", "-Dlibpng=enabled")
+    Push-Location "pixman-$pixman_version"
+    try {
+      MesonBuild -additional_args @("-Dgtk=disabled", "-Dlibpng=enabled")
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1240,15 +1315,20 @@ function Build-Expat {
   try {
     DownloadPackage -package_name "expat"
     ExtractPackage "expat-$expat_version.tar.gz"
-    Set-Location "expat-$expat_version"
-    CMakeBuild -additional_args @(
-        "-DEXPAT_BUILD_DOCS=OFF",
-        "-DEXPAT_BUILD_EXAMPLES=OFF",
-        "-DEXPAT_BUILD_FUZZERS=OFF",
-        "-DEXPAT_BUILD_TESTS=OFF",
-        "-DEXPAT_BUILD_TOOLS=OFF",
-        "-DEXPAT_BUILD_PKGCONFIG=ON"
-      )
+    Push-Location "expat-$expat_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DEXPAT_BUILD_DOCS=OFF",
+          "-DEXPAT_BUILD_EXAMPLES=OFF",
+          "-DEXPAT_BUILD_FUZZERS=OFF",
+          "-DEXPAT_BUILD_TESTS=OFF",
+          "-DEXPAT_BUILD_TOOLS=OFF",
+          "-DEXPAT_BUILD_PKGCONFIG=ON"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1261,15 +1341,20 @@ function Build-Boost {
   try {
     DownloadPackage -package_name "boost"
     ExtractPackage "boost_$boost_version_underscore.tar.gz"
-    Set-Location "boost_$boost_version_underscore"
-    if (Test-Path "b2.exe") { Remove-Item "b2.exe" -Force }
-    if (Test-Path "bjam.exe") { Remove-Item "bjam.exe" -Force }
-    if (Test-Path "stage") { Remove-Item "stage" -Recurse -Force }
-    Write-Host "Running bootstrap.bat" -ForegroundColor Cyan
-    & ./bootstrap.bat msvc
-    if ($LASTEXITCODE -ne 0) { throw "Boost bootstrap failed" }
-    Write-Host "Running b2.exe" -ForegroundColor Cyan
-    & ./b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --prefix="$prefix_path" --exec-prefix="$prefix_path/bin" --libdir="$prefix_path/lib" --includedir="$prefix_path/include" --with-headers toolset=msvc architecture=$boost_architecture address-model=$arch_bits link=shared runtime-link=shared threadapi=win32 threading=multi variant=$build_type install
+    Push-Location "boost_$boost_version_underscore"
+    try {
+      if (Test-Path "b2.exe") { Remove-Item "b2.exe" -Force }
+      if (Test-Path "bjam.exe") { Remove-Item "bjam.exe" -Force }
+      if (Test-Path "stage") { Remove-Item "stage" -Recurse -Force }
+      Write-Host "Running bootstrap.bat" -ForegroundColor Cyan
+      & ./bootstrap.bat msvc
+      if ($LASTEXITCODE -ne 0) { throw "Boost bootstrap failed" }
+      Write-Host "Running b2.exe" -ForegroundColor Cyan
+      & ./b2.exe -a -q -j 4 -d1 --ignore-site-config --stagedir="stage" --layout="tagged" --prefix="$prefix_path" --exec-prefix="$prefix_path/bin" --libdir="$prefix_path/lib" --includedir="$prefix_path/include" --with-headers toolset=msvc architecture=$boost_architecture address-model=$arch_bits link=shared runtime-link=shared threadapi=win32 threading=multi variant=$build_type install
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1282,19 +1367,24 @@ function Build-LibXML2 {
   try {
     DownloadPackage -package_name "libxml2"
     ExtractPackage "libxml2-$libxml2_version.tar.xz"
-    Set-Location "libxml2-$libxml2_version"
-    CMakeBuild -additional_args @(
-        "-DLIBXML2_WITH_PYTHON=OFF",
-        "-DLIBXML2_WITH_ZLIB=ON",
-        "-DLIBXML2_WITH_LZMA=ON",
-        "-DLIBXML2_WITH_ICONV=OFF",
-        "-DLIBXML2_WITH_ICU=ON",
-        "-DLIBXML2_WITH_REGEXPS=ON",
-        "-DLIBXML2_WITH_HTML=ON",
-        "-DICU_ROOT=$prefix_path"
-      )
-    if ($build_type -eq "debug") {
-      Copy-Item "$prefix_path/lib/libxml2d.lib" "$prefix_path/lib/libxml2.lib" -Force
+    Push-Location "libxml2-$libxml2_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DLIBXML2_WITH_PYTHON=OFF",
+          "-DLIBXML2_WITH_ZLIB=ON",
+          "-DLIBXML2_WITH_LZMA=ON",
+          "-DLIBXML2_WITH_ICONV=OFF",
+          "-DLIBXML2_WITH_ICU=ON",
+          "-DLIBXML2_WITH_REGEXPS=ON",
+          "-DLIBXML2_WITH_HTML=ON",
+          "-DICU_ROOT=$prefix_path"
+        )
+      if ($build_type -eq "debug") {
+        Copy-Item "$prefix_path/lib/libxml2d.lib" "$prefix_path/lib/libxml2.lib" -Force
+      }
+    }
+    finally {
+      Pop-Location
     }
   }
   finally {
@@ -1308,8 +1398,13 @@ function Build-NgHttp2 {
   try {
     DownloadPackage -package_name "nghttp2"
     ExtractPackage "nghttp2-$nghttp2_version.tar.gz"
-    Set-Location "nghttp2-$nghttp2_version"
-    CMakeBuild
+    Push-Location "nghttp2-$nghttp2_version"
+    try {
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1324,8 +1419,13 @@ function Build-LibFFI {
     if (-not (Test-Path "libffi")) {
       RecursiveCopy "$downloads_path/libffi" "libffi"
     }
-    Set-Location "libffi"
-    MesonBuild
+    Push-Location "libffi"
+    try {
+      MesonBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1338,8 +1438,13 @@ function Build-DlfcnWin32 {
   try {
     DownloadPackage -package_name "dlfcn-win32"
     ExtractPackage "dlfcn-win32-$dlfcn_version.tar.gz"
-    Set-Location "dlfcn-win32-$dlfcn_version"
-    CMakeBuild
+    Push-Location "dlfcn-win32-$dlfcn_version"
+    try {
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1352,8 +1457,13 @@ function Build-LibPSL {
   try {
     DownloadPackage -package_name "libpsl"
     ExtractPackage "libpsl-$libpsl_version.tar.gz"
-    Set-Location "libpsl-$libpsl_version"
-    MesonBuild
+    Push-Location "libpsl-$libpsl_version"
+    try {
+      MesonBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1366,8 +1476,13 @@ function Build-Orc {
   try {
     DownloadPackage -package_name "orc"
     ExtractPackage "orc-$orc_version.tar.xz"
-    Set-Location "orc-$orc_version"
-    MesonBuild
+    Push-Location "orc-$orc_version"
+    try {
+      MesonBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1380,16 +1495,21 @@ function Build-SQLite {
   try {
     DownloadPackage -package_name "sqlite"
     ExtractPackage "sqlite-autoconf-$sqlite_version.tar.gz"
-    Set-Location "sqlite-autoconf-$sqlite_version"
-    & cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll
-    if ($LASTEXITCODE -ne 0) { throw "SQLite DLL build failed" }
-    & cl shell.c sqlite3.c -Fe:sqlite3.exe
-    if ($LASTEXITCODE -ne 0) { throw "SQLite shell build failed" }
-    Copy-Item "*.h" "$prefix_path/include/" -Force
-    Copy-Item "*.lib" "$prefix_path/lib/" -Force
-    Copy-Item "*.dll" "$prefix_path/bin/" -Force
-    Copy-Item "*.exe" "$prefix_path/bin/" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "SQLite" -description "SQL database engine" -url "https://www.sqlite.org/" -version $sqlite_version -libs "-L`${libdir} -lsqlite3" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/sqlite3.pc"
+    Push-Location "sqlite-autoconf-$sqlite_version"
+    try {
+      & cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll
+      if ($LASTEXITCODE -ne 0) { throw "SQLite DLL build failed" }
+      & cl shell.c sqlite3.c -Fe:sqlite3.exe
+      if ($LASTEXITCODE -ne 0) { throw "SQLite shell build failed" }
+      Copy-Item "*.h" "$prefix_path/include/" -Force
+      Copy-Item "*.lib" "$prefix_path/lib/" -Force
+      Copy-Item "*.dll" "$prefix_path/bin/" -Force
+      Copy-Item "*.exe" "$prefix_path/bin/" -Force
+      CreatePkgConfigFile -prefix $prefix_path -name "SQLite" -description "SQL database engine" -url "https://www.sqlite.org/" -version $sqlite_version -libs "-L`${libdir} -lsqlite3" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/sqlite3.pc"
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1402,11 +1522,16 @@ function Build-Glib {
   try {
     DownloadPackage -package_name "glib"
     ExtractPackage "glib-$glib_version.tar.xz" -ignore_errors $true
-    Set-Location "glib-$glib_version"
-    MesonBuild `
-      -additional_args @(
-        "-Dtests=false"
-      )
+    Push-Location "glib-$glib_version"
+    try {
+      MesonBuild `
+        -additional_args @(
+          "-Dtests=false"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1419,16 +1544,21 @@ function Build-LibSoup {
   try {
     DownloadPackage -package_name "libsoup"
     ExtractPackage "libsoup-$libsoup_version.tar.xz"
-    Set-Location "libsoup-$libsoup_version"
-    MesonBuild `
-      -additional_args @(
-        "-Dtests=false",
-        "-Dvapi=disabled",
-        "-Dgssapi=disabled",
-        "-Dintrospection=disabled",
-        "-Dsysprof=disabled",
-        "-Dtls_check=false"
-      )
+    Push-Location "libsoup-$libsoup_version"
+    try {
+      MesonBuild `
+        -additional_args @(
+          "-Dtests=false",
+          "-Dvapi=disabled",
+          "-Dgssapi=disabled",
+          "-Dintrospection=disabled",
+          "-Dsysprof=disabled",
+          "-Dtls_check=false"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1444,16 +1574,21 @@ function Build-GlibNetworking {
     #Set-Location "glib-networking-$glib_networking_version"
     CloneGitRepo -git_repo_name "glib-networking"
     RecursiveCopy "$downloads_path/glib-networking" "glib-networking"
-    Set-Location "glib-networking"
-    & patch -p1 -N -i $patch_path/glib-networking.patch
-    MesonBuild `
-      -additional_args @(
-        "-Dgnutls=disabled",
-        "-Dopenssl=enabled",
-        "-Dgnome_proxy=disabled",
-        "-Dlibproxy=disabled",
-        "-Dtests=false"
-      )
+    Push-Location "glib-networking"
+    try {
+      & patch -p1 -N -i $patch_path/glib-networking.patch
+      MesonBuild `
+        -additional_args @(
+          "-Dgnutls=disabled",
+          "-Dopenssl=enabled",
+          "-Dgnome_proxy=disabled",
+          "-Dlibproxy=disabled",
+          "-Dtests=false"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1472,11 +1607,16 @@ function Build-Freetype {
   try {
     DownloadPackage -package_name "freetype"
     ExtractPackage "freetype-$freetype_version.tar.gz"
-    Set-Location "freetype-$freetype_version"
-    $disable_harfbuzz = if ($with_harfbuzz) { "OFF" } else { "ON" }
-    CMakeBuild -additional_args @("-DFT_DISABLE_HARFBUZZ=$disable_harfbuzz")
-    if ($build_type -eq "debug") {
-      Copy-Item "$prefix_path/lib/freetyped.lib" "$prefix_path/lib/freetype.lib" -Force
+    Push-Location "freetype-$freetype_version"
+    try {
+      $disable_harfbuzz = if ($with_harfbuzz) { "OFF" } else { "ON" }
+      CMakeBuild -additional_args @("-DFT_DISABLE_HARFBUZZ=$disable_harfbuzz")
+      if ($build_type -eq "debug") {
+        Copy-Item "$prefix_path/lib/freetyped.lib" "$prefix_path/lib/freetype.lib" -Force
+      }
+    }
+    finally {
+      Pop-Location
     }
   }
   finally {
@@ -1490,17 +1630,22 @@ function Build-Harfbuzz {
   try {
     DownloadPackage -package_name "harfbuzz"
     ExtractPackage "harfbuzz-$harfbuzz_version.tar.xz"
-    Set-Location "harfbuzz-$harfbuzz_version"
-    MesonBuild `
-      -additional_args @(
-        "-Dcpp_std=c++17",
-        "-Dtests=disabled",
-        "-Ddocs=disabled",
-        "-Dfreetype=enabled",
-        "-Dicu=enabled",
-        "-Dcairo=disabled",
-        "-Dutilities=disabled"
-      )
+    Push-Location "harfbuzz-$harfbuzz_version"
+    try {
+      MesonBuild `
+        -additional_args @(
+          "-Dcpp_std=c++17",
+          "-Dtests=disabled",
+          "-Ddocs=disabled",
+          "-Dfreetype=enabled",
+          "-Dicu=enabled",
+          "-Dcairo=disabled",
+          "-Dutilities=disabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1538,13 +1683,18 @@ function Build-Tiff {
   try {
     DownloadPackage -package_name "tiff"
     ExtractPackage "tiff-$tiff_version.tar.gz"
-    Set-Location "tiff-$tiff_version"
-    CMakeBuild -additional_args @(
-      "-Djpeg=ON",
-      "-Dtiff-static=OFF",
-      "-Dtiff-docs=OFF",
-      "-Dtiff-tests=OFF"
-    )
+    Push-Location "tiff-$tiff_version"
+    try {
+      CMakeBuild -additional_args @(
+        "-Djpeg=ON",
+        "-Dtiff-static=OFF",
+        "-Dtiff-docs=OFF",
+        "-Dtiff-tests=OFF"
+      )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1557,12 +1707,17 @@ function Build-LibWebP {
   try {
     DownloadPackage -package_name "libwebp"
     ExtractPackage "libwebp-$libwebp_version.tar.gz"
-    Set-Location "libwebp-$libwebp_version"
-    CMakeBuild -additional_args @(
-      "-DWEBP_LINK_STATIC=OFF",
-      "-DWEBP_UNICODE=ON",
-      "-DWEBP_USE_THREAD=ON"
-    )
+    Push-Location "libwebp-$libwebp_version"
+    try {
+      CMakeBuild -additional_args @(
+        "-DWEBP_LINK_STATIC=OFF",
+        "-DWEBP_UNICODE=ON",
+        "-DWEBP_USE_THREAD=ON"
+      )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1575,12 +1730,17 @@ function Build-Ogg {
   try {
     DownloadPackage -package_name "libogg"
     ExtractPackage "libogg-$libogg_version.tar.gz"
-    Set-Location "libogg-$libogg_version"
-    CMakeBuild -additional_args @(
-        "-DINSTALL_DOCS=OFF",
-        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-      )
-    Write-Host "libogg built successfully!" -ForegroundColor Green
+    Push-Location "libogg-$libogg_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DINSTALL_DOCS=OFF",
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        )
+      Write-Host "libogg built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1593,12 +1753,17 @@ function Build-Vorbis {
   try {
     DownloadPackage -package_name "libvorbis"
     ExtractPackage "libvorbis-$libvorbis_version.tar.gz"
-    Set-Location "libvorbis-$libvorbis_version"
-    CMakeBuild -additional_args @(
-        "-DINSTALL_DOCS=OFF",
-        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-      )
-    Write-Host "libvorbis built successfully!" -ForegroundColor Green
+    Push-Location "libvorbis-$libvorbis_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DINSTALL_DOCS=OFF",
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        )
+      Write-Host "libvorbis built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1611,15 +1776,20 @@ function Build-Flac {
   try {
     DownloadPackage -package_name "flac"
     ExtractPackage "flac-$flac_version.tar.xz"
-    Set-Location flac-$flac_version
-    CMakeBuild -build_path "build2" -additional_args @(
-        "-DBUILD_DOCS=OFF",
-        "-DBUILD_EXAMPLES=OFF",
-        "-DINSTALL_MANPAGES=OFF",
-        "-DBUILD_TESTING=OFF",
-        "-DBUILD_PROGRAMS=OFF"
-      )
-    Write-Host "flac built successfully!" -ForegroundColor Green
+    Push-Location "flac-$flac_version"
+    try {
+      CMakeBuild -build_path "build2" -additional_args @(
+          "-DBUILD_DOCS=OFF",
+          "-DBUILD_EXAMPLES=OFF",
+          "-DINSTALL_MANPAGES=OFF",
+          "-DBUILD_TESTING=OFF",
+          "-DBUILD_PROGRAMS=OFF"
+        )
+      Write-Host "flac built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1632,18 +1802,23 @@ function Build-WavPack {
   try {
     DownloadPackage -package_name "wavpack"
     ExtractPackage "wavpack-$wavpack_version.tar.bz2"
-    Set-Location wavpack-$wavpack_version
-    CMakeBuild -additional_args @(
-          "-DBUILD_TESTING=OFF",
-          "-DWAVPACK_BUILD_DOCS=OFF",
-          "-DWAVPACK_BUILD_PROGRAMS=OFF",
-          "-DWAVPACK_ENABLE_ASM=OFF",
-          "-DWAVPACK_ENABLE_LEGACY=OFF",
-          "-DWAVPACK_BUILD_WINAMP_PLUGIN=OFF",
-          "-DWAVPACK_BUILD_COOLEDIT_PLUGIN=OFF"
-        )
-    Copy-Item "$prefix_path/lib/wavpackdll.lib" "$prefix_path/lib/wavpack.lib" -Force
-    Write-Host "wavpack built successfully!" -ForegroundColor Green
+    Push-Location "wavpack-$wavpack_version"
+    try {
+      CMakeBuild -additional_args @(
+            "-DBUILD_TESTING=OFF",
+            "-DWAVPACK_BUILD_DOCS=OFF",
+            "-DWAVPACK_BUILD_PROGRAMS=OFF",
+            "-DWAVPACK_ENABLE_ASM=OFF",
+            "-DWAVPACK_ENABLE_LEGACY=OFF",
+            "-DWAVPACK_BUILD_WINAMP_PLUGIN=OFF",
+            "-DWAVPACK_BUILD_COOLEDIT_PLUGIN=OFF"
+          )
+      Copy-Item "$prefix_path/lib/wavpackdll.lib" "$prefix_path/lib/wavpack.lib" -Force
+      Write-Host "wavpack built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1656,11 +1831,16 @@ function Build-Opus {
   try {
     DownloadPackage -package_name "opus"
     ExtractPackage "opus-$opus_version.tar.gz"
-    Set-Location opus-$opus_version
-    # Remove problematic line from CMakeLists.txt
-    & sed -i '/include(opus_buildtype.cmake)/d' CMakeLists.txt
-    CMakeBuild
-    Write-Host "opus built successfully!" -ForegroundColor Green
+    Push-Location "opus-$opus_version"
+    try {
+      # Remove problematic line from CMakeLists.txt
+      & sed -i '/include(opus_buildtype.cmake)/d' CMakeLists.txt
+      CMakeBuild
+      Write-Host "opus built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1673,10 +1853,15 @@ function Build-Opusfile {
   try {
     DownloadPackage -package_name "opusfile"
     ExtractPackage "opusfile-$opusfile_version.tar.gz"
-    Set-Location opusfile-$opusfile_version
-    & patch -p1 -N -i $patch_path/opusfile-cmake.patch
-    CMakeBuild -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
-    Write-Host "opusfile built successfully!" -ForegroundColor Green
+    Push-Location "opusfile-$opusfile_version"
+    try {
+      & patch -p1 -N -i $patch_path/opusfile-cmake.patch
+      CMakeBuild -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
+      Write-Host "opusfile built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1689,14 +1874,19 @@ function Build-Speex {
   try {
     DownloadPackage -package_name "speex"
     ExtractPackage "speex-Speex-$speex_version.tar.gz"
-    Set-Location speex-Speex-$speex_version
-    & patch -p1 -N -i "$patch_path/speex-cmake.patch"
-    CMakeBuild
-    if ($build_type -eq "debug") {
-      Copy-Item "$prefix_path/lib/libspeexd.lib" "$prefix_path/lib/libspeex.lib" -Force
-      Copy-Item "$prefix_path/bin/libspeexd.dll" "$prefix_path/bin/libspeex.dll" -Force
+    Push-Location "speex-Speex-$speex_version"
+    try {
+      & patch -p1 -N -i "$patch_path/speex-cmake.patch"
+      CMakeBuild
+      if ($build_type -eq "debug") {
+        Copy-Item "$prefix_path/lib/libspeexd.lib" "$prefix_path/lib/libspeex.lib" -Force
+        Copy-Item "$prefix_path/bin/libspeexd.dll" "$prefix_path/bin/libspeex.dll" -Force
+      }
+      Write-Host "speex built successfully!" -ForegroundColor Green
     }
-    Write-Host "speex built successfully!" -ForegroundColor Green
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1709,13 +1899,18 @@ function Build-MPG123 {
   try {
     DownloadPackage -package_name "mpg123"
     ExtractPackage "mpg123-$mpg123_version.tar.bz2"
-    Set-Location mpg123-$mpg123_version
-    CMakeBuild -source_path "ports/cmake" -build_path "build2" -additional_args @(
-        "-DBUILD_PROGRAMS=OFF",
-        "-DBUILD_LIBOUT123=OFF",
-        "-DYASM_ASSEMBLER=$prefix_path/bin/vsyasm.exe"
-      )
-    Write-Host "mpg123 built successfully!" -ForegroundColor Green
+    Push-Location "mpg123-$mpg123_version"
+    try {
+      CMakeBuild -source_path "ports/cmake" -build_path "build2" -additional_args @(
+          "-DBUILD_PROGRAMS=OFF",
+          "-DBUILD_LIBOUT123=OFF",
+          "-DYASM_ASSEMBLER=$prefix_path/bin/vsyasm.exe"
+        )
+      Write-Host "mpg123 built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1729,18 +1924,23 @@ function Build-Lame {
   try {
     DownloadPackage -package_name "lame"
     ExtractPackage "lame-$lame_version.tar.gz"
-    Set-Location lame-$lame_version
-    & sed -i "s/MACHINE = \/machine:.*/MACHINE = \/machine:${lame_machine}/g" Makefile.MSVC
-    & nmake -f Makefile.MSVC MSVCVER=${lame_msvcver} libmp3lame.dll
-    if ($LASTEXITCODE -ne 0) { throw "nmake build failed" }
-    New-Item -Path "$prefix_path/include/lame" -ItemType Directory -Force
-    Copy-Item "include/lame.h" "$prefix_path/include/lame/" -Force
-    Copy-Item "output/libmp3lame.lib" "$prefix_path/lib/" -Force
-    Copy-Item "output/libmp3lame.dll" "$prefix_path/bin/" -Force
-    Copy-Item "$prefix_path/lib/libmp3lame.lib" "$prefix_path/lib/mp3lame.lib" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "lame" -description "encoder that converts audio to the MP3 file format." -url "https://lame.sourceforge.io/" -version $lame_version -libs "-L`${libdir} -lmp3lame" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/lame.pc"
-    Copy-Item "$prefix_path/lib/pkgconfig/lame.pc" "$prefix_path/lib/pkgconfig/libmp3lame.pc" -Force
-    Write-Host "lame built successfully!" -ForegroundColor Green
+    Push-Location "lame-$lame_version"
+    try {
+      & sed -i "s/MACHINE = \/machine:.*/MACHINE = \/machine:${lame_machine}/g" Makefile.MSVC
+      & nmake -f Makefile.MSVC MSVCVER=${lame_msvcver} libmp3lame.dll
+      if ($LASTEXITCODE -ne 0) { throw "nmake build failed" }
+      New-Item -Path "$prefix_path/include/lame" -ItemType Directory -Force
+      Copy-Item "include/lame.h" "$prefix_path/include/lame/" -Force
+      Copy-Item "output/libmp3lame.lib" "$prefix_path/lib/" -Force
+      Copy-Item "output/libmp3lame.dll" "$prefix_path/bin/" -Force
+      Copy-Item "$prefix_path/lib/libmp3lame.lib" "$prefix_path/lib/mp3lame.lib" -Force
+      CreatePkgConfigFile -prefix $prefix_path -name "lame" -description "encoder that converts audio to the MP3 file format." -url "https://lame.sourceforge.io/" -version $lame_version -libs "-L`${libdir} -lmp3lame" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/lame.pc"
+      Copy-Item "$prefix_path/lib/pkgconfig/lame.pc" "$prefix_path/lib/pkgconfig/libmp3lame.pc" -Force
+      Write-Host "lame built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1753,22 +1953,32 @@ function Build-Twolame {
   try {
     DownloadPackage -package_name "twolame"
     ExtractPackage "twolame-$twolame_version.tar.gz"
-    Set-Location twolame-$twolame_version
-    & patch -p1 -N -i "$patch_path/twolame.patch"
-    Set-Location "win32"
-    if (-not (Test-Path "Backup/libtwolame_dll.sln")) {
-      UpgradeVSProject "libtwolame_dll.sln"
+    Push-Location "twolame-$twolame_version"
+    try {
+      & patch -p1 -N -i "$patch_path/twolame.patch"
+      Push-Location "win32"
+      try {
+        if (-not (Test-Path "Backup/libtwolame_dll.sln")) {
+          UpgradeVSProject "libtwolame_dll.sln"
+        }
+        Start-Sleep -Seconds 5
+        & sed -i "s/Win32/$vs_platform/g" *.sln *.vcproj *.vcxproj
+        & sed -i "s/MachineX86/Machine$lib_machine/g" *.sln *.vcxproj
+        MSBuildProject -project_path "libtwolame_dll.sln" -configuration "${build_type}DLL"
+        Copy-Item "../libtwolame/twolame.h" "$prefix_path/include/" -Force
+        Copy-Item "lib/libtwolame_dll.lib" "$prefix_path/lib/" -Force
+        Copy-Item "lib/*.dll" "$prefix_path/bin/" -Force
+        Copy-Item "$prefix_path/lib/libtwolame_dll.lib" "$prefix_path/lib/twolame${lib_postfix}.lib" -Force
+        CreatePkgConfigFile -prefix $prefix_path -name "twolame" -description "optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME" -url "http://www.twolame.org/" -version $twolame_version -libs "-L`${libdir} -ltwolame${lib_postfix}" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/twolame.pc"
+        Write-Host "twolame built successfully!" -ForegroundColor Green
+      }
+      finally {
+        Pop-Location
+      }
     }
-    Start-Sleep -Seconds 5
-    & sed -i "s/Win32/$vs_platform/g" *.sln *.vcproj *.vcxproj
-    & sed -i "s/MachineX86/Machine$lib_machine/g" *.sln *.vcxproj
-    MSBuildProject -project_path "libtwolame_dll.sln" -configuration "${build_type}DLL"
-    Copy-Item "../libtwolame/twolame.h" "$prefix_path/include/" -Force
-    Copy-Item "lib/libtwolame_dll.lib" "$prefix_path/lib/" -Force
-    Copy-Item "lib/*.dll" "$prefix_path/bin/" -Force
-    Copy-Item "$prefix_path/lib/libtwolame_dll.lib" "$prefix_path/lib/twolame${lib_postfix}.lib" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "twolame" -description "optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME" -url "http://www.twolame.org/" -version $twolame_version -libs "-L`${libdir} -ltwolame${lib_postfix}" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/twolame.pc"
-    Write-Host "twolame built successfully!" -ForegroundColor Green
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1811,15 +2021,20 @@ function Build-Musepack {
   try {
     DownloadPackage -package_name "musepack"
     ExtractPackage "musepack_src_r$musepack_version.tar.gz"
-    Set-Location musepack_src_r$musepack_version
-    & patch -p1 -N -i $patch_path/musepack-fixes.patch
-    CMakeBuild -additional_args @(
-        "-DSHARED=ON",
-        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-      )
-    Copy-Item "build/libmpcdec/*.lib" "$prefix_path/lib/" -Force -ErrorAction SilentlyContinue
-    Copy-Item "build/libmpcdec/*.dll" "$prefix_path/bin/" -Force -ErrorAction SilentlyContinue
-    CreatePkgConfigFile -prefix $prefix_path -name "MusePack" -description "MusePack" -url "https://www.musepack.net/" -version $musepack_version -libs "-L`${libdir} -lmpcdec" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/mpcdec.pc"
+    Push-Location "musepack_src_r$musepack_version"
+    try {
+      & patch -p1 -N -i $patch_path/musepack-fixes.patch
+      CMakeBuild -additional_args @(
+          "-DSHARED=ON",
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        )
+      Copy-Item "build/libmpcdec/*.lib" "$prefix_path/lib/" -Force -ErrorAction SilentlyContinue
+      Copy-Item "build/libmpcdec/*.dll" "$prefix_path/bin/" -Force -ErrorAction SilentlyContinue
+      CreatePkgConfigFile -prefix $prefix_path -name "MusePack" -description "MusePack" -url "https://www.musepack.net/" -version $musepack_version -libs "-L`${libdir} -lmpcdec" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/mpcdec.pc"
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1844,10 +2059,15 @@ function Build-LibOpenMPT {
         Pop-Location
       }
     }
-    Set-Location "libopenmpt"
-    & patch -p1 -N -i $patch_path/libopenmpt-cmake.patch
-    CMakeBuild -build_path "build2"
-    Write-Host "libopenmpt built successfully!" -ForegroundColor Green
+    Push-Location "libopenmpt"
+    try {
+      & patch -p1 -N -i $patch_path/libopenmpt-cmake.patch
+      CMakeBuild -build_path "build2"
+      Write-Host "libopenmpt built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1860,10 +2080,15 @@ function Build-LibGME {
   try {
     DownloadPackage -package_name "libgme"
     ExtractPackage "libgme-$libgme_version-src.tar.gz"
-    Set-Location libgme-$libgme_version
-    & patch -p1 -N -i $patch_path/libgme-pkgconf.patch
-    CMakeBuild
-    Remove-Item "$prefix_path/lib/gme-static.lib" -Force -ErrorAction SilentlyContinue
+    Push-Location "libgme-$libgme_version"
+    try {
+      & patch -p1 -N -i $patch_path/libgme-pkgconf.patch
+      CMakeBuild
+      Remove-Item "$prefix_path/lib/gme-static.lib" -Force -ErrorAction SilentlyContinue
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1876,8 +2101,13 @@ function Build-FdkAac {
   try {
     DownloadPackage -package_name "fdk-aac"
     ExtractPackage "fdk-aac-$fdk_aac_version.tar.gz"
-    Set-Location fdk-aac-$fdk_aac_version
-    CMakeBuild
+    Push-Location "fdk-aac-$fdk_aac_version"
+    try {
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1892,8 +2122,13 @@ function Build-Faad2 {
     Get-ChildItem -Directory -Filter "knik0-faad2-*" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
     ExtractPackage "faad2-$faad2_version.tar.gz"
     $package_dir = (Get-ChildItem -Directory -Filter "knik0-faad2-*" | Select-Object -First 1).Name
-    Set-Location $package_dir
-    CMakeBuild
+    Push-Location $package_dir
+    try {
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1906,8 +2141,13 @@ function Build-Faac {
   try {
     DownloadPackage -package_name "faac"
     ExtractPackage "faac-$faac_version.tar.gz" -package_dir "faac-faac-$faac_version"
-    Set-Location "faac-faac-$faac_version"
-    MesonBuild -additional_args @("-Dfrontend=false")
+    Push-Location "faac-faac-$faac_version"
+    try {
+      MesonBuild -additional_args @("-Dfrontend=false")
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1920,8 +2160,13 @@ function Build-UtfCpp {
   try {
     DownloadPackage -package_name "utfcpp"
     ExtractPackage "utfcpp-$utfcpp_version.tar.gz"
-    Set-Location utfcpp-$utfcpp_version
-    CMakeBuild
+    Push-Location "utfcpp-$utfcpp_version"
+    try {
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1934,8 +2179,13 @@ function Build-TagLib {
   try {
     DownloadPackage -package_name "taglib"
     ExtractPackage "taglib-$taglib_version.tar.gz"
-    Set-Location taglib-$taglib_version
-    CMakeBuild
+    Push-Location "taglib-$taglib_version"
+    try {
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1948,9 +2198,14 @@ function Build-LibBS2B {
   try {
     DownloadPackage -package_name "libbs2b"
     ExtractPackage "libbs2b-$libbs2b_version.tar.bz2"
-    Set-Location libbs2b-$libbs2b_version
-    & patch -p1 -N -i $patch_path/libbs2b-msvc.patch
-    CMakeBuild
+    Push-Location "libbs2b-$libbs2b_version"
+    try {
+      & patch -p1 -N -i $patch_path/libbs2b-msvc.patch
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1963,10 +2218,15 @@ function Build-LibEBUR128 {
   try {
     DownloadPackage -package_name "libebur128"
     ExtractPackage "libebur128-$libebur128_version.tar.gz"
-    Set-Location libebur128-$libebur128_version
-    CMakeBuild -additional_args @(
-        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-      )
+    Push-Location "libebur128-$libebur128_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -1980,19 +2240,28 @@ function Build-FFMpeg {
     CloneGitRepo -git_repo_name "ffmpeg"
     if (-not (Test-Path "ffmpeg")) {
       RecursiveCopy "$downloads_path/ffmpeg" "ffmpeg"
-      Set-Location "ffmpeg"
-      & git checkout "meson-$ffmpeg_version"
-      & git checkout .
-      & git pull --rebase
-      Set-Location ..
+      Push-Location "ffmpeg"
+      try {
+        & git checkout "meson-$ffmpeg_version"
+        & git checkout .
+        & git pull --rebase
+      }
+      finally {
+        Pop-Location
+      }
     }
-    Set-Location "ffmpeg"
-    MesonBuild `
-      -additional_args @(
-        "-Dtests=disabled",
-        "-Dgpl=enabled",
-        "-Diconv=disabled"
-      )
+    Push-Location "ffmpeg"
+    try {
+      MesonBuild `
+        -additional_args @(
+          "-Dtests=disabled",
+          "-Dgpl=enabled",
+          "-Diconv=disabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2005,11 +2274,16 @@ function Build-Chromaprint {
   try {
     DownloadPackage -package_name "chromaprint"
     ExtractPackage "chromaprint-$chromaprint_version.tar.gz" -ignore_errors $true
-    Set-Location "chromaprint-$chromaprint_version"
-    CMakeBuild -additional_args @(
-        "-DFFMPEG_ROOT=$prefix_path",
-        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-      )
+    Push-Location "chromaprint-$chromaprint_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DFFMPEG_ROOT=$prefix_path",
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2025,26 +2299,31 @@ function Build-GStreamer {
       if (-not (Test-Path "gstreamer")) {
         RecursiveCopy "$downloads_path/gstreamer/subprojects/gstreamer" "gstreamer"
       }
-      Set-Location "gstreamer"
+      Push-Location "gstreamer"
     }
     else {
       DownloadPackage -package_name "gstreamer"
       ExtractPackage "gstreamer-$gstreamer_version.tar.xz"
-      Set-Location "gstreamer-$gstreamer_version"
+      Push-Location "gstreamer-$gstreamer_version"
     }
-    MesonBuild `
-      -additional_args @(
-        "-Dexamples=disabled",
-        "-Dtests=disabled",
-        "-Dbenchmarks=disabled",
-        "-Dtools=enabled",
-        "-Dintrospection=disabled",
-        "-Dnls=disabled",
-        "-Ddoc=disabled",
-        "-Dgst_debug=true",
-        "-Dgst_parse=true",
-        "-Dregistry=true"
-      )
+    try {
+      MesonBuild `
+        -additional_args @(
+          "-Dexamples=disabled",
+          "-Dtests=disabled",
+          "-Dbenchmarks=disabled",
+          "-Dtools=enabled",
+          "-Dintrospection=disabled",
+          "-Dnls=disabled",
+          "-Ddoc=disabled",
+          "-Dgst_debug=true",
+          "-Dgst_parse=true",
+          "-Dregistry=true"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2060,42 +2339,47 @@ function Build-GstPluginsBase {
       if (-not (Test-Path "gst-plugins-base")) {
         RecursiveCopy "$downloads_path/gstreamer/subprojects/gst-plugins-base" "gst-plugins-base"
       }
-      Set-Location "gst-plugins-base"
+      Push-Location "gst-plugins-base"
     }
     else {
       DownloadPackage -package_name "gst-plugins-base"
       ExtractPackage "gst-plugins-base-$gstreamer_version.tar.xz"
-      Set-Location "gst-plugins-base-$gstreamer_version"
+      Push-Location "gst-plugins-base-$gstreamer_version"
     }
-    MesonBuild `
-      -additional_args @(
-        "-Dexamples=disabled",
-        "-Dtests=disabled",
-        "-Dtools=enabled",
-        "-Dintrospection=disabled",
-        "-Dnls=disabled",
-        "-Dorc=enabled",
-        "-Ddoc=disabled",
-        "-Dadder=enabled",
-        "-Dapp=enabled",
-        "-Daudioconvert=enabled",
-        "-Daudiomixer=enabled",
-        "-Daudiorate=enabled",
-        "-Daudioresample=enabled",
-        "-Daudiotestsrc=enabled",
-        "-Ddsd=enabled",
-        "-Dencoding=enabled",
-        "-Dgio=enabled",
-        "-Dgio-typefinder=enabled",
-        "-Dpbtypes=enabled",
-        "-Dplayback=enabled",
-        "-Dtcp=enabled",
-        "-Dtypefind=enabled",
-        "-Dvolume=enabled",
-        "-Dogg=enabled",
-        "-Dopus=enabled",
-        "-Dvorbis=enabled"
-      )
+    try {
+      MesonBuild `
+        -additional_args @(
+          "-Dexamples=disabled",
+          "-Dtests=disabled",
+          "-Dtools=enabled",
+          "-Dintrospection=disabled",
+          "-Dnls=disabled",
+          "-Dorc=enabled",
+          "-Ddoc=disabled",
+          "-Dadder=enabled",
+          "-Dapp=enabled",
+          "-Daudioconvert=enabled",
+          "-Daudiomixer=enabled",
+          "-Daudiorate=enabled",
+          "-Daudioresample=enabled",
+          "-Daudiotestsrc=enabled",
+          "-Ddsd=enabled",
+          "-Dencoding=enabled",
+          "-Dgio=enabled",
+          "-Dgio-typefinder=enabled",
+          "-Dpbtypes=enabled",
+          "-Dplayback=enabled",
+          "-Dtcp=enabled",
+          "-Dtypefind=enabled",
+          "-Dvolume=enabled",
+          "-Dogg=enabled",
+          "-Dopus=enabled",
+          "-Dvorbis=enabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2110,52 +2394,57 @@ function Build-GstPluginsGood {
       if (-not (Test-Path "gst-plugins-good")) {
         RecursiveCopy "$downloads_path/gstreamer/subprojects/gst-plugins-good" "gst-plugins-good"
       }
-      Set-Location "gst-plugins-good"
+      Push-Location "gst-plugins-good"
     }
     else {
       DownloadPackage -package_name "gst-plugins-good"
       ExtractPackage "gst-plugins-good-$gstreamer_version.tar.xz"
-      Set-Location "gst-plugins-good-$gstreamer_version"
+      Push-Location "gst-plugins-good-$gstreamer_version"
     }
-    MesonBuild `
-      -additional_args @(
-        "--auto-features=disabled",
-        "-Dexamples=disabled",
-        "-Dtests=disabled",
-        "-Dnls=disabled",
-        "-Dorc=enabled",
-        "-Dasm=enabled",
-        "-Ddoc=disabled",
-        "-Dapetag=enabled",
-        "-Daudiofx=enabled",
-        "-Daudioparsers=enabled",
-        "-Dautodetect=enabled",
-        "-Dequalizer=enabled",
-        "-Dicydemux=enabled",
-        "-Did3demux=enabled",
-        "-Disomp4=enabled",
-        "-Dreplaygain=enabled",
-        "-Drtp=enabled",
-        "-Drtsp=enabled",
-        "-Dspectrum=enabled",
-        "-Dudp=enabled",
-        "-Dwavenc=enabled",
-        "-Dwavparse=enabled",
-        "-Dxingmux=enabled",
-        "-Dadaptivedemux2=enabled",
-        "-Ddirectsound=enabled",
-        "-Dflac=enabled",
-        "-Dlame=enabled",
-        "-Dmpg123=enabled",
-        "-Dspeex=enabled",
-        "-Dtaglib=enabled",
-        "-Dtwolame=enabled",
-        "-Dwaveform=enabled",
-        "-Dwavpack=enabled",
-        "-Dsoup=enabled",
-        "-Dmatroska=enabled",
-        "-Dhls-crypto=openssl"
-      )
+    try {
+      MesonBuild `
+        -additional_args @(
+          "--auto-features=disabled",
+          "-Dexamples=disabled",
+          "-Dtests=disabled",
+          "-Dnls=disabled",
+          "-Dorc=enabled",
+          "-Dasm=enabled",
+          "-Ddoc=disabled",
+          "-Dapetag=enabled",
+          "-Daudiofx=enabled",
+          "-Daudioparsers=enabled",
+          "-Dautodetect=enabled",
+          "-Dequalizer=enabled",
+          "-Dicydemux=enabled",
+          "-Did3demux=enabled",
+          "-Disomp4=enabled",
+          "-Dreplaygain=enabled",
+          "-Drtp=enabled",
+          "-Drtsp=enabled",
+          "-Dspectrum=enabled",
+          "-Dudp=enabled",
+          "-Dwavenc=enabled",
+          "-Dwavparse=enabled",
+          "-Dxingmux=enabled",
+          "-Dadaptivedemux2=enabled",
+          "-Ddirectsound=enabled",
+          "-Dflac=enabled",
+          "-Dlame=enabled",
+          "-Dmpg123=enabled",
+          "-Dspeex=enabled",
+          "-Dtaglib=enabled",
+          "-Dtwolame=enabled",
+          "-Dwaveform=enabled",
+          "-Dwavpack=enabled",
+          "-Dsoup=enabled",
+          "-Dmatroska=enabled",
+          "-Dhls-crypto=openssl"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2170,49 +2459,54 @@ function Build-GstPluginsBad {
       if (-not (Test-Path "gst-plugins-bad")) {
         RecursiveCopy "$downloads_path/gstreamer/subprojects/gst-plugins-bad" "gst-plugins-bad"
       }
-      Set-Location "gst-plugins-bad"
+      Push-Location "gst-plugins-bad"
     }
     else {
       DownloadPackage -package_name "gst-plugins-bad"
       ExtractPackage "gst-plugins-bad-$gstreamer_version.tar.xz"
-      Set-Location "gst-plugins-bad-$gstreamer_version"
+      Push-Location "gst-plugins-bad-$gstreamer_version"
     }
-    MesonBuild `
-      -additional_args @(
-        "--auto-features=disabled",
-        "-Dexamples=disabled",
-        "-Dtools=enabled",
-        "-Dtests=disabled",
-        "-Dintrospection=disabled",
-        "-Dnls=disabled",
-        "-Dorc=enabled",
-        "-Dgpl=enabled",
-        "-Daiff=enabled",
-        "-Dasfmux=enabled",
-        "-Did3tag=enabled",
-        "-Dmpegdemux=enabled",
-        "-Dmpegpsmux=enabled",
-        "-Dmpegtsdemux=enabled",
-        "-Dmpegtsmux=enabled",
-        "-Dremovesilence=enabled",
-        "-Daes=enabled",
-        "-Dasio=enabled",
-        "-Dbluez=enabled",
-        "-Dbs2b=enabled",
-        "-Dchromaprint=enabled",
-        "-Ddash=enabled",
-        "-Ddirectsound=enabled",
-        "-Dfaac=enabled",
-        "-Dfaad=enabled",
-        "-Dfdkaac=enabled",
-        "-Dgme=enabled",
-        "-Dmusepack=enabled",
-        "-Dopenmpt=enabled",
-        "-Dopus=enabled",
-        "-Dwasapi=enabled",
-        "-Dwasapi2=enabled",
-        "-Dhls=enabled"
-      )
+    try {
+      MesonBuild `
+        -additional_args @(
+          "--auto-features=disabled",
+          "-Dexamples=disabled",
+          "-Dtools=enabled",
+          "-Dtests=disabled",
+          "-Dintrospection=disabled",
+          "-Dnls=disabled",
+          "-Dorc=enabled",
+          "-Dgpl=enabled",
+          "-Daiff=enabled",
+          "-Dasfmux=enabled",
+          "-Did3tag=enabled",
+          "-Dmpegdemux=enabled",
+          "-Dmpegpsmux=enabled",
+          "-Dmpegtsdemux=enabled",
+          "-Dmpegtsmux=enabled",
+          "-Dremovesilence=enabled",
+          "-Daes=enabled",
+          "-Dasio=enabled",
+          "-Dbluez=enabled",
+          "-Dbs2b=enabled",
+          "-Dchromaprint=enabled",
+          "-Ddash=enabled",
+          "-Ddirectsound=enabled",
+          "-Dfaac=enabled",
+          "-Dfaad=enabled",
+          "-Dfdkaac=enabled",
+          "-Dgme=enabled",
+          "-Dmusepack=enabled",
+          "-Dopenmpt=enabled",
+          "-Dopus=enabled",
+          "-Dwasapi=enabled",
+          "-Dwasapi2=enabled",
+          "-Dhls=enabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2227,23 +2521,28 @@ function Build-GstPluginsUgly {
       if (-not (Test-Path "gst-plugins-ugly")) {
         RecursiveCopy "$downloads_path/gstreamer/subprojects/gst-plugins-ugly" "gst-plugins-ugly"
       }
-      Set-Location "gst-plugins-ugly"
+      Push-Location "gst-plugins-ugly"
     }
     else {
       DownloadPackage -package_name "gst-plugins-ugly"
       ExtractPackage "gst-plugins-ugly-$gstreamer_version.tar.xz"
-      Set-Location "gst-plugins-ugly-$gstreamer_version"
+      Push-Location "gst-plugins-ugly-$gstreamer_version"
     }
-    MesonBuild `
-      -additional_args @(
-        "--auto-features=disabled",
-        "-Dnls=disabled",
-        "-Dorc=enabled",
-        "-Dtests=disabled",
-        "-Ddoc=disabled",
-        "-Dgpl=enabled",
-        "-Dasfdemux=enabled"
-      )
+    try {
+      MesonBuild `
+        -additional_args @(
+          "--auto-features=disabled",
+          "-Dnls=disabled",
+          "-Dorc=enabled",
+          "-Dtests=disabled",
+          "-Ddoc=disabled",
+          "-Dgpl=enabled",
+          "-Dasfdemux=enabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2258,18 +2557,23 @@ function Build-GstLibav {
       if (-not (Test-Path "gst-libav")) {
         RecursiveCopy "$downloads_path/gstreamer/subprojects/gst-libav" "gst-libav"
       }
-      Set-Location "gst-libav"
+      Push-Location "gst-libav"
     }
     else {
       DownloadPackage -package_name "gst-libav"
       ExtractPackage "gst-libav-$gstreamer_version.tar.xz"
-      Set-Location "gst-libav-$gstreamer_version"
+      Push-Location "gst-libav-$gstreamer_version"
     }
-    MesonBuild `
-      -additional_args @(
-        "-Dtests=disabled",
-        "-Ddoc=disabled"
-      )
+    try {
+      MesonBuild `
+        -additional_args @(
+          "-Dtests=disabled",
+          "-Ddoc=disabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2284,15 +2588,20 @@ function Build-GstPluginsRs {
     if (-not (Test-Path "gst-plugins-rs")) {
       RecursiveCopy "$downloads_path/gst-plugins-rs" "gst-plugins-rs"
     }
-    Set-Location "gst-plugins-rs"
-    MesonBuild `
-      -pkg_config_path "" `
-      -additional_args @(
-        "--auto-features=disabled",
-        "-Dexamples=disabled",
-        "-Dtests=disabled",
-        "-Dspotify=enabled"
-      )
+    Push-Location "gst-plugins-rs"
+    try {
+      MesonBuild `
+        -pkg_config_path "" `
+        -additional_args @(
+          "--auto-features=disabled",
+          "-Dexamples=disabled",
+          "-Dtests=disabled",
+          "-Dspotify=enabled"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2305,13 +2614,18 @@ function Build-SparseHash {
   try {
     DownloadPackage -package_name "sparsehash"
     ExtractPackage "sparsehash-$sparsehash_version.tar.gz"
-    Set-Location "sparsehash-sparsehash-$sparsehash_version"
-    & patch -p1 -N -i "$patch_path/sparsehash-msvc.patch"
-    Copy-Item "src/google" "$prefix_path/include/" -Recurse -Force
-    Copy-Item "src/sparsehash" "$prefix_path/include/" -Recurse -Force
-    Copy-Item "src/windows/sparsehash/internal/sparseconfig.h" "$prefix_path/include/sparsehash/internal/" -Force
-    Copy-Item "src/windows/google/sparsehash/sparseconfig.h" "$prefix_path/include/google/sparsehash/" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "sparsehash" -description "C++ associative containers" -url "https://github.com/sparsehash/sparsehash" -version $sparsehash_version -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/libsparsehash.pc"
+    Push-Location "sparsehash-sparsehash-$sparsehash_version"
+    try {
+      & patch -p1 -N -i "$patch_path/sparsehash-msvc.patch"
+      Copy-Item "src/google" "$prefix_path/include/" -Recurse -Force
+      Copy-Item "src/sparsehash" "$prefix_path/include/" -Recurse -Force
+      Copy-Item "src/windows/sparsehash/internal/sparseconfig.h" "$prefix_path/include/sparsehash/internal/" -Force
+      Copy-Item "src/windows/google/sparsehash/sparseconfig.h" "$prefix_path/include/google/sparsehash/" -Force
+      CreatePkgConfigFile -prefix $prefix_path -name "sparsehash" -description "C++ associative containers" -url "https://github.com/sparsehash/sparsehash" -version $sparsehash_version -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/libsparsehash.pc"
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2324,14 +2638,19 @@ function Build-AbseilCpp {
   try {
     DownloadPackage -package_name "abseil-cpp"
     ExtractPackage "abseil-cpp-$abseil_version.tar.gz"
-    Set-Location abseil-cpp-$abseil_version
-    CMakeBuild -additional_args @(
-        "-DCMAKE_CXX_STANDARD=17",
-        "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
-        "-DABSL_INTERNAL_AT_LEAST_CXX17=ON",
-        "-DABSL_BUILD_TESTING=OFF",
-        "-DABSL_USE_EXTERNAL_GOOGLETEST=OFF"
-      )
+    Push-Location "abseil-cpp-$abseil_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-DCMAKE_CXX_STANDARD=17",
+          "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+          "-DABSL_INTERNAL_AT_LEAST_CXX17=ON",
+          "-DABSL_BUILD_TESTING=OFF",
+          "-DABSL_USE_EXTERNAL_GOOGLETEST=OFF"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2344,11 +2663,16 @@ function Build-Protobuf {
   try {
     DownloadPackage -package_name "protobuf"
     ExtractPackage "protobuf-$protobuf_version.tar.gz"
-    Set-Location protobuf-$protobuf_version
-    CMakeBuild -additional_args @(
-        "-Dprotobuf_BUILD_TESTS=OFF",
-        "-Dprotobuf_ABSL_PROVIDER=package"
-      )
+    Push-Location "protobuf-$protobuf_version"
+    try {
+      CMakeBuild -additional_args @(
+          "-Dprotobuf_BUILD_TESTS=OFF",
+          "-Dprotobuf_ABSL_PROVIDER=package"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2363,28 +2687,33 @@ function Build-QtBase {
       if (-not (Test-Path "qtbase")) {
         RecursiveCopy "$downloads_path/qtbase" "qtbase"
       }
-      Set-Location "qtbase"
+      Push-Location "qtbase"
     }
     else {
       DownloadPackage -package_name "qtbase"
       ExtractPackage "qtbase-everywhere-src-$qt_version.tar.xz"
-      Set-Location "qtbase-everywhere-src-$qt_version"
+      Push-Location "qtbase-everywhere-src-$qt_version"
     }
-    & patch -p1 -N -i "$patch_path/qtbase-openssl4.patch" 2>&1 | Out-Null
-    CMakeBuild -additional_args @(
-        "-DQT_BUILD_EXAMPLES=OFF",
-        "-DQT_BUILD_TESTS=OFF",
-        "-DFEATURE_openssl=ON",
-        "-DFEATURE_openssl_linked=ON",
-        "-DFEATURE_system_zlib=ON",
-        "-DFEATURE_system_png=ON",
-        "-DFEATURE_system_jpeg=ON",
-        "-DFEATURE_system_pcre2=ON",
-        "-DFEATURE_system_freetype=ON",
-        "-DFEATURE_system_harfbuzz=ON",
-        "-DFEATURE_system_sqlite=ON",
-        "-DICU_ROOT=$prefix_path"
-      )
+    try {
+      & patch -p1 -N -i "$patch_path/qtbase-openssl4.patch" 2>&1 | Out-Null
+      CMakeBuild -additional_args @(
+          "-DQT_BUILD_EXAMPLES=OFF",
+          "-DQT_BUILD_TESTS=OFF",
+          "-DFEATURE_openssl=ON",
+          "-DFEATURE_openssl_linked=ON",
+          "-DFEATURE_system_zlib=ON",
+          "-DFEATURE_system_png=ON",
+          "-DFEATURE_system_jpeg=ON",
+          "-DFEATURE_system_pcre2=ON",
+          "-DFEATURE_system_freetype=ON",
+          "-DFEATURE_system_harfbuzz=ON",
+          "-DFEATURE_system_sqlite=ON",
+          "-DICU_ROOT=$prefix_path"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2399,30 +2728,35 @@ function Build-QtTools {
       if (-not (Test-Path "qttools")) {
         RecursiveCopy "$downloads_path/qttools" "qttools"
       }
-      Set-Location "qttools"
+      Push-Location "qttools"
     }
     else {
       DownloadPackage -package_name "qttools"
       ExtractPackage "qttools-everywhere-src-$qt_version.tar.xz"
-      Set-Location "qttools-everywhere-src-$qt_version"
+      Push-Location "qttools-everywhere-src-$qt_version"
     }
-    CMakeBuild `
-      -additional_args @(
-        "-DQT_BUILD_EXAMPLES=OFF",
-        "-DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF",
-        "-DQT_BUILD_TOOLS_WHEN_CROSSCOMPILING=ON",
-        "-DFEATURE_assistant=OFF",
-        "-DFEATURE_designer=OFF",
-        "-DFEATURE_distancefieldgenerator=OFF",
-        "-DFEATURE_kmap2qmap=OFF",
-        "-DFEATURE_pixeltool=OFF",
-        "-DFEATURE_qdbus=OFF",
-        "-DFEATURE_qev=OFF",
-        "-DFEATURE_qtattributionsscanner=OFF",
-        "-DFEATURE_qtdiag=OFF",
-        "-DFEATURE_qtplugininfo=OFF",
-        "-DFEATURE_linguist=ON"
-      )
+    try {
+      CMakeBuild `
+        -additional_args @(
+          "-DQT_BUILD_EXAMPLES=OFF",
+          "-DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF",
+          "-DQT_BUILD_TOOLS_WHEN_CROSSCOMPILING=ON",
+          "-DFEATURE_assistant=OFF",
+          "-DFEATURE_designer=OFF",
+          "-DFEATURE_distancefieldgenerator=OFF",
+          "-DFEATURE_kmap2qmap=OFF",
+          "-DFEATURE_pixeltool=OFF",
+          "-DFEATURE_qdbus=OFF",
+          "-DFEATURE_qev=OFF",
+          "-DFEATURE_qtattributionsscanner=OFF",
+          "-DFEATURE_qtdiag=OFF",
+          "-DFEATURE_qtplugininfo=OFF",
+          "-DFEATURE_linguist=ON"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2437,20 +2771,25 @@ function Build-QtImageFormats {
       if (-not (Test-Path "qtimageformats")) {
         RecursiveCopy "$downloads_path/qtimageformats" "qtimageformats"
       }
-      Set-Location "qtimageformats"
+      Push-Location "qtimageformats"
     }
     else {
       DownloadPackage -package_name "qtimageformats"
       ExtractPackage "qtimageformats-everywhere-src-$qt_version.tar.xz"
-      Set-Location "qtimageformats-everywhere-src-$qt_version"
+      Push-Location "qtimageformats-everywhere-src-$qt_version"
     }
-    CMakeBuild -additional_args @(
-      "-DFEATURE_jasper=ON",
-      "-DFEATURE_tiff=ON",
-      "-DFEATURE_webp=ON",
-      "-DFEATURE_system_tiff=ON",
-      "-DFEATURE_system_webp=ON"
-    )
+    try {
+      CMakeBuild -additional_args @(
+        "-DFEATURE_jasper=ON",
+        "-DFEATURE_tiff=ON",
+        "-DFEATURE_webp=ON",
+        "-DFEATURE_system_tiff=ON",
+        "-DFEATURE_system_webp=ON"
+      )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2465,17 +2804,22 @@ function Build-QtGrpc {
       if (-not (Test-Path "qtgrpc")) {
         RecursiveCopy "$downloads_path/qtgrpc" "qtgrpc"
       }
-      Set-Location "qtgrpc"
+      Push-Location "qtgrpc"
     }
     else {
       DownloadPackage -package_name "qtgrpc"
       ExtractPackage "qtgrpc-everywhere-src-$qt_version.tar.xz"
-      Set-Location "qtgrpc-everywhere-src-$qt_version"
+      Push-Location "qtgrpc-everywhere-src-$qt_version"
     }
-    CMakeBuild -additional_args @(
-        "-DQT_BUILD_EXAMPLES=OFF",
-        "-DQT_BUILD_TESTS=OFF"
-      )
+    try {
+      CMakeBuild -additional_args @(
+          "-DQT_BUILD_EXAMPLES=OFF",
+          "-DQT_BUILD_TESTS=OFF"
+        )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2490,10 +2834,15 @@ function Build-QtSparkle {
     if (-not (Test-Path "qtsparkle")) {
       RecursiveCopy "$downloads_path/qtsparkle" "qtsparkle"
     }
-    Set-Location "qtsparkle"
-    CMakeBuild -additional_args @(
-      "-DBUILD_WITH_QT6=ON"
-    )
+    Push-Location "qtsparkle"
+    try {
+      CMakeBuild -additional_args @(
+        "-DBUILD_WITH_QT6=ON"
+      )
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2506,8 +2855,13 @@ function Build-KDSingleApplication {
   try {
     DownloadPackage -package_name "kdsingleapplication"
     ExtractPackage "kdsingleapplication-$kdsingleapplication_version.tar.gz"
-    Set-Location "kdsingleapplication-$kdsingleapplication_version"
-    CMakeBuild -additional_args @("-DKDSingleApplication_QT6=ON")
+    Push-Location "kdsingleapplication-$kdsingleapplication_version"
+    try {
+      CMakeBuild -additional_args @("-DKDSingleApplication_QT6=ON")
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2520,8 +2874,13 @@ function Build-Glew {
   try {
     DownloadPackage -package_name "glew"
     ExtractPackage "glew-$glew_version.tgz"
-    Set-Location "glew-$glew_version"
-    CMakeBuild -source_path "build/cmake" -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
+    Push-Location "glew-$glew_version"
+    try {
+      CMakeBuild -source_path "build/cmake" -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2534,8 +2893,13 @@ function Build-LibProjectm {
   try {
     DownloadPackage -package_name "libprojectm"
     ExtractPackage "libprojectm-$libprojectm_version.tar.gz"
-    Set-Location "libprojectm-$libprojectm_version"
-    CMakeBuild
+    Push-Location "libprojectm-$libprojectm_version"
+    try {
+      CMakeBuild
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2550,14 +2914,19 @@ function Build-TinySvcmdns {
     if (-not (Test-Path "tinysvcmdns")) {
       RecursiveCopy "$downloads_path/tinysvcmdns" "tinysvcmdns"
     }
-    Set-Location "tinysvcmdns"
-    CMakeBuild -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
-    Copy-Item "*.lib" "$prefix_path/lib/" -Force
-    Copy-Item "*.dll" "$prefix_path/bin/" -Force
-    Copy-Item "*.exe" "$prefix_path/bin/" -Force
-    Copy-Item "*.h" "$prefix_path/include/" -Force
-    Copy-Item "../*.h" "$prefix_path/include/" -Force
-    CreatePkgConfigFile -prefix $prefix_path -name "tinysvcmdns" -description "tinysvcmdns" -version "0.1" -cflags "-I`${includedir}" -libs "-L`${libdir} -ltinysvcmdns" -output_file "$prefix_path/lib/pkgconfig/tinysvcmdns.pc"
+    Push-Location "tinysvcmdns"
+    try {
+      CMakeBuild -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
+      Copy-Item "*.lib" "$prefix_path/lib/" -Force
+      Copy-Item "*.dll" "$prefix_path/bin/" -Force
+      Copy-Item "*.exe" "$prefix_path/bin/" -Force
+      Copy-Item "*.h" "$prefix_path/include/" -Force
+      Copy-Item "../*.h" "$prefix_path/include/" -Force
+      CreatePkgConfigFile -prefix $prefix_path -name "tinysvcmdns" -description "tinysvcmdns" -version "0.1" -cflags "-I`${includedir}" -libs "-L`${libdir} -ltinysvcmdns" -output_file "$prefix_path/lib/pkgconfig/tinysvcmdns.pc"
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2570,8 +2939,13 @@ function Build-PeParse {
   try {
     DownloadPackage -package_name "pe-parse"
     ExtractPackage "pe-parse-$peparse_version.tar.gz"
-    Set-Location "pe-parse-$peparse_version"
-    CMakeBuild -additional_args @("-DBUILD_COMMAND_LINE_TOOLS=OFF")
+    Push-Location "pe-parse-$peparse_version"
+    try {
+      CMakeBuild -additional_args @("-DBUILD_COMMAND_LINE_TOOLS=OFF")
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2586,8 +2960,13 @@ function Build-PeUtil {
     if (-not (Test-Path "pe-util")) {
       RecursiveCopy "$downloads_path/pe-util" "pe-util"
     }
-    Set-Location "pe-util"
-    CMakeBuild -additional_args @("-DBUILD_COMMAND_LINE_TOOLS=OFF")
+    Push-Location "pe-util"
+    try {
+      CMakeBuild -additional_args @("-DBUILD_COMMAND_LINE_TOOLS=OFF")
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2602,19 +2981,24 @@ function Build-Strawberry {
     if (-not (Test-Path "strawberry")) {
       RecursiveCopy "$downloads_path/strawberry" "strawberry"
     }
-    Set-Location "strawberry"
-    $enable_win32_console = if ($build_type -eq "debug") { "ON" } else { "OFF" }
-    CMakeBuild -additional_args @(
-        "-DARCH=$arch",
-        "-DENABLE_TRANSLATIONS=ON",
-        "-DBUILD_WERROR=ON",
-        "-DENABLE_WIN32_CONSOLE=$enable_win32_console",
-        "-DICU_ROOT=$prefix_path",
-        "-DENABLE_AUDIOCD=OFF",
-        "-DENABLE_MTP=OFF",
-        "-DENABLE_GPOD=OFF"
-      )
-    Write-Host "Strawberry built successfully!" -ForegroundColor Green
+    Push-Location "strawberry"
+    try {
+      $enable_win32_console = if ($build_type -eq "debug") { "ON" } else { "OFF" }
+      CMakeBuild -additional_args @(
+          "-DARCH=$arch",
+          "-DENABLE_TRANSLATIONS=ON",
+          "-DBUILD_WERROR=ON",
+          "-DENABLE_WIN32_CONSOLE=$enable_win32_console",
+          "-DICU_ROOT=$prefix_path",
+          "-DENABLE_AUDIOCD=OFF",
+          "-DENABLE_MTP=OFF",
+          "-DENABLE_GPOD=OFF"
+        )
+      Write-Host "Strawberry built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
@@ -2626,27 +3010,32 @@ function Build-StrawberrySetup {
   Push-Location $build_path
   try {
     New-Item -Path "StrawberrySetup" -ItemType Directory -Force | Out-Null
-    Set-Location "StrawberrySetup"
-    New-Item -Path @('platforms', 'styles', 'imageformats', 'tls', 'sqldrivers', 'gio-modules', 'gstreamer-plugins') -ItemType Directory -Force
-    Copy-Item -Path "$build_path/strawberry/build/strawberry.exe", `
-                    "$build_path/strawberry/build/strawberry.nsi", `
-                    "$build_path/strawberry/COPYING", `
-                    "$build_path/strawberry/dist/windows/*.ico", `
-                    "$build_path/strawberry/dist/windows/*.nsh" `
-                    "." -Force
-    Copy-Item "$prefix_path/plugins/platforms/*.dll" "./platforms/" -Force
-    Copy-Item "$prefix_path/plugins/styles/*.dll" "./styles/" -Force
-    Copy-Item "$prefix_path/plugins/imageformats/*.dll" "./imageformats/" -Force
-    Copy-Item "$prefix_path/plugins/tls/*.dll" "./tls/" -Force
-    Copy-Item "$prefix_path/plugins/sqldrivers/*.dll" "./sqldrivers/" -Force
-    Copy-Item "$prefix_path/lib/gio/modules/*.dll" "./gio-modules/" -Force
-    Copy-Item "$prefix_path/lib/gstreamer-1.0/*.dll" "./gstreamer-plugins/" -Force
-    Copy-Item -Path "$prefix_path/bin/sqlite3.exe", "$prefix_path/bin/gst-*.exe" -Destination "." -Force
-    & "$PSScriptRoot/CopyDLLDependencies.ps1" -Copy -DestDir "./" -InDir "./" -InDir "./platforms" -InDir "./styles" -InDir "./imageformats" -InDir "./tls" -InDir "./sqldrivers" -InDir "./gio-modules" -InDir "./gstreamer-plugins" -RecursiveSrcDir "$prefix_path/bin"
-    DownloadPackage -package_name "vc-redist-${arch_short}"
-    Copy-Item "$downloads_path/vc_redist.${arch_short}.exe" "." -Force
-    & makensis strawberry.nsi
-    Write-Host "Strawberry setup built successfully!" -ForegroundColor Green
+    Push-Location "StrawberrySetup"
+    try {
+      New-Item -Path @('platforms', 'styles', 'imageformats', 'tls', 'sqldrivers', 'gio-modules', 'gstreamer-plugins') -ItemType Directory -Force
+      Copy-Item -Path "$build_path/strawberry/build/strawberry.exe", `
+                      "$build_path/strawberry/build/strawberry.nsi", `
+                      "$build_path/strawberry/COPYING", `
+                      "$build_path/strawberry/dist/windows/*.ico", `
+                      "$build_path/strawberry/dist/windows/*.nsh" `
+                      "." -Force
+      Copy-Item "$prefix_path/plugins/platforms/*.dll" "./platforms/" -Force
+      Copy-Item "$prefix_path/plugins/styles/*.dll" "./styles/" -Force
+      Copy-Item "$prefix_path/plugins/imageformats/*.dll" "./imageformats/" -Force
+      Copy-Item "$prefix_path/plugins/tls/*.dll" "./tls/" -Force
+      Copy-Item "$prefix_path/plugins/sqldrivers/*.dll" "./sqldrivers/" -Force
+      Copy-Item "$prefix_path/lib/gio/modules/*.dll" "./gio-modules/" -Force
+      Copy-Item "$prefix_path/lib/gstreamer-1.0/*.dll" "./gstreamer-plugins/" -Force
+      Copy-Item -Path "$prefix_path/bin/sqlite3.exe", "$prefix_path/bin/gst-*.exe" -Destination "." -Force
+      & "$PSScriptRoot/CopyDLLDependencies.ps1" -Copy -DestDir "./" -InDir "./" -InDir "./platforms" -InDir "./styles" -InDir "./imageformats" -InDir "./tls" -InDir "./sqldrivers" -InDir "./gio-modules" -InDir "./gstreamer-plugins" -RecursiveSrcDir "$prefix_path/bin"
+      DownloadPackage -package_name "vc-redist-${arch_short}"
+      Copy-Item "$downloads_path/vc_redist.${arch_short}.exe" "." -Force
+      & makensis strawberry.nsi
+      Write-Host "Strawberry setup built successfully!" -ForegroundColor Green
+    }
+    finally {
+      Pop-Location
+    }
   }
   finally {
     Pop-Location
