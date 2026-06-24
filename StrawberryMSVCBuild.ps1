@@ -1378,7 +1378,9 @@ function Build-SQLite {
     ExtractPackage "sqlite-autoconf-$sqlite_version.tar.gz"
     Set-Location "sqlite-autoconf-$sqlite_version"
     & cl -DSQLITE_API="__declspec(dllexport)" -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_COLUMN_METADATA sqlite3.c -link -dll -out:sqlite3.dll
+    if ($LASTEXITCODE -ne 0) { throw "SQLite DLL build failed" }
     & cl shell.c sqlite3.c -Fe:sqlite3.exe
+    if ($LASTEXITCODE -ne 0) { throw "SQLite shell build failed" }
     Copy-Item "*.h" "$prefix_path/include/" -Force
     Copy-Item "*.lib" "$prefix_path/lib/" -Force
     Copy-Item "*.dll" "$prefix_path/bin/" -Force
