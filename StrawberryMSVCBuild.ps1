@@ -1607,7 +1607,7 @@ function Build-Flac {
   try {
     DownloadPackage -package_name "flac"
     ExtractPackage "flac-$flac_version.tar.xz"
-    Push-Location flac-$flac_version
+    Set-Location flac-$flac_version
     CMakeBuild -build_path "build2" -additional_args @(
         "-DBUILD_DOCS=OFF",
         "-DBUILD_EXAMPLES=OFF",
@@ -1628,7 +1628,7 @@ function Build-WavPack {
   try {
     DownloadPackage -package_name "wavpack"
     ExtractPackage "wavpack-$wavpack_version.tar.bz2"
-    Push-Location wavpack-$wavpack_version
+    Set-Location wavpack-$wavpack_version
     CMakeBuild -additional_args @(
           "-DBUILD_TESTING=OFF",
           "-DWAVPACK_BUILD_DOCS=OFF",
@@ -1652,7 +1652,7 @@ function Build-Opus {
   try {
     DownloadPackage -package_name "opus"
     ExtractPackage "opus-$opus_version.tar.gz"
-    Push-Location opus-$opus_version
+    Set-Location opus-$opus_version
     # Remove problematic line from CMakeLists.txt
     & sed -i '/include(opus_buildtype.cmake)/d' CMakeLists.txt
     CMakeBuild
@@ -1669,7 +1669,7 @@ function Build-Opusfile {
   try {
     DownloadPackage -package_name "opusfile"
     ExtractPackage "opusfile-$opusfile_version.tar.gz"
-    Push-Location opusfile-$opusfile_version
+    Set-Location opusfile-$opusfile_version
     & patch -p1 -N -i $patch_path/opusfile-cmake.patch
     CMakeBuild -additional_args @("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
     Write-Host "opusfile built successfully!" -ForegroundColor Green
@@ -1685,7 +1685,7 @@ function Build-Speex {
   try {
     DownloadPackage -package_name "speex"
     ExtractPackage "speex-Speex-$speex_version.tar.gz"
-    Push-Location speex-Speex-$speex_version
+    Set-Location speex-Speex-$speex_version
     & patch -p1 -N -i "$patch_path/speex-cmake.patch"
     CMakeBuild
     if ($build_type -eq "debug") {
@@ -1705,7 +1705,7 @@ function Build-MPG123 {
   try {
     DownloadPackage -package_name "mpg123"
     ExtractPackage "mpg123-$mpg123_version.tar.bz2"
-    Push-Location mpg123-$mpg123_version
+    Set-Location mpg123-$mpg123_version
     CMakeBuild -source_path "ports/cmake" -build_path "build2" -additional_args @(
         "-DBUILD_PROGRAMS=OFF",
         "-DBUILD_LIBOUT123=OFF",
@@ -1725,7 +1725,7 @@ function Build-Lame {
   try {
     DownloadPackage -package_name "lame"
     ExtractPackage "lame-$lame_version.tar.gz"
-    Push-Location lame-$lame_version
+    Set-Location lame-$lame_version
     & sed -i "s/MACHINE = \/machine:.*/MACHINE = \/machine:${lame_machine}/g" Makefile.MSVC
     & nmake -f Makefile.MSVC MSVCVER=${lame_msvcver} libmp3lame.dll
     if ($LASTEXITCODE -ne 0) { throw "nmake build failed" }
