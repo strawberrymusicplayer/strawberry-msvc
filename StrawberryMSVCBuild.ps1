@@ -2017,7 +2017,7 @@ function Build-GStreamer {
   Push-Location $build_path
   try {
     if ($gst_dev -eq "ON") {
-      CloneGitRepo -repo_name "gstreamer"
+      CloneGitRepo -git_repo_name "gstreamer"
       if (-not (Test-Path "gstreamer")) {
         RecursiveCopy "$downloads_path/gstreamer/subprojects/gstreamer" "gstreamer"
       }
@@ -2052,7 +2052,7 @@ function Build-GstPluginsBase {
   Push-Location $build_path
   try {
     if ($gst_dev -eq "ON") {
-      CloneGitRepo -repo_name "gst-plugins-base"
+      CloneGitRepo -git_repo_name "gst-plugins-base"
       if (-not (Test-Path "gst-plugins-base")) {
         RecursiveCopy "$downloads_path/gstreamer/subprojects/gst-plugins-base" "gst-plugins-base"
       }
