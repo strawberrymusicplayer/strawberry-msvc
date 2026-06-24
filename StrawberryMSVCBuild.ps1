@@ -1053,7 +1053,7 @@ function Build-ZLib {
     Set-Location "zlib-$zlib_version"
     CMakeBuild
     if ($build_type -eq "debug") {
-      & sed -i 's/-lz$/-lzd/g' "$prefix_path/lib/z.lib"
+      & sed -i 's/-lz$/-lzd/g' "$prefix_path/lib/pkgconfig/zlib.pc"
       Copy-Item "$prefix_path/lib/zd.lib" "$prefix_path/lib/z.lib" -Force
     }
   }
