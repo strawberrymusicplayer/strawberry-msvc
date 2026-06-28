@@ -1459,7 +1459,10 @@ function Build-LibPSL {
     ExtractPackage "libpsl-$libpsl_version.tar.gz"
     Push-Location "libpsl-$libpsl_version"
     try {
-      MesonBuild
+      MesonBuild `
+        -additional_args @(
+          "-Druntime=libicu"
+        )
     }
     finally {
       Pop-Location
