@@ -1156,6 +1156,7 @@ function Build-LibJPEGTurbo {
     try {
       CMakeBuild -additional_args @(
           "-DENABLE_SHARED=ON",
+          "-DENABLE_STATIC=OFF",
           "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
         )
       Remove-Item "$prefix_path/lib/jpeg-static.lib" -Force -ErrorAction SilentlyContinue
