@@ -1930,7 +1930,7 @@ function Build-Lame {
     ExtractPackage "lame-$lame_version.tar.gz"
     Push-Location "lame-$lame_version"
     try {
-      & sed -i "s/MACHINE = \/machine:.*/MACHINE = \/machine:${lame_machine}/g" Makefile.MSVC
+      & patch -p1 -N -i "$patch_path/lame-msvc.patch"
       & nmake -f Makefile.MSVC MSVCVER=${lame_msvcver} libmp3lame.dll
       if ($LASTEXITCODE -ne 0) { throw "nmake build failed" }
       New-Item -Path "$prefix_path/include/lame" -ItemType Directory -Force

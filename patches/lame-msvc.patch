@@ -1,0 +1,35 @@
+diff --git a/Makefile.MSVC b/Makefile.MSVC
+index 9bc6316..0fb55e3 100644
+--- a/Makefile.MSVC
++++ b/Makefile.MSVC
+@@ -99,8 +99,12 @@ SNDFILE = NO
+ !	ENDIF
+ 
+ OFF = win32
++!	IF "$(MSVCVER)" == "Win64"
++MACHINE = /machine:X64
++!	ELSE
+ MACHINE = /machine:I386
+-LIB_OPTS = /nologo $(MACHINE) 
++!	ENDIF
++LIB_OPTS = /nologo $(MACHINE)
+ 
+ !	MESSAGE ----------------------------------------------------------------------
+ !	IF "$(CFG)" == ""
+@@ -484,15 +488,7 @@ lamelib_sources = \
+ 	libmp3lame/presets.c \
+ 	libmp3lame/version.c
+ 
+-mpglib_sources = \
+-	mpglib/common.c \
+-	mpglib/dct64_i386.c \
+-	mpglib/decode_i386.c \
+-	mpglib/layer1.c \
+-	mpglib/layer2.c \
+-	mpglib/layer3.c \
+-	mpglib/tabinit.c \
+-	mpglib/interface.c
++mpglib_sources =
+ 
+ 
+ !IF "$(MSVCVER)" == "Win64"
