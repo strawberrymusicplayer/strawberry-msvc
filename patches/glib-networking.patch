@@ -350,7 +350,7 @@ index 1d263b0d..adc4bab0 100644
 GitLab
 
 
-From ca376eef85a20d8b36088e92b7676d6d20b99287 Mon Sep 17 00:00:00 2001
+From 09f84f73cd3660a7425e22b6cb17fc6c505aaa0a Mon Sep 17 00:00:00 2001
 From: Sanchayan Maity <sanchayan@centricular.com>
 Date: Thu, 21 May 2026 15:11:47 +0530
 Subject: [PATCH 3/5] openssl: Drop lock_ssl function
@@ -359,12 +359,12 @@ Use the existing g_tls_connection_openssl_lock function instead of
 introducing a specialised function for protecting SSL member field.
 Same lock can be used for protecting other member fields as needed.
 ---
- tls/openssl/gtlsconnection-openssl.c | 57 +++++++++++++++++++---------
+ tls/openssl/gtlsconnection-openssl.c | 55 +++++++++++++++++++---------
  tls/openssl/gtlsconnection-openssl.h |  2 +-
- 2 files changed, 41 insertions(+), 18 deletions(-)
+ 2 files changed, 39 insertions(+), 18 deletions(-)
 
 diff --git a/tls/openssl/gtlsconnection-openssl.c b/tls/openssl/gtlsconnection-openssl.c
-index adc4bab0..27f1309a 100644
+index adc4bab0..899d73c2 100644
 --- a/tls/openssl/gtlsconnection-openssl.c
 +++ b/tls/openssl/gtlsconnection-openssl.c
 @@ -273,7 +273,9 @@ perform_openssl_io (GTlsConnectionOpenssl  *openssl,
@@ -535,17 +535,7 @@ index adc4bab0..27f1309a 100644
    if (!data)
      {
        g_tls_connection_openssl_unlock (tls);
-@@ -1036,7 +1057,9 @@ g_tls_connection_openssl_close (GTlsConnectionBase  *tls,
- 
-   priv = g_tls_connection_openssl_get_instance_private (openssl);
- 
-+  g_tls_connection_openssl_lock (openssl);
-   priv->shutting_down = TRUE;
-+  g_tls_connection_openssl_unlock (openssl);
- 
-   return perform_openssl_io (G_TLS_CONNECTION_OPENSSL (tls),
-                              G_IO_IN | G_IO_OUT,
-@@ -1094,7 +1117,8 @@ g_tls_connection_openssl_initable_init (GInitable     *initable,
+@@ -1094,7 +1115,8 @@ g_tls_connection_openssl_initable_init (GInitable     *initable,
  
    priv = g_tls_connection_openssl_get_instance_private (openssl);
  
@@ -555,7 +545,7 @@ index adc4bab0..27f1309a 100644
    g_assert (ssl);
  
    SSL_set_ex_data (ssl, data_index, openssl);
-@@ -1131,11 +1155,10 @@ g_tls_connection_openssl_init (GTlsConnectionOpenssl *openssl)
+@@ -1131,11 +1153,10 @@ g_tls_connection_openssl_init (GTlsConnectionOpenssl *openssl)
  }
  
  SSL *
@@ -585,57 +575,49 @@ index 031758dd..2313e8e0 100644
 GitLab
 
 
-From 0b62313097f6ee0a05f64bf86d36a174a346f8fd Mon Sep 17 00:00:00 2001
+From 58b3e645687902101de8e78648f19a80f6c19413 Mon Sep 17 00:00:00 2001
 From: Sanchayan Maity <sanchayan@centricular.com>
 Date: Thu, 21 May 2026 19:05:51 +0530
 Subject: [PATCH 4/5] openssl: Guard some more member accesses with mutex
 
 ---
- tls/openssl/gtlsclientconnection-openssl.c | 10 ++++++++++
- tls/openssl/gtlsserverconnection-openssl.c | 19 ++++++++++++++++---
- 2 files changed, 26 insertions(+), 3 deletions(-)
+ tls/openssl/gtlsclientconnection-openssl.c | 11 +++++++++++
+ tls/openssl/gtlsserverconnection-openssl.c |  7 ++++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/tls/openssl/gtlsclientconnection-openssl.c b/tls/openssl/gtlsclientconnection-openssl.c
-index 8bdd4692..c321b03b 100644
+index 8bdd4692..e7793dee 100644
 --- a/tls/openssl/gtlsclientconnection-openssl.c
 +++ b/tls/openssl/gtlsclientconnection-openssl.c
-@@ -115,6 +115,8 @@ g_tls_client_connection_openssl_get_property (GObject    *object,
-   GList *accepted_cas;
-   gint i;
+@@ -131,6 +131,11 @@ g_tls_client_connection_openssl_get_property (GObject    *object,
  
-+  g_tls_connection_openssl_lock (G_TLS_CONNECTION_OPENSSL (object));
+     case PROP_ACCEPTED_CAS:
+       accepted_cas = NULL;
 +
-   switch (prop_id)
-     {
-     case PROP_VALIDATION_FLAGS:
-@@ -169,6 +171,8 @@ g_tls_client_connection_openssl_get_property (GObject    *object,
-     default:
-       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-     }
++      // Protect ca_list as it can be modified by the handshake_thread
++      // while being read from the main thread.
++      g_tls_connection_openssl_lock (G_TLS_CONNECTION_OPENSSL (object));
 +
-+  g_tls_connection_openssl_unlock (G_TLS_CONNECTION_OPENSSL (object));
- }
+       if (openssl->ca_list)
+         {
+           for (i = 0; i < sk_X509_NAME_num (openssl->ca_list); ++i)
+@@ -156,6 +161,8 @@ g_tls_client_connection_openssl_get_property (GObject    *object,
+           accepted_cas = g_list_reverse (accepted_cas);
+         }
+       g_value_set_pointer (value, accepted_cas);
++
++      g_tls_connection_openssl_unlock (G_TLS_CONNECTION_OPENSSL (object));
+       break;
  
- static void
-@@ -180,6 +184,8 @@ g_tls_client_connection_openssl_set_property (GObject      *object,
-   GTlsConnectionBase *tls = G_TLS_CONNECTION_BASE (object);
-   GTlsClientConnectionOpenssl *openssl = G_TLS_CLIENT_CONNECTION_OPENSSL (object);
+     case PROP_SESSION_REUSED:
+@@ -287,13 +294,17 @@ handshake_thread_retrieve_certificate (SSL       *ssl,
+   client = G_TLS_CLIENT_CONNECTION_OPENSSL (g_tls_connection_openssl_get_connection_from_ssl (ssl));
+   tls = G_TLS_CONNECTION_BASE (client);
  
-+  g_tls_connection_openssl_lock (G_TLS_CONNECTION_OPENSSL (object));
-+
-   switch (prop_id)
-     {
-     case PROP_VALIDATION_FLAGS:
-@@ -203,6 +209,8 @@ g_tls_client_connection_openssl_set_property (GObject      *object,
-     default:
-       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-     }
-+
-+  g_tls_connection_openssl_unlock (G_TLS_CONNECTION_OPENSSL (object));
- }
++  // Being called in the context of perform_openssl_io we already have
++  // the mutex lock.
+   client->ca_list = SSL_get_client_CA_list (client->ssl);
  
- static void
-@@ -292,8 +300,10 @@ handshake_thread_retrieve_certificate (SSL       *ssl,
    cert = g_tls_connection_get_certificate (G_TLS_CONNECTION (client));
    if (!cert)
      {
@@ -647,64 +629,10 @@ index 8bdd4692..c321b03b 100644
  
    if (cert)
 diff --git a/tls/openssl/gtlsserverconnection-openssl.c b/tls/openssl/gtlsserverconnection-openssl.c
-index c8e4c7b8..24816d83 100644
+index c8e4c7b8..39340b12 100644
 --- a/tls/openssl/gtlsserverconnection-openssl.c
 +++ b/tls/openssl/gtlsserverconnection-openssl.c
-@@ -81,6 +81,8 @@ g_tls_server_connection_openssl_get_property (GObject    *object,
- {
-   GTlsServerConnectionOpenssl *openssl = G_TLS_SERVER_CONNECTION_OPENSSL (object);
- 
-+  g_tls_connection_openssl_lock (G_TLS_CONNECTION_OPENSSL (object));
-+
-   switch (prop_id)
-     {
-     case PROP_AUTHENTICATION_MODE:
-@@ -90,6 +92,8 @@ g_tls_server_connection_openssl_get_property (GObject    *object,
-     default:
-       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-     }
-+
-+  g_tls_connection_openssl_unlock (G_TLS_CONNECTION_OPENSSL (object));
- }
- 
- static void
-@@ -100,6 +104,8 @@ g_tls_server_connection_openssl_set_property (GObject      *object,
- {
-   GTlsServerConnectionOpenssl *openssl = G_TLS_SERVER_CONNECTION_OPENSSL (object);
- 
-+  g_tls_connection_openssl_lock (G_TLS_CONNECTION_OPENSSL (object));
-+
-   switch (prop_id)
-     {
-     case PROP_AUTHENTICATION_MODE:
-@@ -109,6 +115,8 @@ g_tls_server_connection_openssl_set_property (GObject      *object,
-     default:
-       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-     }
-+
-+  g_tls_connection_openssl_unlock (G_TLS_CONNECTION_OPENSSL (object));
- }
- 
- static int
-@@ -126,6 +134,8 @@ g_tls_server_connection_openssl_prepare_handshake (GTlsConnectionBase  *tls,
-   GTlsConnectionBaseClass *base_class = G_TLS_CONNECTION_BASE_CLASS (g_tls_server_connection_openssl_parent_class);
-   int req_mode = 0;
- 
-+  g_tls_connection_openssl_lock (G_TLS_CONNECTION_OPENSSL (tls));
-+
-   switch (openssl->authentication_mode)
-     {
-     case G_TLS_AUTHENTICATION_REQUIRED:
-@@ -144,6 +154,8 @@ g_tls_server_connection_openssl_prepare_handshake (GTlsConnectionBase  *tls,
-   /* FIXME: is this ok? */
-   SSL_set_verify_depth (openssl->ssl, 0);
- 
-+  g_tls_connection_openssl_unlock (G_TLS_CONNECTION_OPENSSL (tls));
-+
-   if (base_class->prepare_handshake)
-     base_class->prepare_handshake (tls, advertised_protocols);
- }
-@@ -239,13 +251,14 @@ on_certificate_changed (GObject    *object,
+@@ -239,13 +239,14 @@ on_certificate_changed (GObject    *object,
    SSL *ssl;
    GTlsCertificate *cert;
  
@@ -726,7 +654,7 @@ index c8e4c7b8..24816d83 100644
 GitLab
 
 
-From e5cc53281ec21cbb65d31a1c88a93b71a59d3774 Mon Sep 17 00:00:00 2001
+From f53b6f30bef6dd32551d112164874088c3b03ef9 Mon Sep 17 00:00:00 2001
 From: Sanchayan Maity <sanchayan@centricular.com>
 Date: Mon, 15 Jun 2026 15:18:50 +0530
 Subject: [PATCH 5/5] Guard usages of GTlsConnectionBasePrivate data
