@@ -171,8 +171,7 @@ if ($arch -eq "x64" -or $arch -eq "x86_64" -or $arch -eq "amd64") {
   $libjpeg_turbo_simd="ON"
   $boost_architecture="x86"
   $gst_twolame="enabled"
-  $lame_machine="X64"
-  $lame_msvcver="Win64"
+  $lame_msvcver="X64"
 }
 elseif ($arch -eq "arm64") {
   $arch="arm64"
@@ -189,8 +188,7 @@ elseif ($arch -eq "arm64") {
   $libjpeg_turbo_simd="OFF"
   $boost_architecture="arm"
   $gst_twolame="disabled"
-  $lame_machine="ARM64"
-  $lame_msvcver="Win64"
+  $lame_msvcver="ARM64"
 }
 else {
   Write-Error "Unknown arch: $arch"

@@ -1,12 +1,46 @@
 diff --git a/Makefile.MSVC b/Makefile.MSVC
-index 9bc6316..0fb55e3 100644
+index 9bc6316..7c10f1a 100644
 --- a/Makefile.MSVC
 +++ b/Makefile.MSVC
-@@ -99,8 +99,12 @@ SNDFILE = NO
+@@ -53,13 +53,29 @@ PGM = $(T_LAME)
+ 
+ #	some default settings
+ 
++#	Canonicalize the 64-bit target into TARGET_ARCH: MSVCVER=Win64 is kept
++#	as a legacy alias for MSVCVER=X64. Everything below checks TARGET_ARCH,
++#	not MSVCVER, for the actual architecture.
++!	IF "$(MSVCVER)" == "Win64" || "$(MSVCVER)" == "X64"
++TARGET_ARCH = X64
++!	ELSEIF "$(MSVCVER)" == "ARM64"
++TARGET_ARCH = ARM64
++!	ELSE
++TARGET_ARCH =
++!	ENDIF
++
+ !	IF "$(MSVCVER)" != ""
+ COMP = MS
+-!	IF "$(MSVCVER)" == "Win64"
++!	IF "$(TARGET_ARCH)" == "X64" || "$(TARGET_ARCH)" == "ARM64"
+ !	IF "$(ASM)" == ""
+-ASM = NO # or it could be ML64 if we want to use it...
++ASM = NO # or it could be ML64 for X64 if we want to use it...
+ GTK = NO
+ !	ENDIF
++!	IF "$(TARGET_ARCH)" == "ARM64"
++# no ARM64 assembler is wired up in this makefile
++ASM = NO
++MMX = NO
++!	ENDIF
+ !	ENDIF
+ !	ELSE
+ !	IF "$(COMP)" == ""
+@@ -99,8 +115,14 @@ SNDFILE = NO
  !	ENDIF
  
  OFF = win32
-+!	IF "$(MSVCVER)" == "Win64"
++!	IF "$(TARGET_ARCH)" == "ARM64"
++MACHINE = /machine:ARM64
++!	ELSEIF "$(TARGET_ARCH)" == "X64"
 +MACHINE = /machine:X64
 +!	ELSE
  MACHINE = /machine:I386
@@ -16,7 +50,29 @@ index 9bc6316..0fb55e3 100644
  
  !	MESSAGE ----------------------------------------------------------------------
  !	IF "$(CFG)" == ""
-@@ -484,15 +488,7 @@ lamelib_sources = \
+@@ -148,8 +170,10 @@ LIB_OPTS = /nologo $(MACHINE)
+ !	   MESSAGE + optimizing for Pentium II/III
+ !	  ENDIF
+ !	 ELSE
+-!	  IF "$(MSVCVER)" == "Win64"
+-!	   MESSAGE + using MS 64-Bit Compiler
++!	  IF "$(TARGET_ARCH)" == "X64"
++!	   MESSAGE + using MS 64-Bit Compiler (x64)
++!	  ELSEIF "$(TARGET_ARCH)" == "ARM64"
++!	   MESSAGE + using MS 64-Bit Compiler (ARM64)
+ !	  ELSE
+ !	   MESSAGE using MS COMPILER
+ !	   IF "$(CPU)" == "P1"
+@@ -203,7 +227,7 @@ LIB_OPTS = /nologo $(MACHINE)
+ # LN_OPTS = /nologo /debug:full /debugtype:cv /fixed:no /profile
+ 
+ # release options
+-!	IF "$(MSVCVER)" == "Win64"
++!	IF "$(TARGET_ARCH)" == "X64" || "$(TARGET_ARCH)" == "ARM64"
+ CC_OPTS = /nologo /DWin64 /O2b2ity /GAy /Gs1024 /Zp8 /GL /GS- /Zi
+ !	ELSEIF "$(MSVCVER)" == "8.0"
+ CC_OPTS = /nologo /O2 /Wp64 /Oi /GL /arch:SSE /fp:precise
+@@ -484,18 +508,11 @@ lamelib_sources = \
  	libmp3lame/presets.c \
  	libmp3lame/version.c
  
@@ -32,4 +88,9 @@ index 9bc6316..0fb55e3 100644
 +mpglib_sources =
  
  
- !IF "$(MSVCVER)" == "Win64"
+-!IF "$(MSVCVER)" == "Win64"
++!IF "$(TARGET_ARCH)" == "X64"
++# bufferoverflowU.lib is a legacy SDK lib only shipped for x86/x64, not ARM64
+ ADDL_OBJ = bufferoverflowU.lib
+ !ENDIF
+ 
