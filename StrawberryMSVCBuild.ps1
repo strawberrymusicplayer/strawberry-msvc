@@ -170,7 +170,6 @@ if ($arch -eq "x64" -or $arch -eq "x86_64" -or $arch -eq "amd64") {
   $vs_platform="x64"
   $libjpeg_turbo_simd="ON"
   $boost_architecture="x86"
-  $gst_twolame="enabled"
   $lame_msvcver="X64"
 }
 elseif ($arch -eq "arm64") {
@@ -187,7 +186,6 @@ elseif ($arch -eq "arm64") {
   $vs_platform="ARM64"
   $libjpeg_turbo_simd="OFF"
   $boost_architecture="arm"
-  $gst_twolame="disabled"
   $lame_msvcver="ARM64"
 }
 else {
@@ -523,7 +521,6 @@ function GetPackageUrls {
     'speex' = "https://gitlab.xiph.org/xiph/speex/-/archive/Speex-$speex_version/speex-Speex-$speex_version.tar.gz"
     'mpg123' = "https://downloads.sourceforge.net/project/mpg123/mpg123/$mpg123_version/mpg123-$mpg123_version.tar.bz2"
     'lame' = "https://downloads.sourceforge.net/project/lame/lame/$lame_version/lame-$lame_version.tar.gz"
-    'twolame' = "https://downloads.sourceforge.net/twolame/twolame-$twolame_version.tar.gz"
     'fftw' = "https://github.com/strawberrymusicplayer/fftw3-mingw-cross/releases/download/${fftw_version}/fftw-${arch}-w64-mingw32-${build_type}-${fftw_version}.tar.xz"
     'musepack' = "https://files.musepack.net/source/musepack_src_r$musepack_version.tar.gz"
     'libopenmpt' = "https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-$libopenmpt_version+release.msvc.zip"
@@ -1949,44 +1946,6 @@ function Build-Lame {
   }
 }
 
-function Build-Twolame {
-  Write-Host "Building twolame" -ForegroundColor Yellow
-  Push-Location $build_path
-  try {
-    DownloadPackage -package_name "twolame"
-    ExtractPackage "twolame-$twolame_version.tar.gz"
-    Push-Location "twolame-$twolame_version"
-    try {
-      & patch -p1 -N -i "$patch_path/twolame.patch"
-      Push-Location "win32"
-      try {
-        if (-not (Test-Path "Backup/libtwolame_dll.sln")) {
-          UpgradeVSProject "libtwolame_dll.sln"
-        }
-        Start-Sleep -Seconds 5
-        & sed -i "s/Win32/$vs_platform/g" *.sln *.vcproj *.vcxproj
-        & sed -i "s/MachineX86/Machine$lib_machine/g" *.sln *.vcxproj
-        MSBuildProject -project_path "libtwolame_dll.sln" -configuration "${build_type}"
-        Copy-Item "../libtwolame/twolame.h" "$prefix_path/include/" -Force
-        Copy-Item "lib/libtwolame_dll.lib" "$prefix_path/lib/" -Force
-        Copy-Item "lib/*.dll" "$prefix_path/bin/" -Force
-        Copy-Item "$prefix_path/lib/libtwolame_dll.lib" "$prefix_path/lib/twolame${lib_postfix}.lib" -Force
-        CreatePkgConfigFile -prefix $prefix_path -name "twolame" -description "optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME" -url "http://www.twolame.org/" -version $twolame_version -libs "-L`${libdir} -ltwolame${lib_postfix}" -cflags "-I`${includedir}" -output_file "$prefix_path/lib/pkgconfig/twolame.pc"
-        Write-Host "twolame built successfully!" -ForegroundColor Green
-      }
-      finally {
-        Pop-Location
-      }
-    }
-    finally {
-      Pop-Location
-    }
-  }
-  finally {
-    Pop-Location
-  }
-}
-
 function Build-FFTW3 {
   Write-Host "Building fftw3" -ForegroundColor Yellow
   Push-Location $build_path
@@ -2434,7 +2393,6 @@ function Build-GstPluginsGood {
           "-Dmpg123=enabled",
           "-Dspeex=enabled",
           "-Dtaglib=enabled",
-          "-Dtwolame=enabled",
           "-Dwaveform=enabled",
           "-Dwavpack=enabled",
           "-Dsoup=enabled",
@@ -3084,7 +3042,6 @@ try {
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/speex.pc")) { $build_queue += "speex" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libmpg123.pc")) { $build_queue += "mpg123" }
   if (-not (Test-Path "$prefix_path/lib/mp3lame.lib")) { $build_queue += "lame" }
-  if (-not (Test-Path "$prefix_path/lib/twolame${lib_postfix}.lib")) { $build_queue += "twolame" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/fftw3.pc")) { $build_queue += "fftw3" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/mpcdec.pc")) { $build_queue += "musepack" }
   if (-not (Test-Path "$prefix_path/lib/pkgconfig/libopenmpt.pc")) { $build_queue += "libopenmpt" }
@@ -3177,7 +3134,6 @@ try {
       "speex" { Build-Speex }
       "mpg123" { Build-MPG123 }
       "lame" { Build-Lame }
-      "twolame" { Build-Twolame }
       "fftw3" { Build-FFTW3 }
       "musepack" { Build-Musepack }
       "libopenmpt" { Build-LibOpenMPT }
