@@ -2424,6 +2424,7 @@ function Build-GstPluginsBad {
       ExtractPackage "gst-plugins-bad-$gstreamer_version.tar.xz"
       Push-Location "gst-plugins-bad-$gstreamer_version"
     }
+    & patch -p3 -N -i "$patch_path/gstreamer-faac2.patch"
     try {
       MesonBuild `
         -additional_args @(
