@@ -1008,7 +1008,6 @@ function Build-Yasm {
     }
     Push-Location "yasm"
     try {
-      & patch -p1 -N -i "$patch_path/yasm-cmake.patch" 2>&1 | Out-Null
       CMakeBuild
     }
     finally {
