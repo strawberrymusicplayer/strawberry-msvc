@@ -2645,7 +2645,6 @@ function Build-QtBase {
       Push-Location "qtbase-everywhere-src-$qt_version"
     }
     try {
-      & patch -p1 -N -i "$patch_path/qtbase-openssl4.patch" 2>&1 | Out-Null
       CMakeBuild -additional_args @(
           "-DQT_BUILD_EXAMPLES=OFF",
           "-DQT_BUILD_TESTS=OFF",
