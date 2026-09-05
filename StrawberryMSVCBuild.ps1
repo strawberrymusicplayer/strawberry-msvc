@@ -488,7 +488,7 @@ function GetPackageUrls {
     'openssl' = "https://github.com/openssl/openssl/releases/download/openssl-$openssl_version/openssl-$openssl_version.tar.gz"
     'libpng' = "https://downloads.sourceforge.net/project/libpng/libpng16/$libpng_version/libpng-$libpng_version.tar.gz"
     'libjpeg-turbo' = "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$libjpeg_turbo_version/libjpeg-turbo-$libjpeg_turbo_version.tar.gz"
-    'pcre2' = "https://github.com/PhilipHazel/pcre2/releases/download/pcre2-$pcre2_version/pcre2-$pcre2_version.tar.gz"
+    'pcre2' = "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-$pcre2_version/pcre2-$pcre2_version.tar.gz"
     'bzip2' = "https://sourceware.org/pub/bzip2/bzip2-$bzip2_version.tar.gz"
     'xz' = "https://downloads.sourceforge.net/project/lzmautils/xz-$xz_version.tar.gz"
     'brotli' = "https://github.com/google/brotli/archive/refs/tags/v$brotli_version/brotli-$brotli_version.tar.gz"
